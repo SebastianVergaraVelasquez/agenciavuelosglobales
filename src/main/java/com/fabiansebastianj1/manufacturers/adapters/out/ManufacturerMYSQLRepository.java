@@ -27,7 +27,7 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
     @Override
     public void delete(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "DELETE FROM manufacturers WHERE id = ?";
+            String query = "DELETE FROM manufacturer WHERE id = ?";
             try(PreparedStatement statement = connection.prepareStatement(query)){
                 statement.setInt(1, id);
                 statement.executeUpdate();
@@ -41,7 +41,7 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
     public List<Manufacturer> findAll() {
         List<Manufacturer> manufacturers = new ArrayList<>();           
         try (Connection connection = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT * FROM manufacturers";   
+            String query = "SELECT * FROM manufacturer";   
             try (PreparedStatement statement = connection.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery()){
                     while (resultSet.next()) {
@@ -78,7 +78,7 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
     @Override
     public void save(Manufacturer manufacturer) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "INSERT INTO manufacturers (nombre) VALUES (?)";
+            String query = "INSERT INTO manufacturer (nombre) VALUES (?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, manufacturer.getNombre());
                 statement.executeUpdate();
@@ -91,7 +91,7 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
     @Override
     public void update(Manufacturer manufacturer) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE pais SET nombre = ? WHERE id = ?";
+            String query = "UPDATE manufacturer SET nombre = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, manufacturer.getNombre());
                 statement.setInt(2, manufacturer.getId());

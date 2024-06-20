@@ -41,7 +41,7 @@ public class AirlineMYSQLRepository implements AirlineRepository {
     public List<Airline> findAll() {
         List<Airline> airlines = new ArrayList<>();           
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM airlines";   
+            String query = "SELECT * FROM airline";   
             try (PreparedStatement statement = connection.prepareStatement(query);
                  ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
@@ -60,7 +60,7 @@ public class AirlineMYSQLRepository implements AirlineRepository {
     @Override
     public Optional<Airline> findById(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM airlines WHERE id = ?";
+            String query = "SELECT * FROM airline WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query);
                  ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
@@ -80,7 +80,7 @@ public class AirlineMYSQLRepository implements AirlineRepository {
     @Override
     public void save(Airline airline) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "INSERT INTO airlines (nombre) VALUES (?)";
+            String query = "INSERT INTO airline (nombre) VALUES (?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, airline.getNombre());
                 statement.executeUpdate();
@@ -93,7 +93,7 @@ public class AirlineMYSQLRepository implements AirlineRepository {
     @Override
     public void update(Airline airline) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE airlines SET nombre = ? WHERE id = ?";
+            String query = "UPDATE airline SET nombre = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, airline.getNombre());
                 statement.setInt(2, airline.getId());
