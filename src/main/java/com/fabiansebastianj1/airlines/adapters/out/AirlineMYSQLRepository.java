@@ -25,18 +25,15 @@ public class AirlineMYSQLRepository implements AirlineRepository {
     }
 
     @Override
-    public boolean delete(int id) {
-        boolean deleted = true;
+    public void delete(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "DELETE FROM airlines WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, id);
-                return deleted;
+                statement.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            deleted = false;
-            return deleted;
         }
     }
 
@@ -94,8 +91,7 @@ public class AirlineMYSQLRepository implements AirlineRepository {
     }
 
     @Override
-    public boolean update(Airline airline) {
-        boolean updated = false;
+    public void update(Airline airline) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "UPDATE airlines SET nombre = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -105,9 +101,6 @@ public class AirlineMYSQLRepository implements AirlineRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return updated;
         }
-        updated = true;
-        return updated;
     }
 }

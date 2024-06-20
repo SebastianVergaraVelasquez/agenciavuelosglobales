@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface ManufacturerRepository {
     void save(Manufacturer manufacturer);
-    boolean update(Manufacturer manufacturer);
-    boolean delete(int id);
+    void update(Manufacturer manufacturer);
+    void delete(int id);
     Optional<Manufacturer> findById(int id);
     List<Manufacturer> findAll();
 }

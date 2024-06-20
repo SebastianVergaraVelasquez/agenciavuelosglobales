@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface AirlineRepository {
     void save(Airline airline);
-    boolean update(Airline airline);
-    boolean delete(int id);
+    void update(Airline airline);
+    void delete(int id);
     Optional<Airline> findById(int id);
     List<Airline> findAll();
 }
