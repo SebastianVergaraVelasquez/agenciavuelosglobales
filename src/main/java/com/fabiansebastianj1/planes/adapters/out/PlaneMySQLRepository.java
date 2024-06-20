@@ -111,7 +111,7 @@ public class PlaneMySQLRepository implements PlaneRepository {
     public void update(Plane plane) {
         //Actualización temporal, faltan los demás campos, solo se actualiza la placa
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE planes SET plates = ? WHERE id = ?";
+            String query = "UPDATE plane SET plates = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, plane.getPlates());
                 statement.setInt(2, plane.getId());
