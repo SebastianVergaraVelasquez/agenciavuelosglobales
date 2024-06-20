@@ -1,4 +1,4 @@
-package com.fabiansebastianj1.countries.domain.models;
+package com.fabiansebastianj1.country.domain.models;
 
 public class Countries {
     private String id;

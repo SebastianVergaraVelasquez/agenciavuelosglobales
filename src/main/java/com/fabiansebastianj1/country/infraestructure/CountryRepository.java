@@ -1,9 +1,9 @@
-package com.fabiansebastianj1.countries.infraestructure;
+package com.fabiansebastianj1.country.infraestructure;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.fabiansebastianj1.countries.domain.models.Countries;
+import com.fabiansebastianj1.country.domain.models.Countries;
 
 public interface CountriesRepository {
     void save(Countries countries);

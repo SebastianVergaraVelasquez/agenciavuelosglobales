@@ -1,10 +1,10 @@
-package com.fabiansebastianj1.countries.application;
+package com.fabiansebastianj1.country.application;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.fabiansebastianj1.countries.domain.models.Countries;
-import com.fabiansebastianj1.countries.infraestructure.CountriesRepository;
+import com.fabiansebastianj1.country.domain.models.Countries;
+import com.fabiansebastianj1.country.infraestructure.CountriesRepository;
 
 public class CountriesService {
     private final CountriesRepository countriesRepository;
