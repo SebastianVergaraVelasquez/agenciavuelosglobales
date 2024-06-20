@@ -26,11 +26,11 @@ public class AirlineService {
         return airlineRepository.findAll();
     }
 
-    public boolean deleteAirline(int id){
-        return airlineRepository.delete(id);
+    public void deleteAirline(int id){
+        airlineRepository.delete(id);
     }
 
-    public boolean updateAirline(Airline airline){
-        return airlineRepository.update(airline);
+    public void updateAirline(Airline airline){
+        airlineRepository.update(airline);
     }
 }

@@ -25,18 +25,15 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
     }
 
     @Override
-    public boolean delete(int id) {
-        boolean deleted = true;
+    public void delete(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "DELETE FROM manufacturers WHERE id = ?";
             try(PreparedStatement statement = connection.prepareStatement(query)){
                 statement.setInt(1, id);
-                return deleted;
+                statement.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            deleted = false;
-            return deleted;
         }
     }
 
@@ -92,8 +89,7 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
     }
 
     @Override
-    public boolean update(Manufacturer manufacturer) {
-        boolean updated = false;
+    public void update(Manufacturer manufacturer) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "UPDATE pais SET nombre = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -103,9 +99,6 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return updated;
         }
-        updated = true;
-        return updated;
     }
 }

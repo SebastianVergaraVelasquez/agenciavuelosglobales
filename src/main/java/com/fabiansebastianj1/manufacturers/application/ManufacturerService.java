@@ -25,11 +25,11 @@ public class ManufacturerService {
         return manufacturerRepository.findAll();
     }
 
-    public boolean deleteManufacturer(int id){
-        return manufacturerRepository.delete(id);
+    public void deleteManufacturer(int id){
+        manufacturerRepository.delete(id);
     }
 
-    public boolean updateManufacturer(Manufacturer manufacturer){
-        return manufacturerRepository.update(manufacturer);
+    public void updateManufacturer(Manufacturer manufacturer){
+        manufacturerRepository.update(manufacturer);
     }
 }
