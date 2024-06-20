@@ -3,12 +3,12 @@ package com.fabiansebastianj1.country.infraestructure;
 import java.util.List;
 import java.util.Optional;
 
-import com.fabiansebastianj1.country.domain.models.Countries;
+import com.fabiansebastianj1.country.domain.models.Country;
 
-public interface CountriesRepository {
-    void save(Countries countries);
-    void update(Countries countries);
-    Optional<Countries> findById(String id);
+public interface CountryRepository {
+    void save(Country country);
+    void update(Country country);
+    Optional<Country> findById(String id);
     void delete(String id);
-    List<Countries> findAll();
+    List<Country> findAll();
 }

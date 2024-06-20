@@ -3,33 +3,33 @@ package com.fabiansebastianj1.country.application;
 import java.util.List;
 import java.util.Optional;
 
-import com.fabiansebastianj1.country.domain.models.Countries;
-import com.fabiansebastianj1.country.infraestructure.CountriesRepository;
+import com.fabiansebastianj1.country.domain.models.Country;
+import com.fabiansebastianj1.country.infraestructure.CountryRepository;
 
-public class CountriesService {
-    private final CountriesRepository countriesRepository;
+public class CountryService {
+    private final CountryRepository countryRepository;
 
-    public CountriesService(CountriesRepository countriesRepository) {
-        this.countriesRepository = countriesRepository;
+    public CountryService(CountryRepository countryRepository) {
+        this.countryRepository = countryRepository;
     }
 
-    public void createCountries(Countries countries){
-        countriesRepository.save(countries);
+    public void createCountry(Country country){
+        countryRepository.save(country);
     }
 
-    public void updateCountries(Countries countries){
-        countriesRepository.update(countries);
+    public void updateCountry(Country country){
+        countryRepository.update(country);
     }
 
-    public Optional<Countries> getCountriesById(String id){
-        return countriesRepository.findById(id);
+    public Optional<Country> getCountryById(String id){
+        return countryRepository.findById(id);
     }
 
-    public void deleteCountries(String id){
-        countriesRepository.delete(id);
+    public void deleteCountry(String id){
+        countryRepository.delete(id);
     }
 
-    public List<Countries> getAllCountries(){
-        return countriesRepository.findAll();
+    public List<Country> getAllCountry(){
+        return countryRepository.findAll();
     }
 }

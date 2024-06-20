@@ -1,13 +1,13 @@
 package com.fabiansebastianj1.country.domain.models;
 
-public class Countries {
+public class Country {
     private String id;
     private String name;
 
-    public Countries() {
+    public Country() {
     }
 
-    public Countries(String id, String name) {
+    public Country(String id, String name) {
         this.id = id;
         this.name = name;
     }

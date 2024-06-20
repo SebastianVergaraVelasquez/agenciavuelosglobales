@@ -47,7 +47,7 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
                     while (resultSet.next()) {
                         Manufacturer manufacturer = new Manufacturer(
                             resultSet.getInt("id"),
-                            resultSet.getString("nombre"));
+                            resultSet.getString("name"));
                             manufacturers.add(manufacturer);
                     }
                 }           
@@ -65,7 +65,7 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
                 ResultSet resultSet = statement.executeQuery()){
                     Manufacturer manufacturer = new Manufacturer(
                         resultSet.getInt("id"),
-                        resultSet.getString("nombre")
+                        resultSet.getString("name")
                     );
                     return Optional.of(manufacturer);
                 }
@@ -78,7 +78,7 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
     @Override
     public void save(Manufacturer manufacturer) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "INSERT INTO manufacturer (nombre) VALUES (?)";
+            String query = "INSERT INTO manufacturer (name) VALUES (?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, manufacturer.getNombre());
                 statement.executeUpdate();
@@ -91,7 +91,7 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
     @Override
     public void update(Manufacturer manufacturer) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE manufacturer SET nombre = ? WHERE id = ?";
+            String query = "UPDATE manufacturer SET name = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, manufacturer.getNombre());
                 statement.setInt(2, manufacturer.getId());
