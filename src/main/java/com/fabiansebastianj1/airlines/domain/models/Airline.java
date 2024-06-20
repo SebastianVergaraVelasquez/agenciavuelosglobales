@@ -1,11 +1,10 @@
-package com.fabiansebastianj1.manufacturers.domain.models;
+package com.fabiansebastianj1.airlines.domain.models;
 
-public class Manufacturer {
- 
+public class Airline {
     private int id; 
     private String nombre;
 
-    public Manufacturer( int id, String nombre){
+    public Airline( int id, String nombre){
         this.id = id;
         this. nombre = nombre;
     }
