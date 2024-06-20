@@ -93,7 +93,7 @@ public class PlaneMySQLRepository implements PlaneRepository {
     @Override
     public void save(Plane plane) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "INSERT INTO plane (plates,capacity,fabrication_date,id_status,id_model) VALUES (?)";
+            String query = "INSERT INTO plane (plates,capacity,fabrication_date,id_status,id_model) VALUES (?,?,?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, plane.getPlates());
                 statement.setInt(2, plane.getCapacity());
