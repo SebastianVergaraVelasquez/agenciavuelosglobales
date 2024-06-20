@@ -1,4 +1,4 @@
-package com.fabiansebastianj1.employee.adapters.out;
+package com.fabiansebastianj1.customer.adapters.out;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,15 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.fabiansebastianj1.employee.domain.models.*;
-import com.fabiansebastianj1.employee.infrastructure.EmployeeRepository;
+import com.fabiansebastianj1.customer.infrastructure.CustomerRepository;
+import com.fabiansebastianj1.customer.domain.models.Customer;
 
-public class EmployeeMYSQLRepository implements EmployeeRepository {
+public class CustomerMYSQLRepository implements CustomerRepository {
     private final String url;
     private final String user;
     private final String password;
 
-    public EmployeeMYSQLRepository(String url, String user, String password) {
+    public CustomerMYSQLRepository(String url, String user, String password) {
         this.url = url;
         this.user = user;
         this.password = password;
@@ -26,7 +26,7 @@ public class EmployeeMYSQLRepository implements EmployeeRepository {
     @Override
     public void delete(String id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "DELETE FROM employee WHERE id = ?";
+            String query = "DELETE FROM customer WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, id);
                 statement.executeUpdate();
@@ -37,47 +37,43 @@ public class EmployeeMYSQLRepository implements EmployeeRepository {
     }
 
     @Override
-    public List<Employee> findAll() {
-        List<Employee> employees = new ArrayList<>();
+    public List<Customer> findAll() {
+        List<Customer> customers = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM employee";
+            String query = "SELECT * FROM customer";
             try (PreparedStatement statement = connection.prepareStatement(query);
                  ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    Employee employee = new Employee(
+                    Customer customer = new Customer(
                             resultSet.getString("id"),
                             resultSet.getString("name"),
-                            resultSet.getInt("id_rol"),
-                            resultSet.getDate("ingress_date"),
-                            resultSet.getInt("id_airline"),
-                            resultSet.getInt("id_airport")
+                            resultSet.getInt("age"),
+                            resultSet.getInt("id_document")
                             );
-                        employees.add(employee);
+                            customers.add(customer);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return employees;
+        return customers;
     }
 
     @Override
-    public Optional<Employee> findById(String id) {
+    public Optional<Customer> findById(String id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM employee WHERE id = ?";
+            String query = "SELECT * FROM customer WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
-                        Employee employee = new Employee(
+                        Customer customer = new Customer(
                             resultSet.getString("id"),
                             resultSet.getString("name"),
-                            resultSet.getInt("id_rol"),
-                            resultSet.getDate("ingress_date"),
-                            resultSet.getInt("id_airline"),
-                            resultSet.getInt("id_airport")
+                            resultSet.getInt("age"),
+                            resultSet.getInt("id_document")
                             );
-                        return Optional.of(employee);
+                        return Optional.of(customer);
                     }
                 }
             }
@@ -88,16 +84,14 @@ public class EmployeeMYSQLRepository implements EmployeeRepository {
     }
 
     @Override
-    public void save(Employee employee) {
+    public void save(Customer customer) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "INSERT INTO employee (id,name,id_rol,ingress_date,id_airline,id_airport) VALUES (?,?,?,?,?,?)";
+            String query = "INSERT INTO employee (id,name,age, id_document) VALUES (?,?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, employee.getId());
-                statement.setString(2, employee.getName());
-                statement.setInt(3, employee.getRolId());
-                statement.setDate(4, employee.getIngressDate());
-                statement.setInt(5, employee.getAirlineId());
-                statement.setInt(6, employee.getAirportId());
+                statement.setString(1, customer.getId());
+                statement.setString(2, customer.getName());
+                statement.setInt(3, customer.getAge());
+                statement.setInt(4, customer.getDocumentTypeId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -106,16 +100,14 @@ public class EmployeeMYSQLRepository implements EmployeeRepository {
     }
 
     @Override
-    public void update(Employee employee) {
+    public void update(Customer customer) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE employee SET name = ?, id_rol = ?, ingress_date = ?, id_airline = ?, id_airport = ? WHERE id = ?";
+            String query = "UPDATE employee SET name = ?, age = ?, id_document = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, employee.getName());
-                statement.setInt(2, employee.getRolId());
-                statement.setDate(3, employee.getIngressDate());
-                statement.setInt(4, employee.getAirlineId());
-                statement.setInt(5, employee.getAirportId());
-                statement.setString(1, employee.getId());
+                statement.setString(1, customer.getName());
+                statement.setInt(2, customer.getAge());
+                statement.setInt(3, customer.getDocumentTypeId());
+                statement.setString(1, customer.getId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {

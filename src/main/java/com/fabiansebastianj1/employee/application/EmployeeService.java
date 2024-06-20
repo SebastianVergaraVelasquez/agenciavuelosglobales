@@ -18,7 +18,7 @@ public class EmployeeService {
         employeeRepository.save(employee);
     }
 
-    public Optional<Employee> findManufacturerById (int id){
+    public Optional<Employee> findManufacturerById (String id){
         return employeeRepository.findById(id);
     }
 
@@ -26,7 +26,7 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public void deleteManufacturer(int id){
+    public void deleteManufacturer(String id){
         employeeRepository.delete(id);
     }
 
