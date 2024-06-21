@@ -1,6 +1,5 @@
 package com.fabiansebastianj1.documenttype.adapters.out;
 
-import com.fabiansebastianj1.country.domain.models.Country;
 import com.fabiansebastianj1.documenttype.domain.models.DocumentType;
 import com.fabiansebastianj1.documenttype.infraestructure.DocumentTypeRepository;
 
