@@ -43,6 +43,7 @@ public class CountryMYSQLRepository implements CountryRepository {
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, country.getId());
                 statement.setString(2, country.getName());
+                statement.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -56,6 +57,7 @@ public class CountryMYSQLRepository implements CountryRepository {
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, country.getName());
                 statement.setString(2, country.getId());
+                statement.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();

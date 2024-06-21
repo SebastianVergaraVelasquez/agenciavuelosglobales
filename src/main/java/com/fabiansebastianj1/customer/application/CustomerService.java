@@ -3,15 +3,24 @@ package com.fabiansebastianj1.customer.application;
 import java.util.List;
 import java.util.Optional;
 
+// import com.fabiansebastianj1.country.domain.models.Country;
+// import com.fabiansebastianj1.country.infraestructure.CountryRepository;
 import com.fabiansebastianj1.customer.domain.models.Customer;
 import com.fabiansebastianj1.customer.infrastructure.CustomerRepository;
 
 public class CustomerService {
     private final CustomerRepository customerRepository;
+//    private final CountryRepository countryRepository;
+
 
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
+//
+//    public CustomerService(CustomerRepository customerRepository, CountryRepository countryRepository) {
+//        this.customerRepository = customerRepository;
+//        this.countryRepository = countryRepository;
+//    }
 
     public void createCustomer(Customer customer){
         customerRepository.save(customer);
@@ -32,4 +41,8 @@ public class CustomerService {
     public void updateCustomer(Customer customer){
         customerRepository.update(customer);
     }
+
+//    public List<Country> getAllCountry(){
+//        return countryRepository.findAll();
+//    }
 }

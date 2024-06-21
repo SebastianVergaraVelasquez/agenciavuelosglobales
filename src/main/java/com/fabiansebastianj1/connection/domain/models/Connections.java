@@ -1,6 +1,6 @@
 package com.fabiansebastianj1.connection.domain.models;
 
-public class Connection {
+public class Connections {
 
     private int id;
     private String connection_number;
@@ -9,10 +9,10 @@ public class Connection {
     private String id_airport;
     private int id_trip_status;
 
-    public Connection() {
+    public Connections() {
     }
 
-    public Connection(int id, String connection_number, int id_trip, int id_plane, String id_airport, int id_trip_status) {
+    public Connections(int id, String connection_number, int id_trip, int id_plane, String id_airport, int id_trip_status) {
         this.id = id;
         this.connection_number = connection_number;
         this.id_trip = id_trip;
