@@ -50,13 +50,17 @@ public class DocumentTypeMYSQLRepository implements DocumentTypeRepository {
     public Optional<DocumentType> findById(int id) {
         try (Connection connection = DriverManager.getConnection(url,user,password)){
             String query = "SELECT * FROM document_type WHERE id = ?";
-            try (PreparedStatement statement =connection.prepareStatement(query);
-            ResultSet resultSet = statement.executeQuery()){
+            try (PreparedStatement statement =connection.prepareStatement(query)){
+                statement.setInt(1, id);
+            try(ResultSet resultSet = statement.executeQuery()){
+                if(resultSet.next()){
                 DocumentType documentType = new DocumentType(
                     resultSet.getInt("id"),
                     resultSet.getString("name")
                 );
                 return Optional.of(documentType);
+                }
+            }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -95,6 +99,6 @@ public class DocumentTypeMYSQLRepository implements DocumentTypeRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return List.of();
+        return documentTypes;
     }
 }

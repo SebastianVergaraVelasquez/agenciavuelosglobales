@@ -12,8 +12,8 @@ import java.util.Optional;
 import com.fabiansebastianj1.manufacturers.domain.models.Manufacturer;
 import com.fabiansebastianj1.manufacturers.infrastructure.ManufacturerRepository;
 
-public class ManufacturerMYSQLRepository implements ManufacturerRepository{
-    
+public class ManufacturerMYSQLRepository implements ManufacturerRepository {
+
     private final String url;
     private final String user;
     private final String password;
@@ -28,7 +28,7 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
     public void delete(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "DELETE FROM manufacturer WHERE id = ?";
-            try(PreparedStatement statement = connection.prepareStatement(query)){
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, id);
                 statement.executeUpdate();
             }
@@ -39,18 +39,18 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
 
     @Override
     public List<Manufacturer> findAll() {
-        List<Manufacturer> manufacturers = new ArrayList<>();           
-        try (Connection connection = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT * FROM manufacturer";   
+        List<Manufacturer> manufacturers = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM manufacturer";
             try (PreparedStatement statement = connection.prepareStatement(query);
-                ResultSet resultSet = statement.executeQuery()){
-                    while (resultSet.next()) {
-                        Manufacturer manufacturer = new Manufacturer(
+                    ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Manufacturer manufacturer = new Manufacturer(
                             resultSet.getInt("id"),
                             resultSet.getString("name"));
-                            manufacturers.add(manufacturer);
-                    }
-                }           
+                    manufacturers.add(manufacturer);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -59,18 +59,21 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
 
     @Override
     public Optional<Manufacturer> findById(int id) {
-        try (Connection connection = DriverManager.getConnection(url, user, password)){
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT * FROM manufacturers WHERE id = ?";
-            try( PreparedStatement statement = connection.prepareStatement(query); 
-                ResultSet resultSet = statement.executeQuery()){
-                    Manufacturer manufacturer = new Manufacturer(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name")
-                    );
-                    return Optional.of(manufacturer);
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        Manufacturer manufacturer = new Manufacturer(
+                                resultSet.getInt("id"),
+                                resultSet.getString("name"));
+                        return Optional.of(manufacturer);
+                    }
                 }
+            }
         } catch (SQLException e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
         return Optional.empty();
     }
