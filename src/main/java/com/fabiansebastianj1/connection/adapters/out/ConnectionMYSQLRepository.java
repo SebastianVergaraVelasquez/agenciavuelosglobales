@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class ConnectionMYSQLRepository implements ConnectionRepository {
-
     private final String url;
     private final String user;
     private final String password;
