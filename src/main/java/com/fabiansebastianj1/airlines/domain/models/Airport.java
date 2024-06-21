@@ -1,12 +1,12 @@
 package com.fabiansebastianj1.airlines.domain.models;
 
-public class Airline {
-    private int id; 
+public class Airport {
+    private int id;
     private String name;
 
-    public Airline( int id, String name){
+    public Airport(int id, String name) {
         this.id = id;
-        this. name = name;
+        this.name = name;
     }
 
     public int getId() {

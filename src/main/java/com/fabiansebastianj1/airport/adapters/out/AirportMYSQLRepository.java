@@ -1,4 +1,4 @@
-package com.fabiansebastianj1.airlines.adapters.out;
+package com.fabiansebastianj1.airport.adapters.out;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,27 +9,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.fabiansebastianj1.airlines.domain.models.Airport;
-import com.fabiansebastianj1.airlines.infrastructure.AirlineRepository;
+import com.fabiansebastianj1.airport.domain.models.City;
+import com.fabiansebastianj1.airport.infrastructure.AirportRepository;
 
-public class AirlineMYSQLRepository implements AirlineRepository {
-
+public class AirportMYSQLRepository implements AirportRepository {
     private final String url;
     private final String user;
     private final String password;
 
-    public AirlineMYSQLRepository(String url, String user, String password) {
+    public AirportMYSQLRepository(String url, String user, String password) {
         this.url = url;
         this.user = user;
         this.password = password;
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "DELETE FROM airlines WHERE id = ?";
+            String query = "DELETE FROM airport WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setInt(1, id);
+                statement.setString(1, id);
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -38,37 +37,39 @@ public class AirlineMYSQLRepository implements AirlineRepository {
     }
 
     @Override
-    public List<Airport> findAll() {
-        List<Airport> airlines = new ArrayList<>();
+    public List<City> findAll() {
+        List<City> airports = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM airline";
+            String query = "SELECT * FROM airport";
             try (PreparedStatement statement = connection.prepareStatement(query);
                     ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    Airport airline = new Airport(
-                            resultSet.getInt("id"),
-                            resultSet.getString("name"));
-                    airlines.add(airline);
+                    City airport = new City(
+                            resultSet.getString("id"),
+                            resultSet.getString("name"),
+                            resultSet.getString("id_city"));
+                    airports.add(airport);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return airlines;
+        return airports;
     }
 
     @Override
-    public Optional<Airport> findById(int id) {
+    public Optional<City> findById(String id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM airline WHERE id = ?";
+            String query = "SELECT * FROM airport WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setInt(1, id);
+                statement.setString(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
-                        Airport airline = new Airport(
-                                resultSet.getInt("id"),
-                                resultSet.getString("name"));
-                        return Optional.of(airline);
+                        City airport = new City(
+                                resultSet.getString("id"),
+                                resultSet.getString("name"),
+                                resultSet.getString("id_city"));
+                        return Optional.of(airport);
                     }
                 }
             }
@@ -79,11 +80,13 @@ public class AirlineMYSQLRepository implements AirlineRepository {
     }
 
     @Override
-    public void save(Airport airline) {
+    public void save(City airport) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "INSERT INTO airline (name) VALUES (?)";
+            String query = "INSERT INTO airport (id,name,id_city) VALUES (?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, airline.getName());
+                statement.setString(1, airport.getId());
+                statement.setString(1, airport.getName());
+                statement.setString(1, airport.getCityId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -92,12 +95,13 @@ public class AirlineMYSQLRepository implements AirlineRepository {
     }
 
     @Override
-    public void update(Airport airline) {
+    public void update(City airport) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE airline SET name = ? WHERE id = ?";
+            String query = "UPDATE airport SET name = ?, id_city = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, airline.getName());
-                statement.setInt(2, airline.getId());
+                statement.setString(1, airport.getName());
+                statement.setString(2, airport.getCityId());
+                statement.setString(3, airport.getId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {

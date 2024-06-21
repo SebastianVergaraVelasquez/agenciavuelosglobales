@@ -51,7 +51,7 @@ public class PlaneMySQLRepository implements PlaneRepository {
                             resultSet.getInt("id"),
                             resultSet.getString("plates"),
                             resultSet.getInt("capacity"),
-                            resultSet.getDate("fabrication_date"),
+                            resultSet.getDate("fabircation_date"),
                             resultSet.getInt("id_status"),
                             resultSet.getInt("id_model")
                             );
@@ -76,7 +76,7 @@ public class PlaneMySQLRepository implements PlaneRepository {
                             resultSet.getInt("id"),
                             resultSet.getString("plates"),
                             resultSet.getInt("capacity"),
-                            resultSet.getDate("fabrication_date"),
+                            resultSet.getDate("fabircation_date"),
                             resultSet.getInt("id_status"),
                             resultSet.getInt("id_model")
                             );
@@ -93,7 +93,7 @@ public class PlaneMySQLRepository implements PlaneRepository {
     @Override
     public void save(Plane plane) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "INSERT INTO plane (plates,capacity,fabrication_date,id_status,id_model) VALUES (?,?,?,?,?)";
+            String query = "INSERT INTO plane (plates,capacity,fabircation_date,id_status,id_model) VALUES (?,?,?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, plane.getPlates());
                 statement.setInt(2, plane.getCapacity());
@@ -111,10 +111,14 @@ public class PlaneMySQLRepository implements PlaneRepository {
     public void update(Plane plane) {
         //Actualización temporal, faltan los demás campos, solo se actualiza la placa
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE plane SET plates = ? WHERE id = ?";
+            String query = "UPDATE plane SET plates = ?, capacity = ?, fabircation_date = ?, id_status = ?, id_model = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, plane.getPlates());
-                statement.setInt(2, plane.getId());
+                statement.setInt(2, plane.getCapacity());
+                statement.setDate(3, plane.getFabrication_date());
+                statement.setInt(4, plane.getId_status());
+                statement.setInt(5, plane.getId_model());
+                statement.setInt(6, plane.getId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
