@@ -22,10 +22,10 @@ public class DocumentTypeMYSQLRepository implements DocumentTypeRepository {
     @Override
     public void save(DocumentType documentType) {
         try (Connection connection = DriverManager.getConnection(url,user,password)){
-            String query = "INSERT INTO document_type (id, name) VALUES (?,?)";
+            String query = "INSERT INTO document_type (name) VALUES (?)";
             try (PreparedStatement statement = connection.prepareStatement(query)){
-                statement.setInt(1,documentType.getId());
-                statement.setString(2,documentType.getName());
+                statement.setString(1,documentType.getName());
+                statement.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -39,6 +39,7 @@ public class DocumentTypeMYSQLRepository implements DocumentTypeRepository {
             try (PreparedStatement statement = connection.prepareStatement(query)){
                 statement.setInt(1,documentType.getId());
                 statement.setString(2,documentType.getName());
+                statement.executeUpdate();
             }
         }catch (SQLException e){
             e.printStackTrace();
