@@ -66,20 +66,22 @@ public class CountryMYSQLRepository implements CountryRepository {
 
     @Override
     public Optional<Country> findById(String id) {
-        try (Connection connection = DriverManager.getConnection(url, user, password)){
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT * FROM country WHERE id = ?";
-            try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()){
-                Country country = new Country(
-                    resultSet.getString("id"),
-                    resultSet.getString("name")
-                    );
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                    Country country = new Country(
+                            resultSet.getString("id"),
+                            resultSet.getString("name"));
                     return Optional.of(country);
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }   
-        return Optional.empty();
+        }
+    }catch(SQLException e)
+    {e.printStackTrace();
+        }return Optional.empty();
     }
 
     @Override
