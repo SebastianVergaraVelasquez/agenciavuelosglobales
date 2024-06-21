@@ -26,7 +26,7 @@ public class DocumentService {
     }
 
     public void deleteDocumentTypeById(int id) {
-        documentTypeRepository.deleteById(id);
+        documentTypeRepository.delete(id);
     }
 
     public List<DocumentType> getAllDocumentTypes() {
