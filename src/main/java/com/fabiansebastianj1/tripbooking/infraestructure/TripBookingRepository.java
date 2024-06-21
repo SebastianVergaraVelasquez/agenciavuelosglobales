@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface TripBookingRepository {
     void save(TripBooking tripBooking);
     void update(TripBooking tripBooking);
-    void delete(int tripBooking);
+    void delete(int id);
     Optional<TripBooking> findById(int id);
     List<TripBooking> findAll();
 }

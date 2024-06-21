@@ -14,23 +14,23 @@ public class PlaneService {
         this.planeRepository = planeRepository;
     }
 
-    public void createManufacturer(Plane plane){
+    public void createPlane(Plane plane){
         planeRepository.save(plane);
     }
 
-    public Optional<Plane> findManufacturerById (int id){
+    public Optional<Plane> findPlaneById (int id){
         return planeRepository.findById(id);
     }
 
-    public List<Plane> findAllManufacturers(){
+    public List<Plane> findAllPlanes(){
         return planeRepository.findAll();
     }
 
-    public void deleteManufacturer(int id){
+    public void deletePlane(int id){
         planeRepository.delete(id);
     }
 
-    public void updateManufacturer(Plane plane){
+    public void updatePlane(Plane plane){
         planeRepository.update(plane);
     }
 }

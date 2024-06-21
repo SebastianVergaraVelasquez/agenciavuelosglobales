@@ -18,7 +18,9 @@ public class TripBookingService {
         tripBookingRepository.save(tripBooking);
     }
 
-    public void deleteTripBooking(int id) {tripBookingRepository.delete(id);}
+    public void deleteTripBooking(int id) {
+        tripBookingRepository.delete(id);
+    }
 
     public void updateTripBooking(TripBooking tripBooking) {
         tripBookingRepository.update(tripBooking);

@@ -14,23 +14,23 @@ public class TripService {
         this.tripRepository = tripRepository;
     }
 
-    public void createManufacturer(Trip trip){
+    public void createTrip(Trip trip){
         tripRepository.save(trip);
     }
 
-    public Optional<Trip> findManufacturerById (int id){
+    public Optional<Trip> findTripById (int id){
         return tripRepository.findById(id);
     }
 
-    public List<Trip> findAllManufacturers(){
+    public List<Trip> findAllTrips(){
         return tripRepository.findAll();
     }
 
-    public void deleteManufacturer(int id){
+    public void deleteTrip(int id){
         tripRepository.delete(id);
     }
 
-    public void updateManufacturer(Trip trip){
+    public void updateTrip(Trip trip){
         tripRepository.update(trip);
     }
 }

@@ -44,6 +44,4 @@ public class Fare {
     public void setValue(double value) {
         this.value = value;
     }
-
-    
 }

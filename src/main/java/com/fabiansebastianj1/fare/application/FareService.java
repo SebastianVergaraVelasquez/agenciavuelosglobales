@@ -13,23 +13,23 @@ public class FareService {
         this.fareRepository = fareRepository;
     }
 
-    public void createManufacturer(Fare fare){
+    public void createFare(Fare fare){
         fareRepository.save(fare);
     }
 
-    public Optional<Fare> findManufacturerById (int id){
+    public Optional<Fare> findFareById (int id){
         return fareRepository.findById(id);
     }
 
-    public List<Fare> findAllManufacturers(){
+    public List<Fare> findAllFares(){
         return fareRepository.findAll();
     }
 
-    public void deleteManufacturer(int id){
+    public void deleteFare(int id){
         fareRepository.delete(id);
     }
 
-    public void updateManufacturer(Fare fare){
+    public void updateFare(Fare fare){
         fareRepository.update(fare);
     }
 }

@@ -14,23 +14,23 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-     public void createManufacturer(Employee employee){
+     public void createEmployee(Employee employee){
         employeeRepository.save(employee);
     }
 
-    public Optional<Employee> findManufacturerById (String id){
+    public Optional<Employee> findEmployeeById (String id){
         return employeeRepository.findById(id);
     }
 
-    public List<Employee> findAllManufacturers(){
+    public List<Employee> findAllEmployees(){
         return employeeRepository.findAll();
     }
 
-    public void deleteManufacturer(String id){
+    public void deleteEmployee(String id){
         employeeRepository.delete(id);
     }
 
-    public void updateManufacturer(Employee employee){
+    public void updateEmployee(Employee employee){
         employeeRepository.update(employee);
     }
 }
