@@ -1,4 +1,4 @@
-package com.fabiansebastianj1.status.adapters.out;
+package com.fabiansebastianj1.tripbookingdetails.adapters.out;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,15 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.fabiansebastianj1.status.domain.models.Status;
-import com.fabiansebastianj1.status.infrastructure.StatusRepository;
+import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetails;
+import com.fabiansebastianj1.tripbookingdetails.infrastructure.TripBookingDetailsRepository;
 
-public class StatusMYSQLRepository implements StatusRepository {
+public class TripBookingDetailsMYSQLRepository implements TripBookingDetailsRepository {
     private final String url;
     private final String user;
     private final String password;
 
-    public StatusMYSQLRepository(String url, String user, String password) {
+    public TripBookingDetailsMYSQLRepository(String url, String user, String password) {
         this.url = url;
         this.user = user;
         this.password = password;
@@ -26,7 +26,7 @@ public class StatusMYSQLRepository implements StatusRepository {
     @Override
     public void delete(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "DELETE FROM status WHERE id = ?";
+            String query = "DELETE FROM trip_booking_detail WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, id);
                 statement.executeUpdate();
@@ -37,39 +37,43 @@ public class StatusMYSQLRepository implements StatusRepository {
     }
 
     @Override
-    public List<Status> findAll() {
-        List<Status> statuses = new ArrayList<>();
+    public List<TripBookingDetails> findAll() {
+        List<TripBookingDetails> tripBookingDetails = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM status";
+            String query = "SELECT * FROM trip_booking_detail";
             try (PreparedStatement statement = connection.prepareStatement(query);
                  ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    Status status = new Status(
+                    TripBookingDetails tripBookingDetail = new TripBookingDetails(
                             resultSet.getInt("id"),
-                            resultSet.getString("name")
+                            resultSet.getInt("id_trip_booking"),
+                            resultSet.getString("id_customer"),
+                            resultSet.getInt("id_fare")
                             );
-                            statuses.add(status);
+                            tripBookingDetails.add(tripBookingDetail);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return statuses;
+        return tripBookingDetails;
     }
 
     @Override
-    public Optional<Status> findById(int id) {
+    public Optional<TripBookingDetails> findById(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM status WHERE id = ?";
+            String query = "SELECT * FROM trip_booking_detail WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
-                        Status status = new Status(
+                        TripBookingDetails tripBookingDetail = new TripBookingDetails(
                             resultSet.getInt("id"),
-                            resultSet.getString("name")
+                            resultSet.getInt("id_trip_booking"),
+                            resultSet.getString("id_customer"),
+                            resultSet.getInt("id_fare")
                             );
-                        return Optional.of(status);
+                        return Optional.of(tripBookingDetail);
                     }
                 }
             }
@@ -80,11 +84,13 @@ public class StatusMYSQLRepository implements StatusRepository {
     }
 
     @Override
-    public void save(Status status) {
+    public void save(TripBookingDetails tripBookingDetail) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "INSERT INTO status (name) VALUES (?)";
+            String query = "INSERT INTO trip_booking_detail (id_trip_booking, id_customer, id_fare) VALUES (?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, status.getName());
+                statement.setInt(1, tripBookingDetail.getTripBookingId());
+                statement.setString(2, tripBookingDetail.getCustomerId());
+                statement.setInt(3, tripBookingDetail.getFareId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -93,13 +99,14 @@ public class StatusMYSQLRepository implements StatusRepository {
     }
 
     @Override
-    public void update(Status status) {
-        //Actualización temporal, faltan los demás campos, solo se actualiza la placa
+    public void update(TripBookingDetails tripBookingDetail) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE status SET name = ? WHERE id = ?";
+            String query = "UPDATE trip_booking_detail SET id_trip_booking = ?, id_customer = ?, id_fare = ?  WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, status.getName());
-                statement.setInt(2, status.getId());
+                statement.setInt(1, tripBookingDetail.getTripBookingId());
+                statement.setString(2, tripBookingDetail.getCustomerId());
+                statement.setInt(3, tripBookingDetail.getFareId());
+                statement.setInt(4, tripBookingDetail.getId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
