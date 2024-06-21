@@ -3,7 +3,7 @@ package com.fabiansebastianj1.manufacturers.application;
 import java.util.List;
 import java.util.Optional;
 
-import com.fabiansebastianj1.manufacturers.domain.models.Model;
+import com.fabiansebastianj1.manufacturers.domain.models.Manufacturer;
 import com.fabiansebastianj1.manufacturers.infrastructure.ManufacturerRepository;
 
 public class ManufacturerService {
@@ -13,15 +13,15 @@ public class ManufacturerService {
         this.manufacturerRepository = manufacturerRepository;
     }
 
-    public void createManufacturer(Model manufacturer){
+    public void createManufacturer(Manufacturer manufacturer){
         manufacturerRepository.save(manufacturer);
     }
 
-    public Optional<Model> findManufacturerById (int id){
+    public Optional<Manufacturer> findManufacturerById (int id){
         return manufacturerRepository.findById(id);
     }
 
-    public List<Model> findAllManufacturers(){
+    public List<Manufacturer> findAllManufacturers(){
         return manufacturerRepository.findAll();
     }
 
@@ -29,7 +29,7 @@ public class ManufacturerService {
         manufacturerRepository.delete(id);
     }
 
-    public void updateManufacturer(Model manufacturer){
+    public void updateManufacturer(Manufacturer manufacturer){
         manufacturerRepository.update(manufacturer);
     }
 }
