@@ -13,7 +13,7 @@ import com.fabiansebastianj1.airlines.domain.models.Airline;
 import com.fabiansebastianj1.airlines.infrastructure.AirlineRepository;
 
 public class AirlineMYSQLRepository implements AirlineRepository {
-    
+
     private final String url;
     private final String user;
     private final String password;
@@ -39,18 +39,18 @@ public class AirlineMYSQLRepository implements AirlineRepository {
 
     @Override
     public List<Airline> findAll() {
-        List<Airline> airlines = new ArrayList<>();           
+        List<Airline> airlines = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM airline";   
+            String query = "SELECT * FROM airline";
             try (PreparedStatement statement = connection.prepareStatement(query);
-                 ResultSet resultSet = statement.executeQuery()) {
+                    ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     Airline airline = new Airline(
-                        resultSet.getInt("id"),
-                        resultSet.getString("nombre"));
+                            resultSet.getInt("id"),
+                            resultSet.getString("nombre"));
                     airlines.add(airline);
                 }
-            }           
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -61,14 +61,15 @@ public class AirlineMYSQLRepository implements AirlineRepository {
     public Optional<Airline> findById(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT * FROM airline WHERE id = ?";
-            try (PreparedStatement statement = connection.prepareStatement(query);
-                 ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    Airline airline = new Airline(
-                        resultSet.getInt("id"),
-                        resultSet.getString("nombre")
-                    );
-                    return Optional.of(airline);
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        Airline airline = new Airline(
+                                resultSet.getInt("id"),
+                                resultSet.getString("nombre"));
+                        return Optional.of(airline);
+                    }
                 }
             }
         } catch (SQLException e) {
