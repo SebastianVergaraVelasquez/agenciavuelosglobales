@@ -52,7 +52,7 @@ public class TripStatusMYSQLRepository implements TripStatusRepository{
     @Override
     public void update(TripStatus tripStatus) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE country SET name = ? WHERE id = ?";
+            String query = "UPDATE trip_status SET name = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, tripStatus.getName());
                 statement.setInt(2, tripStatus.getId());
