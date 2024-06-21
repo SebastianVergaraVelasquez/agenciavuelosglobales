@@ -47,7 +47,7 @@ public class AirlineMYSQLRepository implements AirlineRepository {
                 while (resultSet.next()) {
                     Airline airline = new Airline(
                             resultSet.getInt("id"),
-                            resultSet.getString("nombre"));
+                            resultSet.getString("name"));
                     airlines.add(airline);
                 }
             }
@@ -67,7 +67,7 @@ public class AirlineMYSQLRepository implements AirlineRepository {
                     if (resultSet.next()) {
                         Airline airline = new Airline(
                                 resultSet.getInt("id"),
-                                resultSet.getString("nombre"));
+                                resultSet.getString("name"));
                         return Optional.of(airline);
                     }
                 }
@@ -81,9 +81,9 @@ public class AirlineMYSQLRepository implements AirlineRepository {
     @Override
     public void save(Airline airline) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "INSERT INTO airline (nombre) VALUES (?)";
+            String query = "INSERT INTO airline (name) VALUES (?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, airline.getNombre());
+                statement.setString(1, airline.getName());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -94,9 +94,9 @@ public class AirlineMYSQLRepository implements AirlineRepository {
     @Override
     public void update(Airline airline) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE airline SET nombre = ? WHERE id = ?";
+            String query = "UPDATE airline SET name = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, airline.getNombre());
+                statement.setString(1, airline.getName());
                 statement.setInt(2, airline.getId());
                 statement.executeUpdate();
             }
