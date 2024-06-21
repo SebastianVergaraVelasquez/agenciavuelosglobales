@@ -25,60 +25,64 @@ public class RevisionMYSQLRepository implements RevisionRepository {
 
     @Override
     public void save(Revision revision) {
-        try (Connection connection = DriverManager.getConnection(url,user,password)){
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "INSERT INTO revision (revision_date,id_plane) VALUES (?,?)";
-            try (PreparedStatement statement = connection.prepareStatement(query)){
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setDate(1, revision.getRevisionDate());
                 statement.setInt(2, revision.getPlaneId());
                 statement.executeUpdate();
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void update(Revision revision) {
-        try (Connection connection = DriverManager.getConnection(url,user,password)){
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "UPDATE revision SET revision_date = ?, id_plane = ? WHERE id=?";
-            try (PreparedStatement statement = connection.prepareStatement(query)){
-                statement.setDate(1,revision.getRevisionDate());
-                statement.setInt(2,revision.getPlaneId());
-                statement.setInt(3,revision.getId());
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setDate(1, revision.getRevisionDate());
+                statement.setInt(2, revision.getPlaneId());
+                statement.setInt(3, revision.getId());
                 statement.executeUpdate();
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void delete(int id) {
-        try (Connection connection = DriverManager.getConnection(url,user,password)) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "DELETE FROM revision WHERE id=?";
-            try (PreparedStatement statement = connection.prepareStatement(query)){
-                statement.setInt(1,id);
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, id);
                 statement.executeUpdate();
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public Optional<Revision> findById(int id) {
-        try (Connection connection = DriverManager.getConnection(url,user,password)) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT * FROM revision WHERE id=?";
-            try (PreparedStatement statement = connection.prepareStatement(query)){
-                ResultSet resultSet = statement.executeQuery();
-                    Revision revision = new Revision(
-                            resultSet.getInt("id"),
-                            resultSet.getDate("revision_date"),
-                            resultSet.getInt("id_plane")
-                    );
-                    return Optional.of(revision);
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        Revision revision = new Revision(
+                                resultSet.getInt("id"),
+                                resultSet.getDate("revision_date"),
+                                resultSet.getInt("id_plane"));
+                        return Optional.of(revision);
+                    }
+
+                }
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return Optional.empty();
@@ -87,22 +91,21 @@ public class RevisionMYSQLRepository implements RevisionRepository {
     @Override
     public List<Revision> findAll() {
         List<Revision> revisions = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url,user,password)){
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT * FROM revision";
             try (PreparedStatement statement = connection.prepareStatement(query);
-                ResultSet resultSet = statement.executeQuery()){
-                    while (resultSet.next()){
-                        Revision revision = new Revision(
-                                resultSet.getInt("id"),
-                                resultSet.getDate("revision_date"),
-                                resultSet.getInt("id_plane")
-                        );
-                        revisions.add(revision);
-                    }
+                    ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Revision revision = new Revision(
+                            resultSet.getInt("id"),
+                            resultSet.getDate("revision_date"),
+                            resultSet.getInt("id_plane"));
+                    revisions.add(revision);
                 }
-            } catch (SQLException e){
-                e.printStackTrace();
             }
-        return List.of();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return revisions;
     }
 }

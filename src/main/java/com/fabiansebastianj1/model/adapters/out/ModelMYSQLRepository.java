@@ -27,7 +27,7 @@ public class ModelMYSQLRepository implements ModelRepository {
     public void delete(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "DELETE FROM model WHERE id = ?";
-            try(PreparedStatement statement = connection.prepareStatement(query)){
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, id);
                 statement.executeUpdate();
             }
@@ -38,19 +38,19 @@ public class ModelMYSQLRepository implements ModelRepository {
 
     @Override
     public List<Model> findAll() {
-        List<Model> manufacturers = new ArrayList<>();           
-        try (Connection connection = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT * FROM model";   
+        List<Model> manufacturers = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM model";
             try (PreparedStatement statement = connection.prepareStatement(query);
-                ResultSet resultSet = statement.executeQuery()){
-                    while (resultSet.next()) {
-                        Model manufacturer = new Model(
+                    ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Model manufacturer = new Model(
                             resultSet.getInt("id"),
                             resultSet.getString("name"),
                             resultSet.getInt("id_manufacturer"));
-                            manufacturers.add(manufacturer);
-                    }
-                }           
+                    manufacturers.add(manufacturer);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -59,21 +59,22 @@ public class ModelMYSQLRepository implements ModelRepository {
 
     @Override
     public Optional<Model> findById(int id) {
-        try (Connection connection = DriverManager.getConnection(url, user, password)){
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT * FROM model WHERE id = ?";
-            try( PreparedStatement statement = connection.prepareStatement(query)){ 
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, id);
-                try (ResultSet resultSet = statement.executeQuery()){
-                    Model model = new Model(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getInt("id_manufacturer"))
-                    ;
-                    return Optional.of(model);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        Model model = new Model(
+                                resultSet.getInt("id"),
+                                resultSet.getString("name"),
+                                resultSet.getInt("id_manufacturer"));
+                        return Optional.of(model);
+                    }
                 }
-            }    
+            }
         } catch (SQLException e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
         return Optional.empty();
     }
