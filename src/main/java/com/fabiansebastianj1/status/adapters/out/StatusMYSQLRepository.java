@@ -1,4 +1,4 @@
-package com.fabiansebastianj1.trip.adapters.out;
+package com.fabiansebastianj1.status.adapters.out;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,16 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.fabiansebastianj1.trip.domain.models.Trip;
-import com.fabiansebastianj1.trip.infrastructure.TripRepository;
+import com.fabiansebastianj1.status.domain.models.Status;
+import com.fabiansebastianj1.status.infrastructure.StatusRepository;
 
-public class TripMYSQLRepository implements TripRepository {
-
+public class StatusMYSQLRepository implements StatusRepository {
     private final String url;
     private final String user;
     private final String password;
 
-    public TripMYSQLRepository(String url, String user, String password) {
+    public StatusMYSQLRepository(String url, String user, String password) {
         this.url = url;
         this.user = user;
         this.password = password;
@@ -27,7 +26,7 @@ public class TripMYSQLRepository implements TripRepository {
     @Override
     public void delete(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "DELETE FROM trip WHERE id = ?";
+            String query = "DELETE FROM status WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, id);
                 statement.executeUpdate();
@@ -38,41 +37,39 @@ public class TripMYSQLRepository implements TripRepository {
     }
 
     @Override
-    public List<Trip> findAll() {
-        List<Trip> trips = new ArrayList<>();
+    public List<Status> findAll() {
+        List<Status> statuses = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM trip";
+            String query = "SELECT * FROM status";
             try (PreparedStatement statement = connection.prepareStatement(query);
                  ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    Trip trip = new Trip(
+                    Status status = new Status(
                             resultSet.getInt("id"),
-                            resultSet.getDate("trip_date"),
-                            resultSet.getDouble("price_tripe")
+                            resultSet.getString("name")
                             );
-                        trips.add(trip);
+                            statuses.add(status);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return trips;
+        return statuses;
     }
 
     @Override
-    public Optional<Trip> findById(int id) {
+    public Optional<Status> findById(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM trip WHERE id = ?";
+            String query = "SELECT * FROM status WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
-                        Trip trip = new Trip(
+                        Status status = new Status(
                             resultSet.getInt("id"),
-                            resultSet.getDate("trip_date"),
-                            resultSet.getDouble("price_tripe")
+                            resultSet.getString("name")
                             );
-                        return Optional.of(trip);
+                        return Optional.of(status);
                     }
                 }
             }
@@ -83,12 +80,11 @@ public class TripMYSQLRepository implements TripRepository {
     }
 
     @Override
-    public void save(Trip trip) {
+    public void save(Status status) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "INSERT INTO trip (trip_date,price_tripe) VALUES (?,?)";
+            String query = "INSERT INTO status (name) VALUES (?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setDate(1, trip.getDate());
-                statement.setDouble(2, trip.getPrice());
+                statement.setString(1, status.getName());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,19 +92,17 @@ public class TripMYSQLRepository implements TripRepository {
     }
 
     @Override
-    public void update(Trip trip) {
+    public void update(Status status) {
         //Actualización temporal, faltan los demás campos, solo se actualiza la placa
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE trip SET trip_date = ?, price_tripe = ?  WHERE id = ?";
+            String query = "UPDATE status SET name = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setDate(1, trip.getDate());
-                statement.setDouble(2, trip.getPrice());
-                statement.setInt(2, trip.getId());
+                statement.setString(1, status.getName());
+                statement.setInt(2, status.getId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
 }

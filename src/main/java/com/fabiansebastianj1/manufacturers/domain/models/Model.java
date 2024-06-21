@@ -1,11 +1,11 @@
 package com.fabiansebastianj1.manufacturers.domain.models;
 
-public class Manufacturer {
+public class Model {
  
     private int id; 
     private String nombre;
 
-    public Manufacturer( int id, String nombre){
+    public Model( int id, String nombre){
         this.id = id;
         this. nombre = nombre;
     }

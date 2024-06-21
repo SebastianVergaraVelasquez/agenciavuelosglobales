@@ -1,4 +1,4 @@
-package com.fabiansebastianj1.manufacturers.adapters.out;
+package com.fabiansebastianj1.model.adapters.out;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,16 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.fabiansebastianj1.manufacturers.domain.models.Model;
-import com.fabiansebastianj1.manufacturers.infrastructure.ManufacturerRepository;
+import com.fabiansebastianj1.model.domain.models.Model;
+import com.fabiansebastianj1.model.infrastructure.ModelRepository;
 
-public class ManufacturerMYSQLRepository implements ManufacturerRepository{
-    
+public class ModelMYSQLRepository implements ModelRepository {
     private final String url;
     private final String user;
     private final String password;
 
-    public ManufacturerMYSQLRepository(String url, String user, String password) {
+    public ModelMYSQLRepository(String url, String user, String password) {
         this.url = url;
         this.user = user;
         this.password = password;
@@ -27,7 +26,7 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
     @Override
     public void delete(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "DELETE FROM manufacturer WHERE id = ?";
+            String query = "DELETE FROM model WHERE id = ?";
             try(PreparedStatement statement = connection.prepareStatement(query)){
                 statement.setInt(1, id);
                 statement.executeUpdate();
@@ -41,13 +40,14 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
     public List<Model> findAll() {
         List<Model> manufacturers = new ArrayList<>();           
         try (Connection connection = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT * FROM manufacturer";   
+            String query = "SELECT * FROM model";   
             try (PreparedStatement statement = connection.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery()){
                     while (resultSet.next()) {
                         Model manufacturer = new Model(
                             resultSet.getInt("id"),
-                            resultSet.getString("name"));
+                            resultSet.getString("name"),
+                            resultSet.getInt("id_manufacturer"));
                             manufacturers.add(manufacturer);
                     }
                 }           
@@ -60,15 +60,18 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
     @Override
     public Optional<Model> findById(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT * FROM manufacturers WHERE id = ?";
-            try( PreparedStatement statement = connection.prepareStatement(query); 
-                ResultSet resultSet = statement.executeQuery()){
-                    Model manufacturer = new Model(
+            String query = "SELECT * FROM model WHERE id = ?";
+            try( PreparedStatement statement = connection.prepareStatement(query)){ 
+                statement.setInt(1, id);
+                try (ResultSet resultSet = statement.executeQuery()){
+                    Model model = new Model(
                         resultSet.getInt("id"),
-                        resultSet.getString("name")
-                    );
-                    return Optional.of(manufacturer);
+                        resultSet.getString("name"),
+                        resultSet.getInt("id_manufacturer"))
+                    ;
+                    return Optional.of(model);
                 }
+            }    
         } catch (SQLException e) {
            e.printStackTrace();
         }
@@ -76,11 +79,12 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
     }
 
     @Override
-    public void save(Model manufacturer) {
+    public void save(Model model) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "INSERT INTO manufacturer (name) VALUES (?)";
+            String query = "INSERT INTO model (name,id_manufacturer) VALUES (?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, manufacturer.getNombre());
+                statement.setString(1, model.getName());
+                statement.setInt(2, model.getManufacturerId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -89,12 +93,13 @@ public class ManufacturerMYSQLRepository implements ManufacturerRepository{
     }
 
     @Override
-    public void update(Model manufacturer) {
+    public void update(Model model) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE manufacturer SET name = ? WHERE id = ?";
+            String query = "UPDATE model SET name = ? , id_manufacturer = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, manufacturer.getNombre());
-                statement.setInt(2, manufacturer.getId());
+                statement.setString(1, model.getName());
+                statement.setInt(2, model.getManufacturerId());
+                statement.setInt(3, model.getId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
