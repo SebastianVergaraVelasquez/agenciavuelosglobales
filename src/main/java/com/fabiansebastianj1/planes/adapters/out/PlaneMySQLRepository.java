@@ -51,7 +51,7 @@ public class PlaneMySQLRepository implements PlaneRepository {
                             resultSet.getInt("id"),
                             resultSet.getString("plates"),
                             resultSet.getInt("capacity"),
-                            resultSet.getDate("fabircation_date"),
+                            resultSet.getString("fabircation_date"),
                             resultSet.getInt("id_status"),
                             resultSet.getInt("id_airline"),
                             resultSet.getInt("id_model")
@@ -77,7 +77,7 @@ public class PlaneMySQLRepository implements PlaneRepository {
                             resultSet.getInt("id"),
                             resultSet.getString("plates"),
                             resultSet.getInt("capacity"),
-                            resultSet.getDate("fabircation_date"),
+                            resultSet.getString("fabircation_date"),
                             resultSet.getInt("id_status"),
                             resultSet.getInt("id_airline"),
                             resultSet.getInt("id_model")
@@ -95,11 +95,11 @@ public class PlaneMySQLRepository implements PlaneRepository {
     @Override
     public void save(Plane plane) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "INSERT INTO plane (plates,capacity,fabircation_date,id_status, id_airline,id_model) VALUES (?,?,?,?,?,?)";
+            String query = "INSERT INTO plane (plates,capacity,fabircation_date,id_status,id_airline,id_model) VALUES (?,?,?,?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, plane.getPlates());
                 statement.setInt(2, plane.getCapacity());
-                statement.setDate(3, plane.getFabricationDate());
+                statement.setString(3, plane.getFabricationDate());
                 statement.setInt(4, plane.getStatusId());
                 statement.setInt(5, plane.getAirlineId());
                 statement.setInt(6, plane.getModelId());
@@ -118,7 +118,7 @@ public class PlaneMySQLRepository implements PlaneRepository {
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, plane.getPlates());
                 statement.setInt(2, plane.getCapacity());
-                statement.setDate(3, plane.getFabricationDate());
+                statement.setString(3, plane.getFabricationDate());
                 statement.setInt(4, plane.getStatusId());
                 statement.setInt(5, plane.getAirlineId());
                 statement.setInt(6, plane.getModelId());

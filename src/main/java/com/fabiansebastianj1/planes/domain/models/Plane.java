@@ -7,12 +7,12 @@ public class Plane {
     private int id;
     private String plates;
     private int capacity;
-    private Date fabricationDate;
+    private String fabricationDate;
     private int statusId;
     private int airlineId;
     private int modelId;
     
-    public Plane(int id, String plates, int capacity, Date fabricationDate, int statusId, int airlineId, int modelId) {
+    public Plane(int id, String plates, int capacity, String fabricationDate, int statusId, int airlineId, int modelId) {
         this.id = id;
         this.plates = plates;
         this.capacity = capacity;
@@ -22,7 +22,7 @@ public class Plane {
         this.modelId = modelId;
     }
 
-    public Plane(String plates, int capacity, Date fabricationDate, int statusId, int airlineId, int modelId) {
+    public Plane(String plates, int capacity, String fabricationDate, int statusId, int airlineId, int modelId) {
         this.plates = plates;
         this.capacity = capacity;
         this.fabricationDate = fabricationDate;
@@ -55,11 +55,11 @@ public class Plane {
         this.capacity = capacity;
     }
 
-    public Date getFabricationDate() {
+    public String getFabricationDate() {
         return fabricationDate;
     }
 
-    public void setFabricationDate(Date fabricationDate) {
+    public void setFabricationDate(String fabricationDate) {
         this.fabricationDate = fabricationDate;
     }
 

@@ -7,6 +7,11 @@ public class Status {
         this.id = id;
         this.name = name;
     }
+
+    public Status(String name) {
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }
