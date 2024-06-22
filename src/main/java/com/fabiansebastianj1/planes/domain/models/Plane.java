@@ -7,17 +7,28 @@ public class Plane {
     private int id;
     private String plates;
     private int capacity;
-    private Date fabrication_date;
-    private int id_status;
-    private int id_model;
+    private Date fabricationDate;
+    private int statusId;
+    private int airlineId;
+    private int modelId;
     
-    public Plane(int id, String plates, int capacity, Date fabrication_date, int id_status, int id_model) {
+    public Plane(int id, String plates, int capacity, Date fabricationDate, int statusId, int airlineId, int modelId) {
         this.id = id;
         this.plates = plates;
         this.capacity = capacity;
-        this.fabrication_date = fabrication_date;
-        this.id_status = id_status;
-        this.id_model = id_model;
+        this.fabricationDate = fabricationDate;
+        this.statusId = statusId;
+        this.airlineId = airlineId;
+        this.modelId = modelId;
+    }
+
+    public Plane(String plates, int capacity, Date fabricationDate, int statusId, int airlineId, int modelId) {
+        this.plates = plates;
+        this.capacity = capacity;
+        this.fabricationDate = fabricationDate;
+        this.statusId = statusId;
+        this.airlineId = airlineId;
+        this.modelId = modelId;
     }
 
     public int getId() {
@@ -44,27 +55,35 @@ public class Plane {
         this.capacity = capacity;
     }
 
-    public Date getFabrication_date() {
-        return fabrication_date;
+    public Date getFabricationDate() {
+        return fabricationDate;
     }
 
-    public void setFabrication_date(Date fabrication_date) {
-        this.fabrication_date = fabrication_date;
+    public void setFabricationDate(Date fabricationDate) {
+        this.fabricationDate = fabricationDate;
     }
 
-    public int getId_status() {
-        return id_status;
+    public int getStatusId() {
+        return statusId;
     }
 
-    public void setId_status(int id_status) {
-        this.id_status = id_status;
+    public void setStatusId(int statusId) {
+        this.statusId = statusId;
     }
 
-    public int getId_model() {
-        return id_model;
+    public int getAirlineId() {
+        return airlineId;
     }
 
-    public void setId_model(int id_model) {
-        this.id_model = id_model;
+    public void setAirlineId(int airlineId) {
+        this.airlineId = airlineId;
     }
+
+    public int getModelId() {
+        return modelId;
+    }
+
+    public void setModelId(int modelId) {
+        this.modelId = modelId;
+    } 
 }
