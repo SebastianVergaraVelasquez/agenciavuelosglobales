@@ -11,4 +11,5 @@ public interface TripBookingRepository {
     void delete(int id);
     Optional<TripBooking> findById(int id);
     List<TripBooking> findAll();
+    Optional<TripBooking> findLast();
 }

@@ -4,10 +4,10 @@ import java.sql.Date;
 
 public class Trip {
     private int id;
-    private Date date;
+    private String date;
     private double price;
 
-    public Trip(int id, Date date, double price) {
+    public Trip(int id, String date, double price) {
         this.id = id;
         this.date = date;
         this.price = price;
@@ -21,11 +21,11 @@ public class Trip {
         this.id = id;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

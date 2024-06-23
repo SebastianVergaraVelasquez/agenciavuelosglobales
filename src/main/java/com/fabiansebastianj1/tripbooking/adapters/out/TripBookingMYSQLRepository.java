@@ -25,7 +25,7 @@ public class TripBookingMYSQLRepository implements TripBookingRepository {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "INSERT INTO trip_booking (date,id_trip) VALUES (?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setDate(1, tripBooking.getDate());
+                statement.setString(1, tripBooking.getDate());
                 statement.setInt(2, tripBooking.getId_trip());
                 statement.executeUpdate();
             }
@@ -39,7 +39,7 @@ public class TripBookingMYSQLRepository implements TripBookingRepository {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "UPDATE trip_booking SET date=?, id_trip=? WHERE id=?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setDate(1, tripBooking.getDate());
+                statement.setString(1, tripBooking.getDate());
                 statement.setInt(2, tripBooking.getId_trip());
                 statement.setInt(3, tripBooking.getId());
                 statement.executeUpdate();
@@ -72,7 +72,7 @@ public class TripBookingMYSQLRepository implements TripBookingRepository {
                     if (resultSet.next()) {
                         TripBooking tripBooking = new TripBooking(
                                 resultSet.getInt("id"),
-                                resultSet.getDate("date"),
+                                resultSet.getString("date"),
                                 resultSet.getInt("id_trip"));
                         return Optional.of(tripBooking);
                     }
@@ -94,7 +94,7 @@ public class TripBookingMYSQLRepository implements TripBookingRepository {
                 while (resultSet.next()) {
                     TripBooking tripBooking = new TripBooking(
                             resultSet.getInt("id"),
-                            resultSet.getDate("date"),
+                            resultSet.getString("date"),
                             resultSet.getInt("id_trip"));
                     tripBookings.add(tripBooking);
                 }
@@ -103,5 +103,25 @@ public class TripBookingMYSQLRepository implements TripBookingRepository {
             e.printStackTrace();
         }
         return tripBookings;
+    }
+
+    @Override
+    public Optional<TripBooking> findLast() {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM trip_booking ORDER BY id DESC LIMIT 1";
+            try (PreparedStatement statement = connection.prepareStatement(query);
+                 ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    TripBooking tripBooking = new TripBooking(
+                            resultSet.getInt("id"),
+                            resultSet.getString("date"),
+                            resultSet.getInt("id_trip"));
+                    return Optional.of(tripBooking);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 }

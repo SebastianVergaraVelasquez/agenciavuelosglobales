@@ -6,6 +6,14 @@ public class TripBookingDetails {
     private String customerId;
     private int fareId;
     
+    
+
+    public TripBookingDetails(int tripBookingId, String customerId, int fareId) {
+        this.tripBookingId = tripBookingId;
+        this.customerId = customerId;
+        this.fareId = fareId;
+    }
+
     public TripBookingDetails(int id, int tripBookingId, String customerId, int fareId) {
         this.id = id;
         this.tripBookingId = tripBookingId;

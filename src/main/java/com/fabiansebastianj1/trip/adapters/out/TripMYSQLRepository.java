@@ -47,7 +47,7 @@ public class TripMYSQLRepository implements TripRepository {
                 while (resultSet.next()) {
                     Trip trip = new Trip(
                             resultSet.getInt("id"),
-                            resultSet.getDate("trip_date"),
+                            resultSet.getString("trip_date"),
                             resultSet.getDouble("price_tripe")
                             );
                         trips.add(trip);
@@ -69,7 +69,7 @@ public class TripMYSQLRepository implements TripRepository {
                     if (resultSet.next()) {
                         Trip trip = new Trip(
                             resultSet.getInt("id"),
-                            resultSet.getDate("trip_date"),
+                            resultSet.getString("trip_date"),
                             resultSet.getDouble("price_tripe")
                             );
                         return Optional.of(trip);
@@ -87,7 +87,7 @@ public class TripMYSQLRepository implements TripRepository {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "INSERT INTO trip (trip_date,price_tripe) VALUES (?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setDate(1, trip.getDate());
+                statement.setString(1, trip.getDate());
                 statement.setDouble(2, trip.getPrice());
                 statement.executeUpdate();
             }
@@ -102,7 +102,7 @@ public class TripMYSQLRepository implements TripRepository {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "UPDATE trip SET trip_date = ?, price_tripe = ?  WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setDate(1, trip.getDate());
+                statement.setString(1, trip.getDate());
                 statement.setDouble(2, trip.getPrice());
                 statement.setInt(2, trip.getId());
                 statement.executeUpdate();
