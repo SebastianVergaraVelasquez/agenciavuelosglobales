@@ -1,8 +1,10 @@
 package com.fabiansebastianj1;
 
+import com.fabiansebastianj1.airlines.adapters.out.AirlineMYSQLRepository;
 import com.fabiansebastianj1.manufacturers.adapters.out.ManufacturerMYSQLRepository;
 import com.fabiansebastianj1.manufacturers.application.ManufacturerService;
 import com.fabiansebastianj1.manufacturers.domain.models.Manufacturer;
+import com.fabiansebastianj1.model.adapters.out.ModelMYSQLRepository;
 import com.fabiansebastianj1.planes.adapters.in.PlaneConsoleAdapter;
 import com.fabiansebastianj1.planes.adapters.out.PlaneMySQLRepository;
 import com.fabiansebastianj1.planes.application.PlaneService;
@@ -17,19 +19,23 @@ public class Main {
         String user = "root";
         String password = "123456";
 
-        // PlaneMySQLRepository planeMySQLRepository = new PlaneMySQLRepository(url, user, password);
-        // PlaneService planeService = new PlaneService(planeMySQLRepository);
-        // PlaneConsoleAdapter planeConsoleAdapter = new PlaneConsoleAdapter(planeService);
-        // planeConsoleAdapter.start();
+        PlaneMySQLRepository planeMySQLRepository = new PlaneMySQLRepository(url, user, password);
+        StatusMYSQLRepository statusMYSQLRepository = new StatusMYSQLRepository(url, user, password);
+        AirlineMYSQLRepository airlineMYSQLRepository = new AirlineMYSQLRepository(url, user, password);
+        ModelMYSQLRepository modelMYSQLRepository = new ModelMYSQLRepository(url, user, password);
+
+        PlaneService planeService = new PlaneService(planeMySQLRepository, statusMYSQLRepository,airlineMYSQLRepository,modelMYSQLRepository );
+        PlaneConsoleAdapter planeConsoleAdapter = new PlaneConsoleAdapter(planeService);
+        planeConsoleAdapter.start();
 
         // ManufacturerMYSQLRepository manufacturerMYSQLRepository = new ManufacturerMYSQLRepository(url, user, password);
         // ManufacturerService manufacturerService = new ManufacturerService(manufacturerMYSQLRepository);
         // Manufacturer manufacturer = new Manufacturer("Owo");
         // manufacturerService.createManufacturer(manufacturer);
 
-        StatusMYSQLRepository statusMYSQLRepository = new StatusMYSQLRepository(url, user, password);
-        StatusService statusService = new StatusService(statusMYSQLRepository);
-        // Status status = new Status("ok");
-        statusService.deleteStatus(1);
+        // StatusMYSQLRepository statusMYSQLRepository = new StatusMYSQLRepository(url, user, password);
+        // StatusService statusService = new StatusService(statusMYSQLRepository);
+        // Status status = new Status("fail");
+        // statusService.createStatus(status);
     }
 }

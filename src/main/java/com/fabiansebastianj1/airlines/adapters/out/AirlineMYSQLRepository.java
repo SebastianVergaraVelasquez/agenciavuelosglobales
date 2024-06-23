@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.fabiansebastianj1.airlines.domain.models.Airport;
+import com.fabiansebastianj1.airlines.domain.models.Airline;
 import com.fabiansebastianj1.airlines.infrastructure.AirlineRepository;
 
 public class AirlineMYSQLRepository implements AirlineRepository {
@@ -38,14 +38,14 @@ public class AirlineMYSQLRepository implements AirlineRepository {
     }
 
     @Override
-    public List<Airport> findAll() {
-        List<Airport> airlines = new ArrayList<>();
+    public List<Airline> findAll() {
+        List<Airline> airlines = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT * FROM airline";
             try (PreparedStatement statement = connection.prepareStatement(query);
                     ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    Airport airline = new Airport(
+                    Airline airline = new Airline(
                             resultSet.getInt("id"),
                             resultSet.getString("name"));
                     airlines.add(airline);
@@ -58,14 +58,14 @@ public class AirlineMYSQLRepository implements AirlineRepository {
     }
 
     @Override
-    public Optional<Airport> findById(int id) {
+    public Optional<Airline> findById(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT * FROM airline WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
-                        Airport airline = new Airport(
+                        Airline airline = new Airline(
                                 resultSet.getInt("id"),
                                 resultSet.getString("name"));
                         return Optional.of(airline);
@@ -79,7 +79,7 @@ public class AirlineMYSQLRepository implements AirlineRepository {
     }
 
     @Override
-    public void save(Airport airline) {
+    public void save(Airline airline) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "INSERT INTO airline (name) VALUES (?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -92,7 +92,7 @@ public class AirlineMYSQLRepository implements AirlineRepository {
     }
 
     @Override
-    public void update(Airport airline) {
+    public void update(Airline airline) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "UPDATE airline SET name = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {

@@ -3,7 +3,7 @@ package com.fabiansebastianj1.airport.application;
 import java.util.List;
 import java.util.Optional;
 
-import com.fabiansebastianj1.airport.domain.models.City;
+import com.fabiansebastianj1.airport.domain.models.Airport;
 import com.fabiansebastianj1.airport.infrastructure.AirportRepository;
 
 public class AirportService {
@@ -13,15 +13,15 @@ public class AirportService {
         this.airportRepository = airportRepository;
     }
 
-    public void createAirport(City airport) {
+    public void createAirport(Airport airport) {
         airportRepository.save(airport);
     }
 
-    public Optional<City> findAirportById(String id) {
+    public Optional<Airport> findAirportById(String id) {
         return airportRepository.findById(id);
     }
 
-    public List<City> findAllAirports() {
+    public List<Airport> findAllAirports() {
         return airportRepository.findAll();
     }
 
@@ -29,7 +29,7 @@ public class AirportService {
         airportRepository.delete(id);
     }
 
-    public void updateAirport(City airport) {
+    public void updateAirport(Airport airport) {
         airportRepository.update(airport);
     }
 }

@@ -10,5 +10,6 @@ public interface PlaneRepository {
     void update(Plane plane);
     void delete(int id);
     Optional<Plane> findById(int id);
+    Optional<Plane> findByPlate(String plate);
     List<Plane> findAll();
 }

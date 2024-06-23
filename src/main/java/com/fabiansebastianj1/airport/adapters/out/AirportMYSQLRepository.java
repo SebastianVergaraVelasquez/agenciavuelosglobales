@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.fabiansebastianj1.airport.domain.models.City;
+import com.fabiansebastianj1.airport.domain.models.Airport;
 import com.fabiansebastianj1.airport.infrastructure.AirportRepository;
 
 public class AirportMYSQLRepository implements AirportRepository {
@@ -37,14 +37,14 @@ public class AirportMYSQLRepository implements AirportRepository {
     }
 
     @Override
-    public List<City> findAll() {
-        List<City> airports = new ArrayList<>();
+    public List<Airport> findAll() {
+        List<Airport> airports = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT * FROM airport";
             try (PreparedStatement statement = connection.prepareStatement(query);
                     ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    City airport = new City(
+                    Airport airport = new Airport(
                             resultSet.getString("id"),
                             resultSet.getString("name"),
                             resultSet.getString("id_city"));
@@ -58,14 +58,14 @@ public class AirportMYSQLRepository implements AirportRepository {
     }
 
     @Override
-    public Optional<City> findById(String id) {
+    public Optional<Airport> findById(String id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT * FROM airport WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
-                        City airport = new City(
+                        Airport airport = new Airport(
                                 resultSet.getString("id"),
                                 resultSet.getString("name"),
                                 resultSet.getString("id_city"));
@@ -80,7 +80,7 @@ public class AirportMYSQLRepository implements AirportRepository {
     }
 
     @Override
-    public void save(City airport) {
+    public void save(Airport airport) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "INSERT INTO airport (id,name,id_city) VALUES (?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -95,7 +95,7 @@ public class AirportMYSQLRepository implements AirportRepository {
     }
 
     @Override
-    public void update(City airport) {
+    public void update(Airport airport) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "UPDATE airport SET name = ?, id_city = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {

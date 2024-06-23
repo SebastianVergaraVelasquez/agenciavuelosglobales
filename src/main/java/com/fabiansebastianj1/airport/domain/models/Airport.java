@@ -1,12 +1,12 @@
 package com.fabiansebastianj1.airport.domain.models;
 
-public class City {
+public class Airport {
 
     private String id;
     private String name;
     private String cityId;
 
-    public City(String id, String name, String cityId) {
+    public Airport(String id, String name, String cityId) {
         this.id = id;
         this.name = name;
         this.cityId = cityId;

@@ -2,11 +2,18 @@ package com.fabiansebastianj1.planes.adapters.in;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
+import com.fabiansebastianj1.airlines.domain.models.Airline;
+import com.fabiansebastianj1.country.domain.models.Country;
+import com.fabiansebastianj1.model.domain.models.Model;
 import com.fabiansebastianj1.planes.application.PlaneService;
 import com.fabiansebastianj1.planes.domain.models.Plane;
+import com.fabiansebastianj1.status.domain.models.Status;
 import com.fabiansebastianj1.validations.dateValidation;
+import com.fabiansebastianj1.validations.InputVali;
+import com.fabiansebastianj1.validations.ValidationExist;
 
 public class PlaneConsoleAdapter {
 
@@ -19,6 +26,7 @@ public class PlaneConsoleAdapter {
     public void start() {
         Scanner scanner = new Scanner(System.in);
         boolean executing = true;
+        InputVali inputVali = new InputVali();
 
         while (executing) {
             System.out.println("*** Modulo de aviones ***");
@@ -34,41 +42,58 @@ public class PlaneConsoleAdapter {
                     System.out.println(" ");
                     scanner.nextLine();
                     System.out.println("Ingrese la matrícula del avión");
-                    String plates = scanner.nextLine();
-                    //Verificar si ya existe
+                    String plates = verificarAvion(scanner);
                     System.out.println("Ingrese la capacidad del avión");
                     int capacity = scanner.nextInt();
                     scanner.nextLine();
                     System.out.println("Ingrese la fecha de fabricación en formato yyyy-MM-dd:");
-                    // Date fabricationDate = dateValidation.dateCheck();
+                    // Date fabricationDate = dateValidation.dateCheck(); //No sé de qué manera dejarlo
                     String fabricationDate = scanner.nextLine();
-                    System.out.println("Ingrese la id del estado del avión");
-                    //Acá deberíamos mostrar las opciones que tiene de estado, listarlas y que en el input ponga el id
-                    //Luego verificar que se ingrese un estado correcto
-                    int statusId = scanner.nextInt();
-                    System.out.println("Ingrese el id de la aerolínea a la que pertenece");
-                    int airlineId = scanner.nextInt();
-                    //Falta agregar las mismas validaciones que con status
-                    System.out.println("Ingrese la id del modelo del avión");
-                    //verificar igual que status
-                    int modelId = scanner.nextInt();
-                    Plane newPlane = new Plane(plates, capacity, fabricationDate, statusId,airlineId,modelId);
+                    // Acá deberíamos mostrar las opciones que tiene de estado, listarlas y que en
+                    mostrarStatuses();
+
+                    Status showStatus = ValidationExist.transformAndValidateObj(
+                            () -> planeService.findStatusById(inputVali.readInt("Ingrese la id del estado del avión")));
+                    int statusId = showStatus.getId();
+
+                    mostrarAirlines(); 
+
+                    Airline showAirline = ValidationExist.transformAndValidateObj(
+                            () -> planeService.findAirlineById(inputVali.readInt("Ingrese el id de la aerolínea a la que pertenece")));
+                    int airlineId = showAirline.getId();
+
+                    mostrarModels();
+
+                    Model showModel = ValidationExist.transformAndValidateObj(
+                    () -> planeService.findModelById(inputVali.readInt("Ingrese la id del modelo del avión")));
+
+                    int modelId = showModel.getId();
+                    
+                    Plane newPlane = new Plane(plates, capacity, fabricationDate, statusId, airlineId, modelId);
                     planeService.createPlane(newPlane);
+
                     break;
+
                 case 2:
                     System.out.println("*** Eliminar avión ***");
                     System.out.println(" ");
                     List<Plane> planes = planeService.findAllPlanes();
                     String leftAlignFormat = "| %-4d | %-10s | %-8d | %-15s | %-9d | %-8d | %-7d | %-15s |%n";
-                    System.out.format("+------+------------+----------+-----------------+-----------+----------+---------+%n");
-                    System.out.format("| ID   | Plates     | Capacity | Fabrication Date| Status ID | AirlineID| ModelID |%n");
-                    System.out.format("+------+------------+----------+-----------------+-----------+----------+---------+%n");
-                        
+                    System.out.format(
+                            "+------+------------+----------+-----------------+-----------+----------+---------+%n");
+                    System.out.format(
+                            "| ID   | Plates     | Capacity | Fabrication Date| Status ID | AirlineID| ModelID |%n");
+                    System.out.format(
+                            "+------+------------+----------+-----------------+-----------+----------+---------+%n");
+
                     for (Plane plane : planes) {
-                        System.out.format(leftAlignFormat, plane.getId(), plane.getPlates(), plane.getCapacity(), plane.getFabricationDate(), plane.getStatusId(), plane.getAirlineId(), plane.getModelId());
+                        System.out.format(leftAlignFormat, plane.getId(), plane.getPlates(), plane.getCapacity(),
+                                plane.getFabricationDate(), plane.getStatusId(), plane.getAirlineId(),
+                                plane.getModelId());
                     }
-                        
-                    System.out.format("+------+------------+----------+-----------------+-----------+----------+---------+-----------------+%n");
+
+                    System.out.format(
+                            "+------+------------+----------+-----------------+-----------+----------+---------+-----------------+%n");
                     int id = scanner.nextInt();
                     planeService.deletePlane(id);
                     break;
@@ -76,9 +101,52 @@ public class PlaneConsoleAdapter {
                     executing = false;
                     System.out.println("Saliendo del módulo de aviones");
                     break;
-            
+
                 default:
                     break;
             }
         }
-}}
+    }
+
+    public String verificarAvion(Scanner scanner) {
+        String plates;
+        while (true) {
+            plates = scanner.nextLine();
+            Optional<Plane> planeFinded = planeService.findPlaneByPlate(plates);
+            if (planeFinded.isPresent()) {
+                Plane plane = planeFinded.get();
+                System.out.println("Este avión ya ha sido registrado");
+                System.out.println(String.format("id: %s , plates: %s", plane.getId(), plane.getPlates()));
+                System.out.println("Ingrese una placa que no se haya registrado");
+            } else {
+                System.out.println("Este avión aún no se ha registado");
+                break;
+            }
+        }
+        return plates;
+    }
+
+    public void mostrarStatuses() {
+        System.out.println("Lista de estados");
+        List<Status> statuses = planeService.findAllStatuses();
+        for (Status status : statuses) {
+            System.out.println(String.format("id: %s, nombre: %s", status.getId(), status.getName()));
+        }
+    }
+
+    public void mostrarAirlines(){
+        System.out.println("Lista de aerolineas");
+        List<Airline> airlines =planeService.findAllAirlines();
+        for (Airline airline : airlines) {
+            System.out.println(String.format("id: %s, nombre: %s", airline.getId(), airline.getName()));
+        }
+    }
+
+    public void mostrarModels(){
+        System.out.println("Lista de modelos");
+        List<Model> models = planeService.findAllModels();
+        for (Model model : models) {
+            System.out.println(String.format("id: %s, nombre: %s", model.getId(), model.getName()));
+        }
+    }
+}

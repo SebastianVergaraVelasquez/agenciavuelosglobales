@@ -93,6 +93,33 @@ public class PlaneMySQLRepository implements PlaneRepository {
     }
 
     @Override
+    public Optional<Plane> findByPlate(String plate) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM plane WHERE plates = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, plate);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        Plane plane = new Plane(
+                            resultSet.getInt("id"),
+                            resultSet.getString("plates"),
+                            resultSet.getInt("capacity"),
+                            resultSet.getString("fabircation_date"),
+                            resultSet.getInt("id_status"),
+                            resultSet.getInt("id_airline"),
+                            resultSet.getInt("id_model")
+                            );
+                        return Optional.of(plane);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public void save(Plane plane) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "INSERT INTO plane (plates,capacity,fabircation_date,id_status,id_airline,id_model) VALUES (?,?,?,?,?,?)";

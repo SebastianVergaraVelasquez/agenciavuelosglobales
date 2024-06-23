@@ -1,17 +1,17 @@
 package com.fabiansebastianj1.airlines.infrastructure;
 
-import com.fabiansebastianj1.airlines.domain.models.Airport;
+import com.fabiansebastianj1.airlines.domain.models.Airline;
 import java.util.Optional;
 import java.util.List;
 
 public interface AirlineRepository {
-    void save(Airport airline);
+    void save(Airline airline);
 
-    void update(Airport airline);
+    void update(Airline airline);
 
     void delete(int id);
 
-    Optional<Airport> findById(int id);
+    Optional<Airline> findById(int id);
 
-    List<Airport> findAll();
+    List<Airline> findAll();
 }
