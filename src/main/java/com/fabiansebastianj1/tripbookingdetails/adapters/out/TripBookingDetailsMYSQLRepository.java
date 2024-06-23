@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetails;
+import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetailsDTO;
 import com.fabiansebastianj1.tripbookingdetails.infrastructure.TripBookingDetailsRepository;
 
 public class TripBookingDetailsMYSQLRepository implements TripBookingDetailsRepository {
@@ -112,5 +113,81 @@ public class TripBookingDetailsMYSQLRepository implements TripBookingDetailsRepo
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<TripBookingDetailsDTO> findTripBookingByCustomerId(String id) {
+        List<TripBookingDetailsDTO> tripBookingDetails = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT "+
+            "tbd.id AS booking_detail_id, "+
+            "tbd.id_trip_booking AS booking_id, "+
+            "tb.id_trip AS trip_id, "+
+            "tbd.id_customer AS customer_id, "+
+            "cus.name AS customer_name, "+
+            "f.description AS fare_description "+
+            "FROM trip_booking_detail AS tbd"+
+            "JOIN customer cus ON cus.id = tbd.id_customer "+
+            "JOIN flight_fare f ON f.id = tbd.id_fare "+
+            "JOIN trip_bookig tb ON tb.id = tbd.id_trip_booking "+
+            "WHERE tbd.id_customer = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        TripBookingDetailsDTO tripBookingDetailsDTO = new TripBookingDetailsDTO(
+                            resultSet.getInt("booking_detail_id"),
+                            resultSet.getInt("booking_id"),
+                            resultSet.getInt("trip_id"),
+                            resultSet.getString("customer_id"),
+                            resultSet.getString("customer_name"),
+                            resultSet.getString("fare_description")
+                            );
+                        tripBookingDetails.add(tripBookingDetailsDTO);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tripBookingDetails;
+    }
+    
+    @Override
+    public List<TripBookingDetailsDTO> findTripBookingByTripId(int id) {
+        List<TripBookingDetailsDTO> tripBookingDetails = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT "+
+            "tbd.id AS booking_detail_id, "+
+            "tbd.id_trip_booking AS booking_id, "+
+            "tb.id_trip AS trip_id, "+
+            "tbd.id_customer AS customer_id, "+
+            "cus.name AS customer_name, "+
+            "f.description AS fare_description "+
+            "FROM trip_booking_detail AS tbd"+
+            "JOIN customer cus ON cus.id = tbd.id_customer "+
+            "JOIN flight_fare f ON f.id = tbd.id_fare "+
+            "JOIN trip_bookig tb ON tb.id = tbd.id_trip_booking "+
+            "WHERE tbd.id_customer = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        TripBookingDetailsDTO tripBookingDetailsDTO = new TripBookingDetailsDTO(
+                            resultSet.getInt("booking_detail_id"),
+                            resultSet.getInt("booking_id"),
+                            resultSet.getInt("trip_id"),
+                            resultSet.getString("customer_id"),
+                            resultSet.getString("customer_name"),
+                            resultSet.getString("fare_description")
+                            );
+                        tripBookingDetails.add(tripBookingDetailsDTO);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tripBookingDetails;
     }
 }

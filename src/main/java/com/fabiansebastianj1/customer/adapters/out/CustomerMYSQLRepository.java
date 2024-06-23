@@ -126,7 +126,7 @@ public class CustomerMYSQLRepository implements CustomerRepository {
             "dt.name AS document_type "+
             "FROM customer AS cus "+
             "JOIN document_type dt ON dt.id = cus.id_document "+
-            "WHERE id = ?";
+            "WHERE cus.id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {

@@ -23,6 +23,16 @@ public class InputVali {
         return valor;
     }
 
+    // public int isInt (String mensaje){
+    //     String value = stringNotNull(mensaje);
+    //     try {
+            
+    //     } catch (Exception e) {
+    //         // TODO: handle exception
+    //     }
+    //     return 
+    // }
+
     public String stringNotNull(String message) {
         System.out.print(message);
         String value;

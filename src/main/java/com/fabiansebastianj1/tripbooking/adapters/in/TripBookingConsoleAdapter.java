@@ -32,7 +32,7 @@ public class TripBookingConsoleAdapter {
             System.out.println("*** Modulo de reserva ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println("1.Crear reserva \n2.Salir");
+            System.out.println("1.Crear reserva \n2.Consultar reservas \n3.Salir");
             int choice = scanner.nextInt();
             System.out.println(" ");
 
@@ -64,8 +64,11 @@ public class TripBookingConsoleAdapter {
                     tripBookingService.createTripBookingDetail(tripBookingDetails);
                     break;
                 case 2:
+                    break;
+                case 3:
                     executing = false;
                     System.out.println("Saliendo del módulo de reserva");
+                    
                     break;
                 default:
                     System.out.println("Seleccione una opción válida");
