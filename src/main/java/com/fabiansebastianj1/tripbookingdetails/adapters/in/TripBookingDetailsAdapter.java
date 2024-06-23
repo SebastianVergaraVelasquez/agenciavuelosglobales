@@ -53,27 +53,33 @@ public class TripBookingDetailsAdapter {
     public void showBookingByCustomerId(String id){
         System.out.println("Lista de reservas por id cliente");
         List<TripBookingDetailsDTO> tripBookingDetails = tripBookingDetailsService.findTripBookingByCustomerId(id);
-        for (TripBookingDetailsDTO tripBookingDetailsDTO : tripBookingDetails) {
-            System.out.println(String.format("booking_detail_id: %s \n"+
-            "booking_id: %s, "+
-            "trip_id: %s, \n"+
-            "customer_id: %s, \n"+
-            "customer_name: %s, \n"+
-            "fare_description: %s", tripBookingDetailsDTO.getId(),tripBookingDetailsDTO.getTripBookingId(),tripBookingDetailsDTO.getIdTrip(), tripBookingDetailsDTO.getCustomerId(), tripBookingDetailsDTO.getCustomerName(), tripBookingDetailsDTO.getFareName()));
+        if (!tripBookingDetails.isEmpty()) {
+            for (TripBookingDetailsDTO tripBookingDetailsDTO : tripBookingDetails) {
+                System.out.println(String.format("booking_detail_id: %s \n"+
+                "booking_id: %s, "+
+                "trip_id: %s, \n"+
+                "customer_id: %s, \n"+
+                "customer_name: %s, \n"+
+                "fare_description: %s", tripBookingDetailsDTO.getId(),tripBookingDetailsDTO.getTripBookingId(),tripBookingDetailsDTO.getIdTrip(), tripBookingDetailsDTO.getCustomerId(), tripBookingDetailsDTO.getCustomerName(), tripBookingDetailsDTO.getFareName()));
+            }
         }
+        else{System.out.println("No hay reservas");}
+        
     }
 
     public void showBookingByTripId(int id){
         System.out.println("Lista de reservas por id vuelo");
         List<TripBookingDetailsDTO> tripBookingDetails = tripBookingDetailsService.findTripBookingByTripId(id);
-        for (TripBookingDetailsDTO tripBookingDetailsDTO : tripBookingDetails) {
-            System.out.println(String.format("booking_detail_id: %s \n"+
-            "booking_id: %s, "+
-            "trip_id: %s, \n"+
-            "customer_id: %s, \n"+
-            "customer_name: %s, \n"+
-            "fare_description: %s", tripBookingDetailsDTO.getId(),tripBookingDetailsDTO.getTripBookingId(),tripBookingDetailsDTO.getIdTrip(), tripBookingDetailsDTO.getCustomerId(), tripBookingDetailsDTO.getCustomerName(), tripBookingDetailsDTO.getFareName()));
+        if (!tripBookingDetails.isEmpty()) {
+            for (TripBookingDetailsDTO tripBookingDetailsDTO : tripBookingDetails) {
+                System.out.println(String.format("booking_detail_id: %s \n"+
+                "booking_id: %s, "+
+                "trip_id: %s, \n"+
+                "customer_id: %s, \n"+
+                "customer_name: %s, \n"+
+                "fare_description: %s", tripBookingDetailsDTO.getId(),tripBookingDetailsDTO.getTripBookingId(),tripBookingDetailsDTO.getIdTrip(), tripBookingDetailsDTO.getCustomerId(), tripBookingDetailsDTO.getCustomerName(), tripBookingDetailsDTO.getFareName()));
+            }
         }
+        else{System.out.println("No hay reservas");}
     }
-
 }
