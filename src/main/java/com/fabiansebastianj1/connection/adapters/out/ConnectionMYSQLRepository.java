@@ -126,7 +126,11 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
         List<ConnectionDTO> flights = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT " +
-               " c1.id_trip, c1.id_airport AS aeropuerto_salida,c2.id_airport AS aeropuerto_llegada, tr.trip_date As Fecha" +
+               "c1.id_trip AS id_vuelo,"+
+               "c1.id AS id_escala," +
+               "c1.id_airport AS aeropuerto_salida, "+
+               "c2.id_airport AS aeropuerto_llegada," + 
+               "tr.trip_date As Fecha" +
                "FROM connection c1" +
                "JOIN trip_status ts1 ON c1.id_trip_status = ts1.id " +
                "JOIN connection c2 ON c1.id_trip = c2.id_trip " +
@@ -137,7 +141,8 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                 ResultSet resultSet = statement.executeQuery()){
                     while (resultSet.next()) {
                         ConnectionDTO flight = new ConnectionDTO(
-                            resultSet.getInt("id"), 
+                            resultSet.getInt("id_vuelo"), 
+                            resultSet.getInt("id_escala"),
                             resultSet.getString("aeropuerto_salida"), 
                             resultSet.getString("aeropuerto_llegada"),
                             resultSet.getString("Fecha"));
