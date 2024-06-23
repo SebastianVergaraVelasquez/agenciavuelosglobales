@@ -3,13 +3,15 @@ package com.fabiansebastianj1.revemployee.domain.models;
 public class RevEmployee {
     private String id_employee;
     private int id_revision;
+    private String description;
 
     public RevEmployee() {
     }
 
-    public RevEmployee(String id_employee, int id_revision) {
+    public RevEmployee(String id_employee, int id_revision, String description) {
         this.id_employee = id_employee;
         this.id_revision = id_revision;
+        this.description = description;
     }
 
     public String getId_employee() {
@@ -27,4 +29,14 @@ public class RevEmployee {
     public void setId_revision(int id_revision) {
         this.id_revision = id_revision;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+   
 }

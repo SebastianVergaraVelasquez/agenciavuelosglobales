@@ -28,7 +28,7 @@ public class RevisionMYSQLRepository implements RevisionRepository {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "INSERT INTO revision (revision_date,id_plane) VALUES (?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setDate(1, revision.getRevisionDate());
+                statement.setString(1, revision.getRevisionDate());
                 statement.setInt(2, revision.getPlaneId());
                 statement.executeUpdate();
             }
@@ -42,7 +42,7 @@ public class RevisionMYSQLRepository implements RevisionRepository {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "UPDATE revision SET revision_date = ?, id_plane = ? WHERE id=?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setDate(1, revision.getRevisionDate());
+                statement.setString(1, revision.getRevisionDate());
                 statement.setInt(2, revision.getPlaneId());
                 statement.setInt(3, revision.getId());
                 statement.executeUpdate();
@@ -75,7 +75,7 @@ public class RevisionMYSQLRepository implements RevisionRepository {
                     if (resultSet.next()) {
                         Revision revision = new Revision(
                                 resultSet.getInt("id"),
-                                resultSet.getDate("revision_date"),
+                                resultSet.getString("revision_date"),
                                 resultSet.getInt("id_plane"));
                         return Optional.of(revision);
                     }
@@ -98,7 +98,7 @@ public class RevisionMYSQLRepository implements RevisionRepository {
                 while (resultSet.next()) {
                     Revision revision = new Revision(
                             resultSet.getInt("id"),
-                            resultSet.getDate("revision_date"),
+                            resultSet.getString("revision_date"),
                             resultSet.getInt("id_plane"));
                     revisions.add(revision);
                 }
@@ -107,5 +107,25 @@ public class RevisionMYSQLRepository implements RevisionRepository {
             e.printStackTrace();
         }
         return revisions;
+    }
+
+    @Override
+    public Optional<Revision> findLast() {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM revision ORDER BY id DESC LIMIT 1";
+            try (PreparedStatement statement = connection.prepareStatement(query);
+                    ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    Revision revision = new Revision(
+                            resultSet.getInt("id"),
+                            resultSet.getString("revision_date"),
+                            resultSet.getInt("id_plane"));
+                    return Optional.of(revision);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 }

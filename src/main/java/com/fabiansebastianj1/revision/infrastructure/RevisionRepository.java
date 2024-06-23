@@ -11,4 +11,5 @@ public interface RevisionRepository {
     void delete(int id);
     Optional<Revision> findById(int id);
     List<Revision> findAll();
+    Optional<Revision> findLast();
 }
