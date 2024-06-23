@@ -32,7 +32,7 @@ public class PlaneConsoleAdapter {
             System.out.println("*** Modulo de aviones ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println("1.Registrar avión \n2.Eliminar avión");
+            System.out.println("1.Registrar avión \n2.Eliminar avión \n3.Salir");
             int choice = scanner.nextInt();
             System.out.println(" ");
 
@@ -41,10 +41,10 @@ public class PlaneConsoleAdapter {
                     System.out.println("*** Registro de aviones ***");
                     System.out.println(" ");
                     scanner.nextLine();
-                    System.out.println("Ingrese la matrícula del avión");
-                    String plates = verificarAvion(scanner);
-                    System.out.println("Ingrese la capacidad del avión");
-                    int capacity = scanner.nextInt();
+
+                    String plates = verificarAvion(inputVali);
+                    
+                    int capacity = inputVali.readInt(inputVali.stringNotNull("Ingrese la capacidad del avión"));
                     scanner.nextLine();
                     System.out.println("Ingrese la fecha de fabricación en formato yyyy-MM-dd:");
                     // Date fabricationDate = dateValidation.dateCheck(); //No sé de qué manera dejarlo
@@ -59,7 +59,7 @@ public class PlaneConsoleAdapter {
                     mostrarAirlines(); 
 
                     Airline showAirline = ValidationExist.transformAndValidateObj(
-                            () -> planeService.findAirlineById(inputVali.readInt("Ingrese el id de la aerolínea a la que pertenece")));
+                            () -> planeService.findAirlineById(inputVali.readInt(inputVali.stringNotNull("Ingrese el id de la aerolínea a la que pertenece"))));
                     int airlineId = showAirline.getId();
 
                     mostrarModels();
@@ -94,7 +94,11 @@ public class PlaneConsoleAdapter {
 
                     System.out.format(
                             "+------+------------+----------+-----------------+-----------+----------+---------+-----------------+%n");
-                    int id = scanner.nextInt();
+                    
+                    Plane showPlane = ValidationExist.transformAndValidateObj(
+                        () -> planeService.findPlaneById(inputVali.readInt(inputVali.stringNotNull("Ingrese el id del avión"))));
+                    int id = showPlane.getId();
+
                     planeService.deletePlane(id);
                     break;
                 case 3:
@@ -108,10 +112,10 @@ public class PlaneConsoleAdapter {
         }
     }
 
-    public String verificarAvion(Scanner scanner) {
+    public String verificarAvion(InputVali inputVali) {
         String plates;
         while (true) {
-            plates = scanner.nextLine();
+            plates = inputVali.stringNotNull("Ingrese la matrícula del avión");
             Optional<Plane> planeFinded = planeService.findPlaneByPlate(plates);
             if (planeFinded.isPresent()) {
                 Plane plane = planeFinded.get();
