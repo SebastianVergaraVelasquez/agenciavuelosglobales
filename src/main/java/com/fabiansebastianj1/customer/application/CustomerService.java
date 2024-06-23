@@ -6,6 +6,7 @@ import java.util.Optional;
 // import com.fabiansebastianj1.country.domain.models.Country;
 // import com.fabiansebastianj1.country.infraestructure.CountryRepository;
 import com.fabiansebastianj1.customer.domain.models.Customer;
+import com.fabiansebastianj1.customer.domain.models.CustomerDTO;
 import com.fabiansebastianj1.customer.infrastructure.CustomerRepository;
 
 public class CustomerService {
@@ -40,6 +41,10 @@ public class CustomerService {
 
     public void updateCustomer(Customer customer){
         customerRepository.update(customer);
+    }
+
+    public Optional<CustomerDTO> findCustomerDTO(String id){
+        return customerRepository.findCustomerDTOById(id);
     }
 
 //    public List<Country> getAllCountry(){

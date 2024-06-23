@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import com.fabiansebastianj1.customer.infrastructure.CustomerRepository;
 import com.fabiansebastianj1.customer.domain.models.Customer;
+import com.fabiansebastianj1.customer.domain.models.CustomerDTO;
 
 public class CustomerMYSQLRepository implements CustomerRepository {
     private final String url;
@@ -114,4 +115,36 @@ public class CustomerMYSQLRepository implements CustomerRepository {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public Optional<CustomerDTO> findCustomerDTOById(String id) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT "+
+            "cus.id AS customer_id, "+
+            "cus.name AS customer_name, "+
+            "cus.age AS customer_age, "+
+            "dt.name AS document_type "+
+            "FROM customer AS cus "+
+            "JOIN document_type dt ON dt.id = cus.id_document "+
+            "WHERE id = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        CustomerDTO customer = new CustomerDTO(
+                            resultSet.getString("customer_id"),
+                            resultSet.getString("customer_name"),
+                            resultSet.getInt("customer_age"),
+                            resultSet.getString("document_type")
+                            );
+                        return Optional.of(customer);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
 }
