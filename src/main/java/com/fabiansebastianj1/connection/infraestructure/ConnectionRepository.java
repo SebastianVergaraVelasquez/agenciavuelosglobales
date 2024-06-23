@@ -1,6 +1,6 @@
 package com.fabiansebastianj1.connection.infraestructure;
 
-import com.fabiansebastianj1.connection.domain.models.Connections;
+import com.fabiansebastianj1.connection.domain.models.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,4 +11,5 @@ public interface ConnectionRepository {
     void delete(int id);
     Optional<Connections> findById(int id);
     List<Connections> findAll();
+    List<ConnectionDTO> listFlights();
 }

@@ -1,5 +1,6 @@
 package com.fabiansebastianj1.connection.application;
 
+import com.fabiansebastianj1.connection.domain.models.ConnectionDTO;
 import com.fabiansebastianj1.connection.domain.models.Connections;
 import com.fabiansebastianj1.connection.infraestructure.ConnectionRepository;
 
@@ -31,5 +32,9 @@ public class ConnectionService {
 
     public List<Connections> getAllConnection(){
         return connectionRepository.findAll();
+    }
+
+    public List<ConnectionDTO> getAllFlights(){
+        return connectionRepository.listFlights();
     }
 }

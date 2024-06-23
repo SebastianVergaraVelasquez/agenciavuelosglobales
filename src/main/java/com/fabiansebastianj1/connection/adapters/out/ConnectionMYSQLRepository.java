@@ -1,5 +1,6 @@
 package com.fabiansebastianj1.connection.adapters.out;
 
+import com.fabiansebastianj1.connection.domain.models.ConnectionDTO;
 import com.fabiansebastianj1.connection.domain.models.Connections;
 import com.fabiansebastianj1.connection.infraestructure.ConnectionRepository;
 
@@ -119,4 +120,34 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
         }
         return connections;
     }
+
+    @Override
+    public List<ConnectionDTO> listFlights(){
+        List<ConnectionDTO> flights = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT " +
+               " c1.id_trip, c1.id_airport AS aeropuerto_salida,c2.id_airport AS aeropuerto_llegada, tr.trip_date As Fecha" +
+               "FROM connection c1" +
+               "JOIN trip_status ts1 ON c1.id_trip_status = ts1.id " +
+               "JOIN connection c2 ON c1.id_trip = c2.id_trip " +
+               "JOIN trip_status ts2 ON c2.id_trip_status = ts2.id " +
+               "JOIN trip tr ON c2.id_trip ON tr.id " +
+               "WHERE c1.id_trip_status = 1 AND c2.id_trip_status = 3;";
+            try(PreparedStatement statement = connection.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery()){
+                    while (resultSet.next()) {
+                        ConnectionDTO flight = new ConnectionDTO(
+                            resultSet.getInt("id"), 
+                            resultSet.getString("aeropuerto_salida"), 
+                            resultSet.getString("aeropuerto_llegada"),
+                            resultSet.getString("Fecha"));
+                        flights.add(flight);
+                    }
+                }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return flights;
+    }
+
 }
