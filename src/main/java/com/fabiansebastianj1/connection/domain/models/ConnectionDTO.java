@@ -7,6 +7,7 @@ import java.sql.Date;
 public class ConnectionDTO {
     private int tripId;
     private int connectionId;
+    private String connectionNumber;
     private String startAirport;
     private String arriveAirport;
     private String tripDate;
@@ -17,6 +18,11 @@ public class ConnectionDTO {
         this.startAirport = startAirport;
         this.arriveAirport = arriveAirport;
         this.tripDate = tripDate;
+    }
+
+    public ConnectionDTO(String connectionNumber, String startAirport) {
+        this.connectionNumber = connectionNumber;
+        this.startAirport = startAirport;
     }
 
     public int getTripId() {
@@ -33,6 +39,14 @@ public class ConnectionDTO {
 
     public void setConnectionId(int connectionId) {
         this.connectionId = connectionId;
+    }
+
+    public String getConnectionNumber() {
+        return connectionNumber;
+    }
+
+    public void setConnectionNumber(String connectionNumber) {
+        this.connectionNumber = connectionNumber;
     }
 
     public String getStartAirport() {
@@ -58,8 +72,5 @@ public class ConnectionDTO {
     public void setTripDate(String tripDate) {
         this.tripDate = tripDate;
     }
-    
-    
-
-    
+ 
 }

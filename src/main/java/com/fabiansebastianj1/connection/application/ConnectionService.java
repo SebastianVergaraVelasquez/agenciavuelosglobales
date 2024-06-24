@@ -37,4 +37,12 @@ public class ConnectionService {
     public List<ConnectionDTO> getAllFlights(){
         return connectionRepository.listFlights();
     }
+
+    public List<ConnectionDTO> findConnectionsByTripId(int tripId){
+        return connectionRepository.findAllByTripId(tripId);
+    }
+
+    public Optional<ConnectionDTO> findTripByTripId(int tripId){
+        return connectionRepository.findConnectionDTO(tripId);
+    }
 }

@@ -121,6 +121,31 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
         return connections;
     }
 
+    public List<ConnectionDTO> findAllByTripId(int tripId) {
+        List<ConnectionDTO> connections = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT con.connection_number AS connection_number, ai.name AS aeropuerto "+
+            "FROM connection AS con " +
+            "JOIN airport ai ON ai.id = con.id_airport "+
+            "WHERE id_trip = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, tripId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        ConnectionDTO connect = new ConnectionDTO(
+                                resultSet.getString("connection_number"),
+                                resultSet.getString("aeropuerto"));
+                        connections.add(connect);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return connections;
+    }
+
+
     @Override
     public List<ConnectionDTO> listFlights(){
         List<ConnectionDTO> flights = new ArrayList<>();
@@ -155,4 +180,40 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
         return flights;
     }
 
+    @Override
+    public Optional<ConnectionDTO> findConnectionDTO(int id) {
+        try (Connection connection = DriverManager.getConnection(url,user,password)){
+            String query = "SELECT " +
+               "c1.id_trip AS id_vuelo,"+
+               "c1.id AS id_escala," +
+               "c1.id_airport AS aeropuerto_salida, "+
+               "c2.id_airport AS aeropuerto_llegada," + 
+               "tr.trip_date As Fecha" +
+               "FROM connection c1" +
+               "JOIN trip_status ts1 ON c1.id_trip_status = ts1.id " +
+               "JOIN connection c2 ON c1.id_trip = c2.id_trip " +
+               "JOIN trip_status ts2 ON c2.id_trip_status = ts2.id " +
+               "JOIN trip tr ON c2.id_trip ON tr.id " +
+               "WHERE c1.id_trip_status = 1 AND c2.id_trip_status = 3 AND c1.id_trip = ? AND c2.id_trip;";
+            try (PreparedStatement statement = connection.prepareStatement(query)){
+                statement.setInt(1,id);
+                statement.setInt(2,id);
+                try (ResultSet resultSet = statement.executeQuery()){
+                    if (resultSet.next()){
+                        ConnectionDTO connections = new ConnectionDTO(
+                            resultSet.getInt("id_vuelo"), 
+                            resultSet.getInt("id_escala"),
+                            resultSet.getString("aeropuerto_salida"), 
+                            resultSet.getString("aeropuerto_llegada"),
+                            resultSet.getString("Fecha"));
+                    return Optional.of(connections);
+                    }
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
 }

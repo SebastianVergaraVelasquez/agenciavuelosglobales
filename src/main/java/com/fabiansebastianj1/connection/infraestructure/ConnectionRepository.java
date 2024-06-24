@@ -12,4 +12,6 @@ public interface ConnectionRepository {
     Optional<Connections> findById(int id);
     List<Connections> findAll();
     List<ConnectionDTO> listFlights();
+    Optional<ConnectionDTO> findConnectionDTO(int id);
+    List<ConnectionDTO> findAllByTripId(int tripId);
 }
