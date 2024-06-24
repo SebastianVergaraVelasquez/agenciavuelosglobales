@@ -124,4 +124,19 @@ public class TripBookingMYSQLRepository implements TripBookingRepository {
         }
         return Optional.empty();
     }
+
+    @Override
+    public void deleteTripBookingDetailForId(int id) {
+        try (Connection connection = DriverManager.getConnection(url,user,password)){
+            String query = "DELETE FROM trip_booking_detail WHERE id_trip_booking = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)){
+                statement.setInt(1,id);
+                statement.executeUpdate();
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

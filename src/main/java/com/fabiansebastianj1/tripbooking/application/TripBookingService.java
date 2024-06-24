@@ -85,5 +85,8 @@ public class TripBookingService {
        return tripBookingRepository.findLast();
     }
 
+    public void deleteTripBookingDetailForId(int id) {
+        tripBookingDetailsRepository.delete(id);
+    }
 
 }

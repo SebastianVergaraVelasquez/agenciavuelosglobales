@@ -89,7 +89,9 @@ public class TripBookingConsoleAdapter {
                                     inputVali.readInt(inputVali.stringNotNull("Ingrese el id de la reserva"))));
                     int tripBookingId = showTripBooking.getId();
 
+                    tripBookingService.deleteTripBookingDetailForId(tripBookingId);
                     tripBookingService.deleteTripBooking(tripBookingId);
+
                     break;
                 case 4:
                     executing = false;
