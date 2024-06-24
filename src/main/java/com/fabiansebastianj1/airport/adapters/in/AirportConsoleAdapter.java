@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
-public class PlaneConsoleAdapter {
+public class AirportConsoleAdapter {
 
     private final AirportService airportService;
 
-    public PlaneConsoleAdapter(AirportService airportService) {
+    public AirportConsoleAdapter(AirportService airportService) {
         this.airportService = airportService;
     }
 
