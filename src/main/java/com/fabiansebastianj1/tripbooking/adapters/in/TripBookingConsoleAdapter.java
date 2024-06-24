@@ -15,7 +15,7 @@ import com.fabiansebastianj1.validations.InputVali;
 import com.fabiansebastianj1.validations.ValidationExist;
 
 public class TripBookingConsoleAdapter {
-    
+
     private final TripBookingService tripBookingService;
 
     public TripBookingConsoleAdapter(TripBookingService tripBookingService) {
@@ -32,7 +32,7 @@ public class TripBookingConsoleAdapter {
             System.out.println("*** Modulo de reserva ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println("1.Crear reserva \n2.Consultar reservas \n3.Salir");
+            System.out.println("1.Crear reserva \n2.Consultar reservas \n3. Eliminar reservas \n4.Salir");
             int choice = scanner.nextInt();
             System.out.println(" ");
 
@@ -41,7 +41,7 @@ public class TripBookingConsoleAdapter {
                     //Cliente, trayecto, fecha, tarifa
                     System.out.println("*** Creación de reserva ***");
                     Customer showCustomer = ValidationExist.transformAndValidateObj(
-                      () -> tripBookingService.findCostumergById(inputVali.stringNotNull("Ingrese el id del cliente"))  
+                      () -> tripBookingService.findCostumergById(inputVali.stringNotNull("Ingrese el id del cliente"))
                     );
                     String customerId = showCustomer.getId();
                     mostrarVuelos();
@@ -52,7 +52,7 @@ public class TripBookingConsoleAdapter {
                     String tripDate = inputVali.stringNotNull("Ingrese la fecha de la reserva");
                     mostrarTarifas();
                     Fare showFare = ValidationExist.transformAndValidateObj(
-                      () -> tripBookingService.findFareById(inputVali.readInt(inputVali.stringNotNull("Ingrese el id de la tarifa")))  
+                      () -> tripBookingService.findFareById(inputVali.readInt(inputVali.stringNotNull("Ingrese el id de la tarifa")))
                     );
                     int fareId = showFare.getId();
                     TripBooking newTripBooking = new TripBooking(tripDate, flightId);
@@ -66,9 +66,34 @@ public class TripBookingConsoleAdapter {
                 case 2:
                     break;
                 case 3:
+                    System.out.println("*** Eliminar reserva ***");
+                    System.out.println(" ");
+                    List<TripBooking> tripBookings = tripBookingService.findAllTripBookings();
+                    String leftAlignFormat = "| %-4d | %-10s | %-8d |%n";
+                    System.out.format(
+                            "+------+------------+----------+%n");
+                    System.out.format(
+                            "| ID   | Date     | Id_Trip |%n");
+                    System.out.format(
+                            "+------+------------+----------+%n");
+
+                    for (TripBooking tripBooking : tripBookings) {
+                        System.out.format(leftAlignFormat, tripBooking.getId(), tripBooking.getDate(), tripBooking.getId_trip());
+                    }
+
+                    System.out.format(
+                            "+------+------------+----------+%n");
+
+                    TripBooking showTripBooking = ValidationExist.transformAndValidateObj(
+                            () -> tripBookingService.findTripBookingById(
+                                    inputVali.readInt(inputVali.stringNotNull("Ingrese el id de la reserva"))));
+                    int tripBookingId = showTripBooking.getId();
+
+                    tripBookingService.deleteTripBooking(tripBookingId);
+                    break;
+                case 4:
                     executing = false;
                     System.out.println("Saliendo del módulo de reserva");
-                    
                     break;
                 default:
                     System.out.println("Seleccione una opción válida");
