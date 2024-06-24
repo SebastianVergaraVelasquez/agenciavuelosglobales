@@ -9,7 +9,7 @@ import com.fabiansebastianj1.employee.domain.models.Employee;
 import com.fabiansebastianj1.tripcrew.application.TripCrewService;
 import com.fabiansebastianj1.tripcrew.domain.models.TripCrew;
 import com.fabiansebastianj1.validations.InputVali;
-import com.fabiansebastianj1.validations.NewRegister;
+import com.fabiansebastianj1.validations.Register;
 import com.fabiansebastianj1.validations.ValidationExist;
 
 public class TripCrewConsoleAdapter {
@@ -72,8 +72,9 @@ public class TripCrewConsoleAdapter {
             String employeeId = showEmployee.getId();
             TripCrew tripCrew = new TripCrew(employeeId, idConnection);
             tripCrewService.createTripCrew(tripCrew);
-            continueAdd = NewRegister.yesOrNo(scanner);
-        } 
+            continueAdd = Register.yesOrNo(
+                    "Desea hacer un nuevo registro? Ingrese el valor numérico: 1 (Si) o 2(no)");
+        }
     }
 
     public void mostrarEmpleados() {

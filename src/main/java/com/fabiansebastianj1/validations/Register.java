@@ -2,14 +2,14 @@ package com.fabiansebastianj1.validations;
 
 import java.util.Scanner;
 
-public class NewRegister {
+public class Register {
 
-    public static boolean yesOrNo(Scanner scanner){
-
+    public static boolean yesOrNo( String message) {
+        Scanner scanner = new Scanner(System.in);
         boolean value = true;
 
         while (true) {
-            System.out.println("Desea hacer otro registro. Ingrese 1. Para sí, 2. Para no");
+            System.out.println(message);
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
