@@ -5,12 +5,16 @@ import java.util.Optional;
 
 import com.fabiansebastianj1.airport.domain.models.Airport;
 import com.fabiansebastianj1.airport.infrastructure.AirportRepository;
+import com.fabiansebastianj1.city.domain.models.City;
+import com.fabiansebastianj1.city.infrastructure.CityRepository;
 
 public class AirportService {
     private final AirportRepository airportRepository;
+    private final CityRepository cityRepository;
 
-    public AirportService(AirportRepository airportRepository) {
+    public AirportService(AirportRepository airportRepository, CityRepository cityRepository) {
         this.airportRepository = airportRepository;
+        this.cityRepository = cityRepository;
     }
 
     public void createAirport(Airport airport) {
@@ -32,4 +36,13 @@ public class AirportService {
     public void updateAirport(Airport airport) {
         airportRepository.update(airport);
     }
+
+    public List<City> findAllCities() {
+        return cityRepository.findAll();
+    }
+
+    public Optional<City> findCityById(String id) {
+        return cityRepository.findById(id);
+    }
+
 }

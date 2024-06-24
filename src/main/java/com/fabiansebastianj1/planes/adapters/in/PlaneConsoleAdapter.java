@@ -109,6 +109,7 @@ public class PlaneConsoleAdapter {
                     System.out.println(" ");
                     scanner.nextLine();
                     avionExists(inputVali);
+
                     break;
                 case 4:
                     executing = false;
@@ -174,7 +175,7 @@ public class PlaneConsoleAdapter {
                 "| ID   | Plates     | Capacity | Fabrication Date| Status ID | AirlineID| ModelID |%n");
         System.out.format(
                 "+------+------------+----------+-----------------+-----------+----------+---------+%n");
-        System.out.format(leftAlignFormat, showPlane.getId(), showPlane.getPlates(), showPlane.getCapacity(),
+        System.out.format(leftAlignFormat,showPlane.getId(), showPlane.getPlates(), showPlane.getCapacity(),
                 showPlane.getFabricationDate(), showPlane.getStatusId(), showPlane.getAirlineId(),
                 showPlane.getModelId());
     }
