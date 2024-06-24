@@ -10,6 +10,7 @@ import com.fabiansebastianj1.country.domain.models.Country;
 import com.fabiansebastianj1.model.domain.models.Model;
 import com.fabiansebastianj1.planes.application.PlaneService;
 import com.fabiansebastianj1.planes.domain.models.Plane;
+import com.fabiansebastianj1.planes.domain.models.PlaneDTO;
 import com.fabiansebastianj1.status.domain.models.Status;
 import com.fabiansebastianj1.validations.dateValidation;
 import com.fabiansebastianj1.validations.InputVali;
@@ -108,7 +109,7 @@ public class PlaneConsoleAdapter {
                     System.out.println("*** Consultar avión ***");
                     System.out.println(" ");
                     scanner.nextLine();
-                    avionExists(inputVali);
+                    showPlaneInfo(inputVali);
 
                     break;
                 case 4:
@@ -164,19 +165,24 @@ public class PlaneConsoleAdapter {
         }
     }
 
-    public void avionExists(InputVali inputVali) {
+    public void showPlaneInfo(InputVali inputVali) {
         Plane showPlane = ValidationExist.transformAndValidateObj(
                 () -> planeService.findPlaneByPlate(
                         inputVali.stringNotNull("Ingrese el id del avión")));
+
+        Optional<PlaneDTO> planeDTO = planeService.findPlaneInfoAdditional(showPlane.getPlates());
+        PlaneDTO planeFinded = planeDTO.get();
+
         String leftAlignFormat = "| %-4d | %-10s | %-8d | %-15s | %-9d | %-8d | %-7d | %-15s |%n";
         System.out.format(
                 "+------+------------+----------+-----------------+-----------+----------+---------+%n");
         System.out.format(
-                "| ID   | Plates     | Capacity | Fabrication Date| Status ID | AirlineID| ModelID |%n");
+                "| ID   | Plates     | Capacity | Fabrication Date| Status | Airline| Model |%n");
         System.out.format(
                 "+------+------------+----------+-----------------+-----------+----------+---------+%n");
-        System.out.format(leftAlignFormat,showPlane.getId(), showPlane.getPlates(), showPlane.getCapacity(),
-                showPlane.getFabricationDate(), showPlane.getStatusId(), showPlane.getAirlineId(),
-                showPlane.getModelId());
+        System.out.format(leftAlignFormat,planeFinded.getId(), planeFinded.getPlates(), planeFinded.getCapacity(),
+                planeFinded.getFabricationDate(), planeFinded.getStatusName(), planeFinded.getAirlineName(),
+                planeFinded.getModelName());
     }
+
 }

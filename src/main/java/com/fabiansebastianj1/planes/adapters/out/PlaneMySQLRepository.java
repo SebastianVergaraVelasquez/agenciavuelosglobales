@@ -11,8 +11,9 @@ import java.util.ArrayList;
 
 
 import com.fabiansebastianj1.planes.domain.models.Plane;
+import com.fabiansebastianj1.planes.domain.models.PlaneDTO;
 import com.fabiansebastianj1.planes.infrastructure.PlaneRepository;
-  
+
 
 public class PlaneMySQLRepository implements PlaneRepository {
 
@@ -55,7 +56,7 @@ public class PlaneMySQLRepository implements PlaneRepository {
                             resultSet.getInt("id_status"),
                             resultSet.getInt("id_airline"),
                             resultSet.getInt("id_model")
-                            );
+                    );
                     planes.add(plane);
                 }
             }
@@ -64,6 +65,7 @@ public class PlaneMySQLRepository implements PlaneRepository {
         }
         return planes;
     }
+
 
     @Override
     public Optional<Plane> findById(int id) {
@@ -74,14 +76,14 @@ public class PlaneMySQLRepository implements PlaneRepository {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
                         Plane plane = new Plane(
-                            resultSet.getInt("id"),
-                            resultSet.getString("plates"),
-                            resultSet.getInt("capacity"),
-                            resultSet.getString("fabircation_date"),
-                            resultSet.getInt("id_status"),
-                            resultSet.getInt("id_airline"),
-                            resultSet.getInt("id_model")
-                            );
+                                resultSet.getInt("id"),
+                                resultSet.getString("plates"),
+                                resultSet.getInt("capacity"),
+                                resultSet.getString("fabircation_date"),
+                                resultSet.getInt("id_status"),
+                                resultSet.getInt("id_airline"),
+                                resultSet.getInt("id_model")
+                        );
                         return Optional.of(plane);
                     }
                 }
@@ -101,14 +103,14 @@ public class PlaneMySQLRepository implements PlaneRepository {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
                         Plane plane = new Plane(
-                            resultSet.getInt("id"),
-                            resultSet.getString("plates"),
-                            resultSet.getInt("capacity"),
-                            resultSet.getString("fabircation_date"),
-                            resultSet.getInt("id_status"),
-                            resultSet.getInt("id_airline"),
-                            resultSet.getInt("id_model")
-                            );
+                                resultSet.getInt("id"),
+                                resultSet.getString("plates"),
+                                resultSet.getInt("capacity"),
+                                resultSet.getString("fabircation_date"),
+                                resultSet.getInt("id_status"),
+                                resultSet.getInt("id_airline"),
+                                resultSet.getInt("id_model")
+                        );
                         return Optional.of(plane);
                     }
                 }
@@ -156,5 +158,39 @@ public class PlaneMySQLRepository implements PlaneRepository {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public Optional<PlaneDTO> findPlaneInfoAdditional(String plates) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT p.id AS id_plane, p.plates AS plates, p.capacity AS capacity, p.fabircation_date AS fabrication_date," +
+                    "s.name AS status, a.name AS airline, m.name AS model" +
+                    "FROM plane AS p"+
+                    "JOIN status AS st ON p.id_status = st.id" +
+                    "JOIN airline AS a ON p.id_airline = a.id" +
+                    "JOIN model AS m ON p.id_model = m.id" +
+                    "WHERE p.plates = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, plates);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        PlaneDTO planeDTO = new PlaneDTO(
+                                resultSet.getInt("id_plane"),
+                                resultSet.getString("plates"),
+                                resultSet.getInt("capacity"),
+                                resultSet.getString("fabrication_date"),
+                                resultSet.getString("status"),
+                                resultSet.getString("airline"),
+                                resultSet.getString("model"));
+                        return Optional.of(planeDTO);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+
 }
 
