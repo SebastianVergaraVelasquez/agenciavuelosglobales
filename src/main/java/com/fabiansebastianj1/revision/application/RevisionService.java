@@ -10,8 +10,8 @@ import com.fabiansebastianj1.planes.infrastructure.PlaneRepository;
 import com.fabiansebastianj1.revemployee.application.RevEmployeService;
 import com.fabiansebastianj1.revemployee.domain.models.RevEmployee;
 import com.fabiansebastianj1.revision.domain.models.Revision;
+import com.fabiansebastianj1.revision.domain.models.RevisionDTO;
 import com.fabiansebastianj1.revision.infrastructure.RevisionRepository;
-import com.fabiansebastianj1.revisiondetail.domain.models.RevisionDetail;
 
 public class RevisionService {
 
@@ -19,8 +19,6 @@ public class RevisionService {
     private final PlaneRepository planeRepository;
     private final EmployeeRepository employeeRepository;
     private final RevEmployeService revEmployeService;
-
-    
 
     public RevisionService(RevisionRepository revisionRepository, PlaneRepository planeRepository,
             EmployeeRepository employeeRepository, RevEmployeService revEmployeService) {
@@ -69,4 +67,13 @@ public class RevisionService {
     public void createRevEmployee(RevEmployee revEmployee){
         revEmployeService.save(revEmployee);
     }
+
+    public List<RevisionDTO> revisionsByPlaneId(int id){
+        return revisionRepository.findRevisionsByPlaneId(id);
+    }
+
+    public Optional<Plane> findPlaneByPlates(String plates){
+        return planeRepository.findByPlate(plates);
+    }
+
 }

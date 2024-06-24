@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fabiansebastianj1.revision.domain.models.Revision;
+import com.fabiansebastianj1.revision.domain.models.RevisionDTO;
 import com.fabiansebastianj1.revision.infrastructure.RevisionRepository;
 
 public class RevisionMYSQLRepository implements RevisionRepository {
@@ -87,6 +88,39 @@ public class RevisionMYSQLRepository implements RevisionRepository {
         }
         return Optional.empty();
     }
+
+    @Override
+public List<RevisionDTO> findRevisionsByPlaneId(int id) {
+    List<RevisionDTO> revisions = new ArrayList<>();
+    try (Connection connection = DriverManager.getConnection(url, user, password)) {
+        String query = "SELECT revi.id AS revision_id, " +
+                       "revi.revision_date AS revision_date, " +
+                       "revi.id_plane AS plane_id, " +
+                       "re_em.description AS description, " +
+                       "em.name AS employee " +
+                       "FROM revision AS revi " +
+                       "JOIN rev_employee re_em ON re_em.id_revision = revi.id " +
+                       "JOIN employee em ON em.id = re_em.id_employee " +
+                       "WHERE revi.id_plane = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    RevisionDTO revision = new RevisionDTO(
+                            resultSet.getInt("revision_id"),
+                            resultSet.getString("revision_date"),
+                            resultSet.getInt("plane_id"),
+                            resultSet.getString("description"),
+                            resultSet.getString("employee"));
+                    revisions.add(revision);
+                }
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return revisions;
+}
 
     @Override
     public List<Revision> findAll() {

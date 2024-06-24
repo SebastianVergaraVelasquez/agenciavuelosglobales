@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fabiansebastianj1.revision.domain.models.Revision;
+import com.fabiansebastianj1.revision.domain.models.RevisionDTO;
 
 public interface RevisionRepository {
     void save(Revision revision);
@@ -12,4 +13,5 @@ public interface RevisionRepository {
     Optional<Revision> findById(int id);
     List<Revision> findAll();
     Optional<Revision> findLast();
+    List<RevisionDTO> findRevisionsByPlaneId(int id);
 }
