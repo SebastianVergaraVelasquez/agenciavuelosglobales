@@ -8,6 +8,7 @@ import com.fabiansebastianj1.airlines.infrastructure.AirlineRepository;
 import com.fabiansebastianj1.model.domain.models.Model;
 import com.fabiansebastianj1.model.infrastructure.ModelRepository;
 import com.fabiansebastianj1.planes.domain.models.Plane;
+import com.fabiansebastianj1.planes.domain.models.PlaneDTO;
 import com.fabiansebastianj1.planes.infrastructure.PlaneRepository;
 import com.fabiansebastianj1.status.domain.models.Status;
 import com.fabiansebastianj1.status.infrastructure.StatusRepository;
@@ -72,5 +73,9 @@ public class PlaneService {
 
     public Optional<Model> findModelById (int id){
         return modelRepository.findById(id);
+    }
+
+    public Optional<PlaneDTO> findPlaneInfoAdditional (String plates){
+        return planeRepository.findPlaneInfoAdditional(plates);
     }
 }
