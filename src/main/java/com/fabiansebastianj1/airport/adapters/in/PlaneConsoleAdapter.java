@@ -2,6 +2,7 @@ package com.fabiansebastianj1.airport.adapters.in;
 
 import com.fabiansebastianj1.airport.application.AirportService;
 import com.fabiansebastianj1.airport.domain.models.Airport;
+import com.fabiansebastianj1.airport.domain.models.AirportDTO;
 import com.fabiansebastianj1.city.domain.models.City;
 import com.fabiansebastianj1.validations.InputVali;
 import com.fabiansebastianj1.validations.ValidationExist;
@@ -27,13 +28,13 @@ public class PlaneConsoleAdapter {
             System.out.println("*** Modulo de Aeropuerto ***");
             System.out.println(" ");
             System.out.println("Que accion desea realizar, digite una opcion numerica");
-            System.out.println("1. Registrar Aeropuerto  \n2. Salir");
+            System.out.println("1. Registrar Aeropuerto \n2.Consultar Aeropuerto \n3. Salir");
             int choice = scanner.nextInt();
             System.out.println(" ");
 
             switch (choice) {
                 case 1:
-                    System.out.println("*** Registro de Aviones ***");
+                    System.out.println("*** Registro de aeropuerto ***");
                     System.out.println(" ");
                     scanner.nextLine();
 
@@ -49,6 +50,13 @@ public class PlaneConsoleAdapter {
                     airportService.createAirport(newAirport);
                     break;
                 case 2:
+                    System.out.println("*** Consulta de aeropuerto ");
+                    Airport showAirport = ValidationExist.transformAndValidateObj(
+                        () -> airportService.findAirportById(inputVali.stringNotNull("Ingrese el id del aeropuerto"))
+                    );
+                    showAirportInfo(showAirport.getId());
+                    break;
+                case 3:
                     executing = false;
                     System.out.println("Saliendo del modulo de Aeropuerto");
                     break;
@@ -61,6 +69,14 @@ public class PlaneConsoleAdapter {
         }
 
 
+    }
+
+    public void showAirportInfo(String id){
+        Optional<AirportDTO> airport = airportService.findAirportCityById(id);
+        AirportDTO airportFinded = airport.get();
+        System.out.println(String.format("id: %s"+
+        "name: %s"+
+        "city: %s", airportFinded.getId(), airportFinded.getName(), airportFinded.getCityName() ));
     }
 
 

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fabiansebastianj1.airport.domain.models.Airport;
+import com.fabiansebastianj1.airport.domain.models.AirportDTO;
 import com.fabiansebastianj1.airport.infrastructure.AirportRepository;
 
 public class AirportMYSQLRepository implements AirportRepository {
@@ -107,5 +108,29 @@ public class AirportMYSQLRepository implements AirportRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override 
+    public Optional<AirportDTO> findAirportCityById(String id){
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT ai.id AS airport_id, ai.name AS airport, ci.name AS city FROM airport AS ai "+
+            "JOIN city ci ON ci.id = ai.id_city "+
+            "WHERE ai.id = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        AirportDTO airport = new AirportDTO(
+                                resultSet.getString("airport_id"),
+                                resultSet.getString("airport"),
+                                resultSet.getString("city"));
+                        return Optional.of(airport);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 }

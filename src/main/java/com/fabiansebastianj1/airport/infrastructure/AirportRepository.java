@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fabiansebastianj1.airport.domain.models.Airport;
+import com.fabiansebastianj1.airport.domain.models.AirportDTO;
 
 public interface AirportRepository {
     void save(Airport airport);
@@ -15,4 +16,6 @@ public interface AirportRepository {
     Optional<Airport> findById(String id);
 
     List<Airport> findAll();
+
+    Optional<AirportDTO> findAirportCityById(String id);
 }

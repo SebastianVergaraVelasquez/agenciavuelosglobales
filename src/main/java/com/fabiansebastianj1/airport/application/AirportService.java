@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fabiansebastianj1.airport.domain.models.Airport;
+import com.fabiansebastianj1.airport.domain.models.AirportDTO;
 import com.fabiansebastianj1.airport.infrastructure.AirportRepository;
 import com.fabiansebastianj1.city.domain.models.City;
 import com.fabiansebastianj1.city.infrastructure.CityRepository;
@@ -43,6 +44,10 @@ public class AirportService {
 
     public Optional<City> findCityById(String id) {
         return cityRepository.findById(id);
+    }
+
+    public Optional <AirportDTO> findAirportCityById(String id){
+        return airportRepository.findAirportCityById(id);
     }
 
 }
