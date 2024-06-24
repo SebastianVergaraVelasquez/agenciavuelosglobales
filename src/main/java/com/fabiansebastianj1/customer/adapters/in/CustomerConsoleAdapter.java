@@ -1,9 +1,12 @@
 package com.fabiansebastianj1.customer.adapters.in;
 
+import java.util.List;
 import java.util.Scanner;
 
 import com.fabiansebastianj1.customer.application.CustomerService;
+import com.fabiansebastianj1.customer.domain.models.Customer;
 import com.fabiansebastianj1.customer.domain.models.CustomerDTO;
+import com.fabiansebastianj1.documenttype.domain.models.DocumentType;
 import com.fabiansebastianj1.validations.InputVali;
 import com.fabiansebastianj1.validations.ValidationExist;
 
@@ -23,7 +26,7 @@ public class CustomerConsoleAdapter {
             System.out.println("*** Modulo de cliente ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println("1.Visualizar información del cliente \n2.Salir");
+            System.out.println("1.Visualizar información del cliente \n2.Registrar cliente \n3.Salir");
             int choice = scanner.nextInt();
             System.out.println(" ");
 
@@ -34,18 +37,31 @@ public class CustomerConsoleAdapter {
                     );
                     System.out.println(String.format("id: %s\n name: %s \n age: %s \ndocument_type: %s", showCustomer.getId(),showCustomer.getName(),showCustomer.getAge(),showCustomer.getDocumentType()));
                     break;
-                    
+                case 2:
+                    System.out.println("Registrar cliente");
+                    String id = inputVali.stringNotNull("Ingrese la id del cliente");
+                    String nombre = inputVali.stringNotNull("Ingrese el nombre del cliente");
+                    int edad = inputVali.readInt(inputVali.stringNotNull("Ingrese la edad del cliente"));
+                    showDocumentTypes();
+                    DocumentType showDocumentType = ValidationExist.transformAndValidateObj(
+                        () -> customerService.findDocumentTypeById(inputVali.readInt(inputVali.stringNotNull("Ingrese el id del tipo de documento")))
+                    );
+
+                    Customer newCustomer = new Customer(id, nombre, edad, showDocumentType.getId());
+                    customerService.createCustomer(newCustomer);
+                    System.out.println("Cliente creado exitosamente");
+                    break;
                 default:
                     break;
             }
-
-//             1. El agente de ventas selecciona la opción "Consultar Cliente" en el menú principal.
-// 2. El sistema solicita al agente ingresar el identificador del cliente.
-// 3. El agente ingresa el identificador del cliente.
-// 4. El sistema busca la información del cliente en la base de datos.
-// 5. El sistema muestra la información del cliente.
-// Postcondiciones: La información del cliente es mostrada al agente.
-
         }
+    }
+
+    public void showDocumentTypes(){
+        System.out.println("Lista de tipos de documento");
+        List<DocumentType> documentTypes = customerService.findAllDocumentTypes();
+        for (DocumentType documentType : documentTypes) {
+            System.out.println(String.format("id: %s, name: %s", documentType.getId(), documentType.getName()));
+        }  
     }
 }

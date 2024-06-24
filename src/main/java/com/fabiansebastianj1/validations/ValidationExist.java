@@ -4,8 +4,6 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Supplier;
 
-import com.google.protobuf.Option;
-
 public class ValidationExist {
     
     public static <T> T transformAndValidateObj(Supplier<Optional<T>> supplier){

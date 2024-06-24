@@ -8,20 +8,23 @@ import java.util.Optional;
 import com.fabiansebastianj1.customer.domain.models.Customer;
 import com.fabiansebastianj1.customer.domain.models.CustomerDTO;
 import com.fabiansebastianj1.customer.infrastructure.CustomerRepository;
+import com.fabiansebastianj1.documenttype.domain.models.DocumentType;
+import com.fabiansebastianj1.documenttype.infraestructure.DocumentTypeRepository;
 
 public class CustomerService {
     private final CustomerRepository customerRepository;
 //    private final CountryRepository countryRepository;
+    private final DocumentTypeRepository documentTypeRepository;
 
-
-    public CustomerService(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
-    }
-//
 //    public CustomerService(CustomerRepository customerRepository, CountryRepository countryRepository) {
 //        this.customerRepository = customerRepository;
 //        this.countryRepository = countryRepository;
 //    }
+
+    public CustomerService(CustomerRepository customerRepository, DocumentTypeRepository documentTypeRepository) {
+        this.customerRepository = customerRepository;
+        this.documentTypeRepository = documentTypeRepository;
+    }
 
     public void createCustomer(Customer customer){
         customerRepository.save(customer);
@@ -45,6 +48,14 @@ public class CustomerService {
 
     public Optional<CustomerDTO> findCustomerDTO(String id){
         return customerRepository.findCustomerDTOById(id);
+    }
+
+    public List<DocumentType> findAllDocumentTypes(){
+        return documentTypeRepository.findAll();
+    }
+
+    public Optional<DocumentType> findDocumentTypeById(int id){
+        return documentTypeRepository.findById(id);
     }
 
 //    public List<Country> getAllCountry(){
