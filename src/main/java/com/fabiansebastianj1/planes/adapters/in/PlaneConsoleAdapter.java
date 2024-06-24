@@ -6,14 +6,14 @@ import java.util.Optional;
 import java.util.Scanner;
 
 import com.fabiansebastianj1.airlines.domain.models.Airline;
-import com.fabiansebastianj1.country.domain.models.Country;
+import com.fabiansebastianj1.customer.domain.models.Customer;
 import com.fabiansebastianj1.model.domain.models.Model;
 import com.fabiansebastianj1.planes.application.PlaneService;
 import com.fabiansebastianj1.planes.domain.models.Plane;
 import com.fabiansebastianj1.planes.domain.models.PlaneDTO;
 import com.fabiansebastianj1.status.domain.models.Status;
-import com.fabiansebastianj1.validations.dateValidation;
 import com.fabiansebastianj1.validations.InputVali;
+import com.fabiansebastianj1.validations.Register;
 import com.fabiansebastianj1.validations.ValidationExist;
 
 public class PlaneConsoleAdapter {
@@ -33,7 +33,8 @@ public class PlaneConsoleAdapter {
             System.out.println("*** Modulo de aviones ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println("1.Registrar avión \n2.Eliminar avión \n3. Consultar Avion \n4. Salir");
+            System.out.println(
+                    "1.Registrar avión \n2.Eliminar avión \n3. Consultar Avion \n4.Actualizar avión \n5. Salir");
             int choice = scanner.nextInt();
             System.out.println(" ");
 
@@ -43,7 +44,7 @@ public class PlaneConsoleAdapter {
                     System.out.println(" ");
                     scanner.nextLine();
 
-                    String plates = verificarAvion(inputVali);
+                    String plates = verifyPlatesUntilOk(inputVali);
 
                     int capacity = inputVali.readInt(inputVali.stringNotNull("Ingrese la capacidad del avión"));
                     scanner.nextLine();
@@ -52,20 +53,20 @@ public class PlaneConsoleAdapter {
                     // dejarlo
                     String fabricationDate = scanner.nextLine();
                     // Acá deberíamos mostrar las opciones que tiene de estado, listarlas y que en
-                    mostrarStatuses();
+                    showStatuses();
 
                     Status showStatus = ValidationExist.transformAndValidateObj(
                             () -> planeService.findStatusById(inputVali.readInt("Ingrese la id del estado del avión")));
                     int statusId = showStatus.getId();
 
-                    mostrarAirlines();
+                    showAirlines();
 
                     Airline showAirline = ValidationExist.transformAndValidateObj(
                             () -> planeService.findAirlineById(inputVali.readInt(
                                     inputVali.stringNotNull("Ingrese el id de la aerolínea a la que pertenece"))));
                     int airlineId = showAirline.getId();
 
-                    mostrarModels();
+                    showModels();
 
                     Model showModel = ValidationExist.transformAndValidateObj(
                             () -> planeService.findModelById(inputVali.readInt("Ingrese la id del modelo del avión")));
@@ -109,21 +110,24 @@ public class PlaneConsoleAdapter {
                     System.out.println("*** Consultar avión ***");
                     System.out.println(" ");
                     scanner.nextLine();
-                    showPlaneInfo(inputVali);
+                    Plane PlaneFinded = returnPlane(inputVali);
+                    showPlaneInfo(PlaneFinded);
 
                     break;
                 case 4:
-                    executing = false;
-                    System.out.println("Saliendo del módulo de aviones");
+                    System.out.println("Actualizar info avión");
+
                     break;
 
                 default:
+                    executing = false;
+                    System.out.println("Saliendo del módulo de aviones");
                     break;
             }
         }
     }
 
-    public String verificarAvion(InputVali inputVali) {
+    public String verifyPlatesUntilOk(InputVali inputVali) {
         String plates;
         while (true) {
             plates = inputVali.stringNotNull("Ingrese la matrícula del avión");
@@ -141,7 +145,7 @@ public class PlaneConsoleAdapter {
         return plates;
     }
 
-    public void mostrarStatuses() {
+    public void showStatuses() {
         System.out.println("Lista de estados");
         List<Status> statuses = planeService.findAllStatuses();
         for (Status status : statuses) {
@@ -149,7 +153,7 @@ public class PlaneConsoleAdapter {
         }
     }
 
-    public void mostrarAirlines() {
+    public void showAirlines() {
         System.out.println("Lista de aerolineas");
         List<Airline> airlines = planeService.findAllAirlines();
         for (Airline airline : airlines) {
@@ -157,7 +161,7 @@ public class PlaneConsoleAdapter {
         }
     }
 
-    public void mostrarModels() {
+    public void showModels() {
         System.out.println("Lista de modelos");
         List<Model> models = planeService.findAllModels();
         for (Model model : models) {
@@ -165,11 +169,38 @@ public class PlaneConsoleAdapter {
         }
     }
 
-    public void showPlaneInfo(InputVali inputVali) {
+    public void updatePlane(InputVali inputVali) {
+        Plane showPlane = returnPlane(inputVali);
+        showPlaneInfo(showPlane);
+        boolean newInput;
+        int newIdStatus, newIdAirline;
+        // verificar si desea cambiar el estado
+        newInput = Register.yesOrNo("Desea cambiar el estado del avión? Ingrese el valor numerico 1 (si) o 2(no)");
+        if (newInput == true) {
+            showModels();
+            newIdStatus = inputVali.readInt(inputVali.stringNotNull("Ingrese el nuevo nombre"));
+        } else {
+            newIdStatus = showPlane.getStatusId();
+        }
+        // verificar si desea cambiar la aerolinea
+        newInput = Register.yesOrNo("Desea cambiar la edad del cliente? Ingrese el valor numerico 1 (si) o 2(no)");
+        if (newInput == true) {
+            newIdAirline = inputVali.readInt(inputVali.stringNotNull("Ingrese la edad"));
+        } else {
+            newIdAirline = showPlane.getAirlineId();
+        }
+        Plane updatedPlane = new Plane(showPlane.getId(),showPlane.getPlates(),showPlane.getCapacity(),showPlane.getFabricationDate(),newIdStatus,newIdAirline,showPlane.getModelId());
+        planeService.updatePlane(updatedPlane);
+    }
+
+    public Plane returnPlane(InputVali inputVali) {
         Plane showPlane = ValidationExist.transformAndValidateObj(
                 () -> planeService.findPlaneByPlate(
-                        inputVali.stringNotNull("Ingrese el id del avión")));
+                        inputVali.stringNotNull("Ingrese la placa del avión")));
+        return showPlane;
+    }
 
+    public void showPlaneInfo(Plane showPlane) {
         Optional<PlaneDTO> planeDTO = planeService.findPlaneInfoAdditional(showPlane.getPlates());
         PlaneDTO planeFinded = planeDTO.get();
 
@@ -180,9 +211,8 @@ public class PlaneConsoleAdapter {
                 "| ID   | Plates     | Capacity | Fabrication Date| Status | Airline| Model |%n");
         System.out.format(
                 "+------+------------+----------+-----------------+-----------+----------+---------+%n");
-        System.out.format(leftAlignFormat,planeFinded.getId(), planeFinded.getPlates(), planeFinded.getCapacity(),
+        System.out.format(leftAlignFormat, planeFinded.getId(), planeFinded.getPlates(), planeFinded.getCapacity(),
                 planeFinded.getFabricationDate(), planeFinded.getStatusName(), planeFinded.getAirlineName(),
                 planeFinded.getModelName());
     }
-
 }
