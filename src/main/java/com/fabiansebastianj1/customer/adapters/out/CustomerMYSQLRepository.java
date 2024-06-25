@@ -108,7 +108,7 @@ public class CustomerMYSQLRepository implements CustomerRepository {
                 statement.setString(1, customer.getName());
                 statement.setInt(2, customer.getAge());
                 statement.setInt(3, customer.getDocumentTypeId());
-                statement.setString(1, customer.getId());
+                statement.setString(4, customer.getId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {

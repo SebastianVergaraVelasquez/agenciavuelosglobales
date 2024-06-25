@@ -11,6 +11,7 @@ import com.fabiansebastianj1.revision.application.RevisionService;
 import com.fabiansebastianj1.revision.domain.models.Revision;
 import com.fabiansebastianj1.revision.domain.models.RevisionDTO;
 import com.fabiansebastianj1.validations.InputVali;
+import com.fabiansebastianj1.validations.Register;
 import com.fabiansebastianj1.validations.ValidationExist;
 
 public class RevisionConsoleAdapter {
@@ -30,7 +31,7 @@ public class RevisionConsoleAdapter {
             System.out.println("*** Modulo de Revisión de aviones ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println("1.Registrar revisión \n2.Salir");
+            System.out.println("1.Registrar revisión \n2. Consultar historial de revision\n3. Actualizar Informacion de Revision\n4. Salir");
             int choice = scanner.nextInt();
             System.out.println(" ");
 
@@ -68,12 +69,24 @@ public class RevisionConsoleAdapter {
 
                     //consultar avion por plate, luego extraer de ahí el id y pasarlo a la busqueda de revisión
                     Plane planeFinded = ValidationExist.transformAndValidateObj(
-                        ()-> revisionService.findPlaneByPlates(inputVali.stringNotNull("Ingrese la id del avion"))
+                            () -> revisionService.findPlaneByPlates(inputVali.stringNotNull("Ingrese la id del avion"))
                     );
                     //Consultar si el avión buscado tiene revisiones
                     showRevisionsByPlaneId(planeFinded.getId());
                     break;
                 case 3:
+                    System.out.println("*** Actualizar Informacion de Revision ***");
+                    System.out.println(" ");
+                    System.out.println("Informacion actual de la revision");
+                    Revision showRevision = ValidationExist.transformAndValidateObj(
+                            () -> revisionService.findRevisionById(
+                                    inputVali.readInt(inputVali.stringNotNull("Ingrese el Id de la revision que desea editar")))
+                    );
+                    showRevisionsByPlaneId(showRevision.getPlaneId());
+                    updateRevision(showRevision);
+
+                    break;
+                case 4:
                     System.out.println("Saliendo del modulo de revisión");
                     executing = false;
                     break;
@@ -85,19 +98,20 @@ public class RevisionConsoleAdapter {
         }
     }
 
-    public void showRevisionsByPlaneId(int id){
+    public void showRevisionsByPlaneId(int id) {
         System.out.println("Historial de revisiones");
         List<RevisionDTO> revisions = revisionService.revisionsByPlaneId(id);
         if (!revisions.isEmpty()) {
             for (RevisionDTO revisionDTO : revisions) {
-                System.out.println(String.format("id: %s \n"+
-                "date: %s \n"+
-                "planeId: %s \n"+
-                "description: %s \n"+
-                "tecnico: %s \n\n", revisionDTO.getId(),revisionDTO.getRevisionDate(),revisionDTO.getPlaneId(),revisionDTO.getDescription(),revisionDTO.getEmployeeName()));
+                System.out.println(String.format("id: %s \n" +
+                        "date: %s \n" +
+                        "planeId: %s \n" +
+                        "description: %s \n" +
+                        "tecnico: %s \n\n", revisionDTO.getId(), revisionDTO.getRevisionDate(), revisionDTO.getPlaneId(), revisionDTO.getDescription(), revisionDTO.getEmployeeName()));
             }
+        } else {
+            System.out.println("Este avión no tiene revisiones \n");
         }
-        else{System.out.println("Este avión no tiene revisiones \n");}
     }
 
     public void mostrarAviones() {
@@ -107,4 +121,37 @@ public class RevisionConsoleAdapter {
             System.out.println(String.format("id: %s, plates: %s", plane.getId(), plane.getPlates()));
         }
     }
+
+    public void updateRevision(Revision showRevision) {
+        InputVali inputVali = new InputVali();
+        boolean newInput;
+        String newDate;
+        String newDescription;
+        String newEmployeeId;
+        newInput = Register.yesOrNo("Desea cambiar la fecha de la revision? Ingrese el valor numerico 1 (si) o 2(no)");
+        if (newInput == true) {
+            newDate = inputVali.stringNotNull("Ingrese la nueva fecha");
+        } else {
+            newDate = showRevision.getRevisionDate();
+        }
+        newInput = Register.yesOrNo("Desea cambiar la descripcion de la revision? Ingrese el valor numerico 1 (si) o 2(no)");
+        Optional<RevEmployee> revEmployee = revisionService.findRevEmployeeById(showRevision.getId());
+        if (newInput == true) {
+            newDescription = inputVali.stringNotNull("Ingrese la nueva descripcion");
+            revEmployee.get().setDescription(newDescription);
+            revisionService.updateRevEmploye(revEmployee.get());
+        }
+        newInput = Register.yesOrNo("Desea cambiar el empleado de la revision? Ingrese el valor numerico 1 (si) o 2(no)");
+        if (newInput == true) {
+            revisionService.findAllEmployees();
+            newEmployeeId = inputVali.stringNotNull("Ingrese el Id del empleado que quiera seleccionar");
+            revEmployee.get().setId_employee(newEmployeeId);
+            revisionService.updateRevEmploye(revEmployee.get());
+        }
+        showRevision.setRevisionDate(newDate);
+        revisionService.updateRevision(showRevision);
+
+    }
+
+
 }

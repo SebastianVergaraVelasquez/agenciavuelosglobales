@@ -76,4 +76,16 @@ public class RevisionService {
         return planeRepository.findByPlate(plates);
     }
 
+    public Optional<RevEmployee> findRevEmployeeById(int id){
+       return revEmployeService.findRevEmployeeById(id);
+    }
+
+    public List<Employee> findAllEmployees(){
+        return employeeRepository.findAll();
+    }
+
+    public void updateRevEmploye(RevEmployee revEmployee){
+        revEmployeService.updateRevEmploye(revEmployee);
+    }
+
 }
