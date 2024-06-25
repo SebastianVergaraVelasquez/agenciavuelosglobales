@@ -152,7 +152,8 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT " +
                "c1.id_trip AS id_vuelo,"+
-               "c1.id AS id_escala," +
+               "c1.id AS id_connection, "+
+               "c1.connection_number AS id_escala," +
                "c1.id_airport AS aeropuerto_salida, "+
                "c2.id_airport AS aeropuerto_llegada," + 
                "tr.trip_date As Fecha" +
@@ -161,13 +162,14 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                "JOIN connection c2 ON c1.id_trip = c2.id_trip " +
                "JOIN trip_status ts2 ON c2.id_trip_status = ts2.id " +
                "JOIN trip tr ON c2.id_trip ON tr.id " +
-               "WHERE c1.id_trip_status = 1 AND c2.id_trip_status = 3;";
+               "WHERE c1.id_trip_status = 1 AND c2.id_trip_status = 2;";
             try(PreparedStatement statement = connection.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery()){
                     while (resultSet.next()) {
                         ConnectionDTO flight = new ConnectionDTO(
                             resultSet.getInt("id_vuelo"), 
                             resultSet.getInt("id_escala"),
+                            resultSet.getString("id_connection"),
                             resultSet.getString("aeropuerto_salida"), 
                             resultSet.getString("aeropuerto_llegada"),
                             resultSet.getString("Fecha"));
@@ -185,6 +187,7 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
         try (Connection connection = DriverManager.getConnection(url,user,password)){
             String query = "SELECT " +
                "c1.id_trip AS id_vuelo,"+
+               "c1.id AS id_connection, "+
                "c1.id AS id_escala," +
                "c1.id_airport AS aeropuerto_salida, "+
                "c2.id_airport AS aeropuerto_llegada," + 
@@ -203,6 +206,7 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                         ConnectionDTO connections = new ConnectionDTO(
                             resultSet.getInt("id_vuelo"), 
                             resultSet.getInt("id_escala"),
+                            resultSet.getString("id_connection"),
                             resultSet.getString("aeropuerto_salida"), 
                             resultSet.getString("aeropuerto_llegada"),
                             resultSet.getString("Fecha"));
