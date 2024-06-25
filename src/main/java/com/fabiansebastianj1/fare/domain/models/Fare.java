@@ -13,6 +13,12 @@ public class Fare {
         this.value = value;
     }
 
+    public Fare(String description, String detail, double value) {
+        this.description = description;
+        this.detail = detail;
+        this.value = value;
+    }
+
     public int getId() {
         return id;
     }

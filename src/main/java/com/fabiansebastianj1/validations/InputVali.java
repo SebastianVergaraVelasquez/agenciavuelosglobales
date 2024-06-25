@@ -23,15 +23,19 @@ public class InputVali {
         return valor;
     }
 
-    // public int isInt (String mensaje){
-    //     String value = stringNotNull(mensaje);
-    //     try {
-            
-    //     } catch (Exception e) {
-    //         // TODO: handle exception
-    //     }
-    //     return 
-    // }
+   public Double readDouble (String mensaje){
+    Double valor;
+        while (true) {
+            System.out.println(mensaje);
+            try {
+                valor = Double.parseDouble(scanner.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.print("Debe ingresar un dato valido, ");
+            }
+        }
+        return valor;
+   }
 
     public String stringNotNull(String message) {
         System.out.print(message);
