@@ -1,13 +1,16 @@
 package com.fabiansebastianj1.tripcrew.adapters.in;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import com.fabiansebastianj1.connection.domain.models.ConnectionDTO;
 import com.fabiansebastianj1.connection.domain.models.Connections;
 import com.fabiansebastianj1.employee.domain.models.Employee;
+import com.fabiansebastianj1.trip.domain.models.Trip;
 import com.fabiansebastianj1.tripcrew.application.TripCrewService;
 import com.fabiansebastianj1.tripcrew.domain.models.TripCrew;
+import com.fabiansebastianj1.tripcrew.domain.models.TripCrewDTO;
 import com.fabiansebastianj1.validations.InputVali;
 import com.fabiansebastianj1.validations.Register;
 import com.fabiansebastianj1.validations.ValidationExist;
@@ -29,7 +32,7 @@ public class TripCrewConsoleAdapter {
             System.out.println("*** Modulo de tripulantes ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println("1.Asignar Tripulación \n2.Salir");
+            System.out.println("1.Asignar Tripulación \n2.Consultar asignación de tripulación \n3.Salir");
             int choice = scanner.nextInt();
             System.out.println(" ");
 
@@ -37,10 +40,10 @@ public class TripCrewConsoleAdapter {
                 case 1:
                     System.out.println("***Lista de trayectos disponibles***");
                     mostrarVuelos();
-
+                    //Consulto que el id connection exista en la tabla connection
                     Connections showConnections = ValidationExist.transformAndValidateObj(
                             () -> tripCrewService.findConnectionById(
-                                    inputVali.readInt(inputVali.stringNotNull("Ingrese la id de la escala"))));
+                                    inputVali.readInt(inputVali.stringNotNull("Ingrese la id_escala mostrada para el vuelo al que desea asignar la tripulación"))));
                     int idConnection = showConnections.getId();
 
                     boolean employeesExists = verificarEmpleados();
@@ -52,6 +55,20 @@ public class TripCrewConsoleAdapter {
                         break;
                     }
                 case 2:
+                    System.out.println("***Consulta de tripulantes***");
+                    //Consulto el tripId y extraigo el tripId
+                    Trip searchedTrip = ValidationExist.transformAndValidateObj(
+                        () -> tripCrewService.findTripById(
+                                inputVali.readInt(inputVali.stringNotNull("Ingrese el id del vuelo"))));
+                    //Consulto el connectionId y extraigo el connectionId
+                    ConnectionDTO searchedTripAsConnection = ValidationExist.transformAndValidateObj(
+                        () -> tripCrewService.findTripAsConnectionByTripId(searchedTrip.getId())
+                    );
+                    showTripCrew(searchedTripAsConnection.getConnectionId());
+                    break;
+
+
+                case 3:
                     System.out.println("Saliendo del modulo de tripulantes");
                     executing = false;
                     break;
@@ -59,6 +76,13 @@ public class TripCrewConsoleAdapter {
                     System.out.println("Ingrese una opción válida");
                     break;
             }
+        }
+    }
+
+    public void showTripCrew(int id){
+        List<TripCrewDTO> tripCrewList = tripCrewService.listTripCrewDTOByConnectionId(id);
+        for (TripCrewDTO tripCrewDTO : tripCrewList) {
+            System.out.println(String.format("id_employee: %s, name: %s, role: %s", tripCrewDTO.getEmployeeId(),tripCrewDTO.getEmployeeName(), tripCrewDTO.getEmployeeRole()));
         }
     }
 

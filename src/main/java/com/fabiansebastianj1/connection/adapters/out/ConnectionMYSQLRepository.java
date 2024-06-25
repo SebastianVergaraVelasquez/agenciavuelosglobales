@@ -179,7 +179,7 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
         }
         return flights;
     }
-
+    //Esta método me devuelve el vuelo como conexión (De aquí extraigo el id de connection usando id_trip)
     @Override
     public Optional<ConnectionDTO> findConnectionDTO(int id) {
         try (Connection connection = DriverManager.getConnection(url,user,password)){
@@ -194,7 +194,7 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                "JOIN connection c2 ON c1.id_trip = c2.id_trip " +
                "JOIN trip_status ts2 ON c2.id_trip_status = ts2.id " +
                "JOIN trip tr ON c2.id_trip ON tr.id " +
-               "WHERE c1.id_trip_status = 1 AND c2.id_trip_status = 3 AND c1.id_trip = ? AND c2.id_trip;";
+               "WHERE c1.id_trip_status = 1 AND c2.id_trip_status = 3 AND c1.id_trip = ? AND c2.id_trip = ?;";
             try (PreparedStatement statement = connection.prepareStatement(query)){
                 statement.setInt(1,id);
                 statement.setInt(2,id);

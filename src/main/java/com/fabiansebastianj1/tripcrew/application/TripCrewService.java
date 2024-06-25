@@ -9,7 +9,10 @@ import com.fabiansebastianj1.connection.domain.models.Connections;
 import com.fabiansebastianj1.connection.infraestructure.ConnectionRepository;
 import com.fabiansebastianj1.employee.domain.models.Employee;
 import com.fabiansebastianj1.employee.infrastructure.EmployeeRepository;
+import com.fabiansebastianj1.trip.domain.models.Trip;
+import com.fabiansebastianj1.trip.infrastructure.TripRepository;
 import com.fabiansebastianj1.tripcrew.domain.models.TripCrew;
+import com.fabiansebastianj1.tripcrew.domain.models.TripCrewDTO;
 import com.fabiansebastianj1.tripcrew.infrastructure.TripCrewRepository;
 
 public class TripCrewService {
@@ -17,11 +20,14 @@ public class TripCrewService {
     private final TripCrewRepository tripCrewRepository;
     private final ConnectionRepository connectionRepository;
     private final EmployeeRepository employeeRepository;
+    private final TripRepository tripRepository;
 
-    public TripCrewService(TripCrewRepository tripCrewRepository, ConnectionRepository connectionRepository,EmployeeRepository employeeRepository) {
+    public TripCrewService(TripCrewRepository tripCrewRepository, ConnectionRepository connectionRepository,
+            EmployeeRepository employeeRepository, TripRepository tripRepository) {
         this.tripCrewRepository = tripCrewRepository;
         this.connectionRepository = connectionRepository;
         this.employeeRepository = employeeRepository;
+        this.tripRepository = tripRepository;
     }
 
     public void createTripCrew(TripCrew tripCrew){
@@ -42,5 +48,17 @@ public class TripCrewService {
 
     public Optional<Employee> findEmployeeById(String id){
         return employeeRepository.findById(id);
+    }
+
+    public Optional<Trip> findTripById(int id){
+        return tripRepository.findById(id);
+    }
+
+    public Optional<ConnectionDTO> findTripAsConnectionByTripId(int id){
+        return connectionRepository.findConnectionDTO(id);
+    }
+
+    public List<TripCrewDTO> listTripCrewDTOByConnectionId(int id){
+        return tripCrewRepository.listTripCrewDTO(id);
     }
 }
