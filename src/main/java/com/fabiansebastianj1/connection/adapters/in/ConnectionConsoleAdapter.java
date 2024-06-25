@@ -29,7 +29,7 @@ public class ConnectionConsoleAdapter {
             System.out.println("*** Modulo de cliente ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println("1.Visualizar información del trayecto \n2.Actualizar escala \n3.Salir");
+            System.out.println("1.Visualizar información del trayecto \n2.Actualizar escala \n3.Eliminar escala \n4.Salir");
             int choice = scanner.nextInt();
             System.out.println(" ");
 
@@ -52,6 +52,11 @@ public class ConnectionConsoleAdapter {
                     showConnectionInfoById(connection.getId());
                     updateInfoConnection(connection);
                     System.out.println("**Actualización exitosa***");
+                    break;
+                case 3:
+                    System.out.println("***Eliminar escala***");
+                    Connections connectionToDelete = returnConnection(inputVali);
+                    connectionService.deleteCOnnection(connectionToDelete.getId());
                     break;
                 default:
                     break;
