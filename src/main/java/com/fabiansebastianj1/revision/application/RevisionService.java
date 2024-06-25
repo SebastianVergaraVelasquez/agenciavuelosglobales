@@ -9,6 +9,7 @@ import com.fabiansebastianj1.planes.domain.models.Plane;
 import com.fabiansebastianj1.planes.infrastructure.PlaneRepository;
 import com.fabiansebastianj1.revemployee.application.RevEmployeService;
 import com.fabiansebastianj1.revemployee.domain.models.RevEmployee;
+import com.fabiansebastianj1.revemployee.infraestructure.RevEmployeeRepository;
 import com.fabiansebastianj1.revision.domain.models.Revision;
 import com.fabiansebastianj1.revision.domain.models.RevisionDTO;
 import com.fabiansebastianj1.revision.infrastructure.RevisionRepository;
@@ -18,14 +19,14 @@ public class RevisionService {
     private final RevisionRepository revisionRepository;
     private final PlaneRepository planeRepository;
     private final EmployeeRepository employeeRepository;
-    private final RevEmployeService revEmployeService;
+    private final RevEmployeeRepository revEmployeeRepository;
 
     public RevisionService(RevisionRepository revisionRepository, PlaneRepository planeRepository,
-            EmployeeRepository employeeRepository, RevEmployeService revEmployeService) {
+            EmployeeRepository employeeRepository, RevEmployeeRepository revEmployeeRepository) {
         this.revisionRepository = revisionRepository;
         this.planeRepository = planeRepository;
         this.employeeRepository = employeeRepository;
-        this.revEmployeService = revEmployeService;
+        this.revEmployeeRepository = revEmployeeRepository;
     }
 
     public void createRevision(Revision revision) {
@@ -65,7 +66,7 @@ public class RevisionService {
     }
 
     public void createRevEmployee(RevEmployee revEmployee){
-        revEmployeService.save(revEmployee);
+        revEmployeeRepository.save(revEmployee);
     }
 
     public List<RevisionDTO> revisionsByPlaneId(int id){
@@ -77,7 +78,7 @@ public class RevisionService {
     }
 
     public Optional<RevEmployee> findRevEmployeeById(int id){
-       return revEmployeService.findRevEmployeeById(id);
+       return revEmployeeRepository.findRevEmployeeById(id);
     }
 
     public List<Employee> findAllEmployees(){
@@ -85,7 +86,11 @@ public class RevisionService {
     }
 
     public void updateRevEmploye(RevEmployee revEmployee){
-        revEmployeService.updateRevEmploye(revEmployee);
+        revEmployeeRepository.update(revEmployee);
+    }
+
+    public void deleteRevEmployee(int id) {
+        revEmployeeRepository.delete(id);
     }
 
 }

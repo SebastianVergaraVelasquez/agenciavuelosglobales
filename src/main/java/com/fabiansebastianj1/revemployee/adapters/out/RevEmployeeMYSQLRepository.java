@@ -74,4 +74,17 @@ public class RevEmployeeMYSQLRepository implements RevEmployeeRepository {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void delete(int id) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "DELETE FROM rev_employee WHERE id_revision = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, id);
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

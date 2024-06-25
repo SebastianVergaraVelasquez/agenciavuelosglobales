@@ -31,7 +31,7 @@ public class RevisionConsoleAdapter {
             System.out.println("*** Modulo de Revisión de aviones ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println("1.Registrar revisión \n2. Consultar historial de revision\n3. Actualizar Informacion de Revision\n4. Salir");
+            System.out.println("1.Registrar revisión \n2. Consultar historial de revision\n3. Actualizar Informacion de Revision\n4. Eliminar Revision\n5. Salir");
             int choice = scanner.nextInt();
             System.out.println(" ");
 
@@ -87,10 +87,31 @@ public class RevisionConsoleAdapter {
 
                     break;
                 case 4:
+                    System.out.println("*** Eliminar Revision ***");
+                    System.out.println(" ");
+                    List<Revision> revisions = revisionService.findAllRevisions();
+                    String leftAlignFormat = "| %-4d | %-10s | %-8d |%n";
+                    System.out.format("+------+------------+----------+%n");
+                    System.out.format("| ID   | Date     | Id_Plane |%n");
+                    System.out.format("+------+------------+----------+%n");
+
+                    for (Revision revision : revisions) {
+                        System.out.format(leftAlignFormat, revision.getId(), revision.getRevisionDate(), revision.getPlaneId());
+                    }
+
+                    System.out.format("+------+------------+----------+%n");
+
+                    Revision showRevisions = ValidationExist.transformAndValidateObj(
+                            () -> revisionService.findRevisionById(
+                                    inputVali.readInt(inputVali.stringNotNull("Ingrese el ID de la revision que desea aliminar"))));
+
+                    revisionService.deleteRevEmployee(showRevisions.getId());
+                    revisionService.deleteRevision(showRevisions.getId());
+                    break;
+                case 5:
                     System.out.println("Saliendo del modulo de revisión");
                     executing = false;
                     break;
-
                 default:
                     System.out.println("Ingrese una opción válida");
                     break;

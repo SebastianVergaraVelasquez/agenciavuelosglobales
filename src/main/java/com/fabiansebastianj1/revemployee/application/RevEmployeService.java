@@ -17,11 +17,17 @@ public class RevEmployeService {
         revEmployeeRepository.save(revEmployee);
     }
 
-    public Optional<RevEmployee> findRevEmployeeById(int id){
+    public Optional<RevEmployee> findRevEmployeeById(int id) {
         return revEmployeeRepository.findRevEmployeeById(id);
     }
 
-        public void updateRevEmploye(RevEmployee revEmployee){
+    public void updateRevEmploye(RevEmployee revEmployee) {
         revEmployeeRepository.update(revEmployee);
     }
+
+    public void deleteRevEmployee(int id) {
+        revEmployeeRepository.delete(id);
+    }
+
+
 }

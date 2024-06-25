@@ -9,4 +9,5 @@ public interface RevEmployeeRepository {
     void save(RevEmployee revEmployee);
     Optional<RevEmployee> findRevEmployeeById(int id);
     void update(RevEmployee revEmployee);
+    void delete(int id);
 }
