@@ -7,6 +7,10 @@ public class DocumentType {
     public DocumentType() {
     }
 
+    public DocumentType(String name) {
+        this.name = name;
+    }
+
     public DocumentType(int id, String name) {
         this.id = id;
         this.name = name;
