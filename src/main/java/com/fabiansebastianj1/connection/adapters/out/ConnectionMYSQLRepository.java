@@ -121,6 +121,32 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
         return connections;
     }
 
+    @Override
+    public List<Connections> findAllConnectionsByTripId(int tripId) {
+    List<Connections> connections = new ArrayList<>();
+    try (Connection connection = DriverManager.getConnection(url, user, password)) {
+        String query = "SELECT * FROM connection WHERE id_trip = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, tripId); // Fija el valor del parámetro tripId
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Connections connect = new Connections(
+                            resultSet.getInt("id"),
+                            resultSet.getString("connection_number"),
+                            resultSet.getInt("id_trip"),
+                            resultSet.getInt("id_plane"),
+                            resultSet.getString("id_airport"),
+                            resultSet.getInt("id_trip_status"));
+                    connections.add(connect);
+                }
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return connections;
+}
+
     public List<ConnectionDTO> findAllByTripId(int tripId) {
         List<ConnectionDTO> connections = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
@@ -153,7 +179,7 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
             String query = "SELECT " +
                "c1.id_trip AS id_vuelo,"+
                "c1.id AS id_connection, "+
-               "c1.connection_number AS id_escala," +
+               "c1.connection_number AS con_number," +
                "c1.id_airport AS aeropuerto_salida, "+
                "c2.id_airport AS aeropuerto_llegada," + 
                "tr.trip_date As Fecha" +
@@ -168,8 +194,9 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                     while (resultSet.next()) {
                         ConnectionDTO flight = new ConnectionDTO(
                             resultSet.getInt("id_vuelo"), 
-                            resultSet.getInt("id_escala"),
-                            resultSet.getString("id_connection"),
+                            resultSet.getInt("id_connection"),
+                            resultSet.getString("con_number"),
+                            resultSet.getInt("id_plane"),
                             resultSet.getString("aeropuerto_salida"), 
                             resultSet.getString("aeropuerto_llegada"),
                             resultSet.getString("Fecha"));
@@ -189,6 +216,7 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                "c1.id_trip AS id_vuelo,"+
                "c1.id AS id_connection, "+
                "c1.id AS id_escala," +
+               "c1.id_plane AS id_plane ,"+
                "c1.id_airport AS aeropuerto_salida, "+
                "c2.id_airport AS aeropuerto_llegada," + 
                "tr.trip_date As Fecha" +
@@ -205,8 +233,9 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                     if (resultSet.next()){
                         ConnectionDTO connections = new ConnectionDTO(
                             resultSet.getInt("id_vuelo"), 
-                            resultSet.getInt("id_escala"),
-                            resultSet.getString("id_connection"),
+                            resultSet.getInt("id_connection"),
+                            resultSet.getString("con_number"),
+                            resultSet.getInt("id_plane"),
                             resultSet.getString("aeropuerto_salida"), 
                             resultSet.getString("aeropuerto_llegada"),
                             resultSet.getString("Fecha"));

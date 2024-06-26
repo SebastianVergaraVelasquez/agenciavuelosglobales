@@ -48,7 +48,8 @@ public class TripMYSQLRepository implements TripRepository {
                     Trip trip = new Trip(
                             resultSet.getInt("id"),
                             resultSet.getString("trip_date"),
-                            resultSet.getDouble("price_tripe")
+                            resultSet.getDouble("price_tripe"),
+                            resultSet.getInt("trip_condition_id")
                             );
                         trips.add(trip);
                 }
@@ -70,7 +71,8 @@ public class TripMYSQLRepository implements TripRepository {
                         Trip trip = new Trip(
                             resultSet.getInt("id"),
                             resultSet.getString("trip_date"),
-                            resultSet.getDouble("price_tripe")
+                            resultSet.getDouble("price_tripe"),
+                            resultSet.getInt("trip_condition_id")
                             );
                         return Optional.of(trip);
                     }

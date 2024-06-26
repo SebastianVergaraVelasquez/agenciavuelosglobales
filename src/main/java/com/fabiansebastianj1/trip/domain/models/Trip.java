@@ -6,11 +6,13 @@ public class Trip {
     private int id;
     private String date;
     private double price;
+    private int tripConditionId;
 
-    public Trip(int id, String date, double price) {
+    public Trip(int id, String date, double price, int tripConditionId) {
         this.id = id;
         this.date = date;
         this.price = price;
+        this.tripConditionId = tripConditionId;
     }
 
     public int getId() {
@@ -35,6 +37,14 @@ public class Trip {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public int getTripConditionId() {
+        return tripConditionId;
+    }
+
+    public void setTripConditionId(int tripConditionId) {
+        this.tripConditionId = tripConditionId;
     }
 
 }

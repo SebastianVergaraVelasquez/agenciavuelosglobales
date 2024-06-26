@@ -14,10 +14,11 @@ public class ConnectionDTO {
     private String planePlates;
     private String tripDate;
     
-    public ConnectionDTO(int tripId, int connection_id, String connectionNumber, String startAirport, String arriveAirport, String tripDate) {
+    public ConnectionDTO(int tripId, int connection_id, String connectionNumber, int planeId, String startAirport, String arriveAirport, String tripDate) {
         this.tripId = tripId;
         this.connectionId = connection_id;
         this.connectionNumber = connectionNumber;
+        this.planeId = planeId;
         this.startAirport = startAirport;
         this.arriveAirport = arriveAirport;
         this.tripDate = tripDate;

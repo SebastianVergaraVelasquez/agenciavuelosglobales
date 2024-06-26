@@ -43,6 +43,10 @@ public class PlaneService {
         return planeRepository.findAll();
     }
 
+    public List<Plane> findAllPlanesAvailable(){
+        return planeRepository.findAllAvailable();
+    }
+
     public void deletePlane(int id){
         planeRepository.delete(id);
     }

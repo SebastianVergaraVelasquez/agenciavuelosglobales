@@ -14,4 +14,5 @@ public interface PlaneRepository {
     Optional<Plane> findByPlate(String plate);
     List<Plane> findAll();
     Optional<PlaneDTO> findPlaneInfoAdditional(String plates);
+    List<Plane> findAllAvailable();
 }

@@ -66,6 +66,32 @@ public class PlaneMySQLRepository implements PlaneRepository {
         return planes;
     }
 
+    @Override
+    public List<Plane> findAllAvailable() {
+        List<Plane> planes = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM plane WHERE id_status = 1";
+            try (PreparedStatement statement = connection.prepareStatement(query);
+                 ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Plane plane = new Plane(
+                            resultSet.getInt("id"),
+                            resultSet.getString("plates"),
+                            resultSet.getInt("capacity"),
+                            resultSet.getString("fabircation_date"),
+                            resultSet.getInt("id_status"),
+                            resultSet.getInt("id_airline"),
+                            resultSet.getInt("id_model")
+                    );
+                    planes.add(plane);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return planes;
+    }
+
 
     @Override
     public Optional<Plane> findById(int id) {
