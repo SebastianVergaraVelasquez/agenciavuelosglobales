@@ -56,7 +56,7 @@ public class PlaneConsoleAdapter {
                     showStatuses();
 
                     Status showStatus = ValidationExist.transformAndValidateObj(
-                            () -> planeService.findStatusById(inputVali.readInt("Ingrese la id del estado del avión")));
+                            () -> planeService.findStatusById(inputVali.readInt(inputVali.stringNotNull("Ingrese la id del estado del avión"))));
                     int statusId = showStatus.getId();
 
                     showAirlines();
@@ -69,7 +69,7 @@ public class PlaneConsoleAdapter {
                     showModels();
 
                     Model showModel = ValidationExist.transformAndValidateObj(
-                            () -> planeService.findModelById(inputVali.readInt("Ingrese la id del modelo del avión")));
+                            () -> planeService.findModelById(inputVali.readInt(inputVali.stringNotNull("Ingrese la id del modelo del avión"))));
 
                     int modelId = showModel.getId();
 

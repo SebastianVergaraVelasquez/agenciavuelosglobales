@@ -130,7 +130,7 @@ public class AirportConsoleAdapter {
         System.out.println("Lista de ciudades");
         List<City> cities = airportService.findAllCities();
         for (City city : cities) {
-            System.out.println(String.format("id: %s , nombre: %s , cityID: %s", city.getId(), city.getName()));
+            System.out.println(String.format("id: %s , nombre: %s", city.getId(), city.getName()));
         }
     }
 }

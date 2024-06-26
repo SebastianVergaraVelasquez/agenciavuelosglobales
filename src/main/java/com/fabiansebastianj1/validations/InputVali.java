@@ -29,9 +29,9 @@ public class InputVali {
     public Double readDouble(String mensaje) {
         Double valor;
         while (true) {
-            System.out.println(mensaje);
+            // System.out.println(mensaje);
             try {
-                valor = Double.parseDouble(scanner.nextLine());
+                valor = Double.parseDouble(mensaje);
                 break;
             } catch (NumberFormatException e) {
                 System.out.print("Debe ingresar un dato valido, ");

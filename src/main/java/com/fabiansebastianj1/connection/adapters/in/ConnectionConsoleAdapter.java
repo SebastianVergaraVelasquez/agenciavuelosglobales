@@ -124,7 +124,7 @@ public class ConnectionConsoleAdapter {
         if (!connections.isEmpty()) {
             System.out.println("Conexiones de este vuelo");
             for (ConnectionDTO connectionDTO : connections) {
-                System.out.println(String.format("Connection_number: %s, airport: %",
+                System.out.println(String.format("Connection_number: %s, airport: %s",
                         connectionDTO.getConnectionNumber(), connectionDTO.getStartAirport()));
             }
         } else {

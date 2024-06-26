@@ -109,8 +109,8 @@ public class AirportMYSQLRepository implements AirportRepository {
             String query = "INSERT INTO airport (id,name,id_city) VALUES (?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, airport.getId());
-                statement.setString(1, airport.getName());
-                statement.setString(1, airport.getCityId());
+                statement.setString(2, airport.getName());
+                statement.setString(3, airport.getCityId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
