@@ -26,10 +26,11 @@ public class ConnectionConsoleAdapter {
         InputVali inputVali = new InputVali();
 
         while (executing) {
-            System.out.println("*** Modulo de cliente ***");
+            System.out.println("*** Modulo de conexion ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println("1.Visualizar información del trayecto \n2.Actualizar escala \n3.Eliminar escala \n4.Salir");
+            System.out.println(
+                    "1.Visualizar información del trayecto \n2.Actualizar escala \n3.Eliminar escala \n4.Salir");
             int choice = scanner.nextInt();
             System.out.println(" ");
 
@@ -58,13 +59,17 @@ public class ConnectionConsoleAdapter {
                     Connections connectionToDelete = returnConnection(inputVali);
                     connectionService.deleteCOnnection(connectionToDelete.getId());
                     break;
+                case 4:
+                    executing = false;
+                    System.out.println("Saliendo del modulo de conexion");
+                    break;
                 default:
                     break;
             }
         }
     }
 
-    public void updateInfoConnection(Connections connection){
+    public void updateInfoConnection(Connections connection) {
         InputVali inputVali = new InputVali();
         boolean newInput;
         newInput = Register.yesOrNo("Desea modificar connection_number? Ingrese el valor numérico: 1 (si) 2(no)");
@@ -80,29 +85,28 @@ public class ConnectionConsoleAdapter {
             System.out.println("***Lista de aeropuertos***");
             finAllAirports();
             connection.setId_airport(inputVali.stringNotNull("Ingrese nuevo id_airport"));
-        } 
+        }
         newInput = Register.yesOrNo("Desea modificar el avion a usar? Ingrese el valor numérico: 1 (si) 2(no)");
         if (newInput) {
 
             Plane plane = ValidationExist.transformAndValidateObj(
-                () -> connectionService.findPlaneByPlates(inputVali.stringNotNull("Ingrese las placas del avión"))
-            );
+                    () -> connectionService.findPlaneByPlates(inputVali.stringNotNull("Ingrese las placas del avión")));
             connection.setId_plane(plane.getId());
         }
         connectionService.updateConnection(connection);
     }
 
-    public void finAllAirports(){
+    public void finAllAirports() {
         List<Airport> airports = connectionService.findAllAirports();
         for (Airport airport : airports) {
-            System.out.println(String.format("id: %s, nombre: %s", airport.getId(),airport.getName()));
+            System.out.println(String.format("id: %s, nombre: %s", airport.getId(), airport.getName()));
         }
     }
 
-    public Connections returnConnection(InputVali inputVali){
+    public Connections returnConnection(InputVali inputVali) {
         Connections connection = ValidationExist.transformAndValidateObj(
-        () -> connectionService.getConnectionById(inputVali.readInt(inputVali.stringNotNull("Ingrese el id de la escala")))  
-        );
+                () -> connectionService
+                        .getConnectionById(inputVali.readInt(inputVali.stringNotNull("Ingrese el id de la escala"))));
         return connection;
     }
 

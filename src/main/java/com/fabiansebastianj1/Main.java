@@ -11,7 +11,10 @@ import com.fabiansebastianj1.connection.adapters.in.ConnectionConsoleAdapter;
 import com.fabiansebastianj1.connection.adapters.out.ConnectionMYSQLRepository;
 import com.fabiansebastianj1.connection.application.ConnectionService;
 import com.fabiansebastianj1.country.adapters.out.CountryMYSQLRepository;
+import com.fabiansebastianj1.country.application.CountryService;
+import com.fabiansebastianj1.customer.adapters.in.CustomerConsoleAdapter;
 import com.fabiansebastianj1.customer.adapters.out.CustomerMYSQLRepository;
+import com.fabiansebastianj1.customer.application.CustomerService;
 import com.fabiansebastianj1.documenttype.adapters.out.DocumentTypeMYSQLRepository;
 import com.fabiansebastianj1.employee.adapters.out.EmployeeMYSQLRepository;
 import com.fabiansebastianj1.fare.adapters.out.FareMYSQLRepository;
@@ -67,20 +70,23 @@ public class Main {
         TripStatusMYSQLRepository tripStatusMYSQLRepository = new TripStatusMYSQLRepository(url,user,password);
         TripulationRoleMYSQLRepository tripulationRoleMYSQLRepository = new TripulationRoleMYSQLRepository(url,user,password);
 
+        
+        
+        CustomerService customerService = new CustomerService(customerMYSQLRepository, documentTypeMYSQLRepository);
+        CustomerConsoleAdapter customerConsoleAdapter = new CustomerConsoleAdapter(customerService);
+        customerConsoleAdapter.start();
 
-        ConnectionService connectionService = new ConnectionService(connectionMYSQLRepository, airportMYSQLRepository, planeMySQLRepository);
-        ConnectionConsoleAdapter connectionConsoleAdapter = new ConnectionConsoleAdapter(connectionService);
-        connectionConsoleAdapter.start();
-
-
+        
+        
+        
+        
+        // ConnectionService connectionService = new ConnectionService(connectionMYSQLRepository, airportMYSQLRepository, planeMySQLRepository);
+        // ConnectionConsoleAdapter connectionConsoleAdapter = new ConnectionConsoleAdapter(connectionService);
+        // connectionConsoleAdapter.start();
         
         // AirportService airportService = new AirportService(airportMYSQLRepository, cityMYSQLRepository);
         // AirportConsoleAdapter airportConsoleAdapter = new AirportConsoleAdapter(airportService);
         // airportConsoleAdapter.start();
-
-
-
-
 
         // PlaneService planeService = new PlaneService(planeMySQLRepository, statusMYSQLRepository,airlineMYSQLRepository,modelMYSQLRepository );
         // PlaneConsoleAdapter planeConsoleAdapter = new PlaneConsoleAdapter(planeService);

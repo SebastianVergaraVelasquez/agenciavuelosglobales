@@ -303,14 +303,14 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
     public Optional<ConnectionDTO> showConnectionInfo(int id){
         try (Connection connection = DriverManager.getConnection(url,user,password)){
             String query = "SELECT " +
-            "c.id AS trip_id, "+
+            "c.id AS connection_id, "+
             "c.connection_number AS con_number, "+
-            "c.trip_id AS trip_id, "+
+            "c.id_trip AS trip_id, "+
             "ai.name AS airport, "+
             "p.id AS plane_id, "+
             "p.plates AS plane_plates "+
             "FROM connection AS c "+
-            "JOIN airport ai ON ai.id = c.id_airport, "+
+            "JOIN airport ai ON ai.id = c.id_airport "+
             "JOIN plane p ON p.id = c.id_plane "+
             "WHERE c.id = ?" ;
             try (PreparedStatement statement = connection.prepareStatement(query)){

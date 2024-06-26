@@ -87,7 +87,7 @@ public class CustomerMYSQLRepository implements CustomerRepository {
     @Override
     public void save(Customer customer) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "INSERT INTO employee (id,name,age, id_document) VALUES (?,?,?,?)";
+            String query = "INSERT INTO customer (id,name,age, id_document) VALUES (?,?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, customer.getId());
                 statement.setString(2, customer.getName());
@@ -103,7 +103,7 @@ public class CustomerMYSQLRepository implements CustomerRepository {
     @Override
     public void update(Customer customer) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE employee SET name = ?, age = ?, id_document = ? WHERE id = ?";
+            String query = "UPDATE customer SET name = ?, age = ?, id_document = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, customer.getName());
                 statement.setInt(2, customer.getAge());

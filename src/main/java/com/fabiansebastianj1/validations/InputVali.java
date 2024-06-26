@@ -14,9 +14,9 @@ public class InputVali {
     public int readInt(String mensaje) {
         int valor;
         while (true) {
-            System.out.println(mensaje);
+            // System.out.println(mensaje);
             try {
-                valor = Integer.parseInt(scanner.nextLine());
+                valor = Integer.parseInt(mensaje);
                 break;
             } catch (NumberFormatException e) {
                 System.out.print("Debe ingresar un dato valido, ");

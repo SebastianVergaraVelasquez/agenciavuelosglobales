@@ -87,7 +87,7 @@ public class DocumentTypeMYSQLRepository implements DocumentTypeRepository {
         try (Connection connection =DriverManager.getConnection(url, user, password)) {
             String query = "SELECT * FROM document_type";
             try (PreparedStatement statement = connection.prepareStatement(query);
-                ResultSet resultSet = statement.getResultSet()) {
+                ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()){
                     DocumentType documentType = new DocumentType(
                             resultSet.getInt("id"),

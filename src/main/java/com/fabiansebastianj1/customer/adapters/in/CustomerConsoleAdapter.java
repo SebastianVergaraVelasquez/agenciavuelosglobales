@@ -8,7 +8,6 @@ import com.fabiansebastianj1.customer.domain.models.Customer;
 import com.fabiansebastianj1.customer.domain.models.CustomerDTO;
 import com.fabiansebastianj1.documenttype.domain.models.DocumentType;
 import com.fabiansebastianj1.validations.*;
-import com.fabiansebastianj1.validations.ValidationExist;
 
 public class CustomerConsoleAdapter {
     private final CustomerService customerService;
@@ -44,40 +43,51 @@ public class CustomerConsoleAdapter {
                 case 3:
                     updateCustomerInfo(inputVali);
                     break;
+                case 4:
+                    executing = false;
+                    System.out.println("Saliendo del modulo de cliente");
+                    break;
                 default:
                     break;
             }
         }
     }
 
-    public void updateCustomerInfo(InputVali inputVali){
+    public void updateCustomerInfo(InputVali inputVali) {
         boolean newInput;
         String newName;
         int newAge, newIdDocumentType;
         Customer showCustomer = returnCustomer(inputVali);
-        //verificar si desea cambiar el nombre
-        newInput = Register.yesOrNo( "Desea cambiar el nombre del cliente? Ingrese el valor numerico 1 (si) o 2(no)");
-        if (newInput == true){newName = inputVali.stringNotNull("Ingrese el nuevo nombre");}
-        else{newName = showCustomer.getName();}
-        //verificar si desea cambiar la edad
-        newInput = Register.yesOrNo( "Desea cambiar la edad del cliente? Ingrese el valor numerico 1 (si) o 2(no)");
-        if(newInput == true){newAge = inputVali.readInt(inputVali.stringNotNull("Ingrese la edad"));}
-        else{newAge = showCustomer.getAge();}
-        //verificar si desea cambiar el tipo de documento
-        newInput = Register.yesOrNo( "Desea el tipo de documento? Ingrese el valor numerico 1 (si) o 2(no)");
-        if(newInput == true){
+        // verificar si desea cambiar el nombre
+        newInput = Register.yesOrNo("Desea cambiar el nombre del cliente? Ingrese el valor numerico 1 (si) o 2(no)");
+        if (newInput == true) {
+            newName = inputVali.stringNotNull("Ingrese el nuevo nombre");
+        } else {
+            newName = showCustomer.getName();
+        }
+        // verificar si desea cambiar la edad
+        newInput = Register.yesOrNo("Desea cambiar la edad del cliente? Ingrese el valor numerico 1 (si) o 2(no)");
+        if (newInput == true) {
+            newAge = inputVali.readInt(inputVali.stringNotNull("Ingrese la edad"));
+        } else {
+            newAge = showCustomer.getAge();
+        }
+        // verificar si desea cambiar el tipo de documento
+        newInput = Register.yesOrNo("Desea cambiar el tipo de documento? Ingrese el valor numerico 1 (si) o 2(no)");
+        if (newInput == true) {
             showDocumentTypes();
             DocumentType showDocumentType = ValidationExist.transformAndValidateObj(
-                () -> customerService.findDocumentTypeById(
-                        inputVali.readInt(inputVali.stringNotNull("Ingrese el id del tipo de documento"))));
+                    () -> customerService.findDocumentTypeById(
+                            inputVali.readInt(inputVali.stringNotNull("Ingrese el id del tipo de documento"))));
             newIdDocumentType = showDocumentType.getId();
+        } else {
+            newIdDocumentType = showCustomer.getDocumentTypeId();
         }
-        else{newIdDocumentType = showCustomer.getDocumentTypeId();}
-        Customer updaCustomerDTO = new Customer(showCustomer.getId(),newName,newAge,newIdDocumentType);
+        Customer updaCustomerDTO = new Customer(showCustomer.getId(), newName, newAge, newIdDocumentType);
         customerService.updateCustomer(updaCustomerDTO);
     }
 
-    //Este me devuelve el cliente con el nombre de su tipo de documento
+    // Este me devuelve el cliente con el nombre de su tipo de documento
     public CustomerDTO returnCustomerDTO(InputVali inputVali) {
         CustomerDTO showCustomer = ValidationExist.transformAndValidateObj(
                 () -> customerService.findCustomerDTO(
@@ -85,7 +95,7 @@ public class CustomerConsoleAdapter {
         return showCustomer;
     }
 
-    //Este me devuelve el cliente con el id de su tipo de documento
+    // Este me devuelve el cliente con el id de su tipo de documento
     public Customer returnCustomer(InputVali inputVali) {
         Customer showCustomer = ValidationExist.transformAndValidateObj(
                 () -> customerService.findCustomerById(
