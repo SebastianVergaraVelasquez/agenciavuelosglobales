@@ -17,12 +17,14 @@ public class TripulationRoleMYSQLRepository implements TripulationRoleRepository
     private final String user;
     private final String password;
 
+    // Constructor que inicializa la URL, usuario y contraseña de la base de datos
     public TripulationRoleMYSQLRepository(String url, String user, String password) {
         this.url = url;
         this.user = user;
         this.password = password;
     }
 
+    // Método para guardar un rol de tripulación en la base de datos
     @Override
     public void save(TripulationRole tripulationRole) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
@@ -36,6 +38,7 @@ public class TripulationRoleMYSQLRepository implements TripulationRoleRepository
         }
     }
 
+    // Método para actualizar un rol de tripulación en la base de datos
     @Override
     public void update(TripulationRole tripulationRole) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
@@ -50,6 +53,7 @@ public class TripulationRoleMYSQLRepository implements TripulationRoleRepository
         }
     }
 
+    // Método para eliminar un rol de tripulación de la base de datos por su ID
     @Override
     public void delete(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
@@ -63,6 +67,7 @@ public class TripulationRoleMYSQLRepository implements TripulationRoleRepository
         }
     }
 
+    // Método para buscar un rol de tripulación por su ID en la base de datos
     @Override
     public Optional<TripulationRole> findById(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
@@ -84,6 +89,7 @@ public class TripulationRoleMYSQLRepository implements TripulationRoleRepository
         return Optional.empty();
     }
 
+    // Método para obtener todos los roles de tripulación almacenados en la base de datos
     @Override
     public List<TripulationRole> findAll() {
         List<TripulationRole> tripulationRoles = new ArrayList<>();

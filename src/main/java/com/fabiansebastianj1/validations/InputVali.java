@@ -5,10 +5,12 @@ import java.util.Scanner;
 public class InputVali {
     private Scanner scanner;
     
+    // Constructor que inicializa el scanner para leer desde la entrada estándar
     public InputVali() {
         this.scanner = new Scanner(System.in);
     }
 
+    // Método para leer un entero desde la entrada estándar
     public int readInt(String mensaje) {
         int valor;
         while (true) {
@@ -23,8 +25,9 @@ public class InputVali {
         return valor;
     }
 
-   public Double readDouble (String mensaje){
-    Double valor;
+    // Método para leer un número decimal (double) desde la entrada estándar
+    public Double readDouble(String mensaje) {
+        Double valor;
         while (true) {
             System.out.println(mensaje);
             try {
@@ -35,8 +38,9 @@ public class InputVali {
             }
         }
         return valor;
-   }
+    }
 
+    // Método para leer una cadena que no puede ser nula o vacía desde la entrada estándar
     public String stringNotNull(String message) {
         System.out.print(message);
         String value;
@@ -51,11 +55,12 @@ public class InputVali {
         return value;
     }
 
-    public String stringWithLeght(String message, int lenght) {
+    // Método para leer una cadena que no puede ser nula o vacía y debe tener una longitud máxima especificada
+    public String stringWithLeght(String message, int length) {
         String value;
         while (true) {
             value = this.stringNotNull(message);
-            if (value.length() > lenght) {
+            if (value.length() > length) {
                 System.out.print("Error, ");
             } else {
                 break;
@@ -64,6 +69,7 @@ public class InputVali {
         return value;
     }
 
+    // Método para leer una cadena que puede ser nula desde la entrada estándar
     public String stringNull(String message) {
         System.out.print(message);
         return scanner.nextLine();

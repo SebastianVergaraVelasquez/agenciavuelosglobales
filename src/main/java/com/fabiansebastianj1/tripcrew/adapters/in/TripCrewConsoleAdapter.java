@@ -23,6 +23,7 @@ public class TripCrewConsoleAdapter {
         this.tripCrewService = tripCrewService;
     }
 
+    // Método principal que inicia la interfaz de consola para gestionar tripulaciones
     public void start() {
         Scanner scanner = new Scanner(System.in);
         boolean executing = true;
@@ -54,24 +55,26 @@ public class TripCrewConsoleAdapter {
                         System.out.println("No hay empleados por asignar");
                         break;
                     }
+                    break;
+
                 case 2:
                     System.out.println("***Consulta de tripulantes***");
                     //Consulto el tripId y extraigo el tripId
                     Trip searchedTrip = ValidationExist.transformAndValidateObj(
-                        () -> tripCrewService.findTripById(
-                                inputVali.readInt(inputVali.stringNotNull("Ingrese el id del vuelo"))));
+                            () -> tripCrewService.findTripById(
+                                    inputVali.readInt(inputVali.stringNotNull("Ingrese el id del vuelo"))));
                     //Consulto el connectionId y extraigo el connectionId
                     ConnectionDTO searchedTripAsConnection = ValidationExist.transformAndValidateObj(
-                        () -> tripCrewService.findTripAsConnectionByTripId(searchedTrip.getId())
+                            () -> tripCrewService.findTripAsConnectionByTripId(searchedTrip.getId())
                     );
                     showTripCrew(searchedTripAsConnection.getConnectionId());
                     break;
-
 
                 case 3:
                     System.out.println("Saliendo del modulo de tripulantes");
                     executing = false;
                     break;
+
                 default:
                     System.out.println("Ingrese una opción válida");
                     break;
@@ -79,13 +82,15 @@ public class TripCrewConsoleAdapter {
         }
     }
 
-    public void showTripCrew(int id){
+    // Método para mostrar la lista de tripulantes de un vuelo específico
+    public void showTripCrew(int id) {
         List<TripCrewDTO> tripCrewList = tripCrewService.listTripCrewDTOByConnectionId(id);
         for (TripCrewDTO tripCrewDTO : tripCrewList) {
-            System.out.println(String.format("id_employee: %s, name: %s, role: %s", tripCrewDTO.getEmployeeId(),tripCrewDTO.getEmployeeName(), tripCrewDTO.getEmployeeRole()));
+            System.out.println(String.format("id_employee: %s, name: %s, role: %s", tripCrewDTO.getEmployeeId(), tripCrewDTO.getEmployeeName(), tripCrewDTO.getEmployeeRole()));
         }
     }
 
+    // Método para registrar empleados en un vuelo específico
     public void registrarEmpleados(int idConnection, Scanner scanner, InputVali inputVali) {
         mostrarEmpleados();
         boolean continueAdd = true;
@@ -101,6 +106,7 @@ public class TripCrewConsoleAdapter {
         }
     }
 
+    // Método para mostrar la lista de empleados disponibles
     public void mostrarEmpleados() {
         System.out.println("Lista de empleados");
         List<Employee> employees = tripCrewService.listEmployees();
@@ -109,6 +115,7 @@ public class TripCrewConsoleAdapter {
         }
     }
 
+    // Método para verificar si existen empleados disponibles para asignar
     public boolean verificarEmpleados() {
         boolean employeesExists = true;
         List<Employee> employees = tripCrewService.listEmployees();
@@ -119,12 +126,13 @@ public class TripCrewConsoleAdapter {
         }
     }
 
+    // Método para mostrar la lista de vuelos disponibles
     public void mostrarVuelos() {
         List<ConnectionDTO> flights = tripCrewService.findFlightNoConnection();
         for (ConnectionDTO flight : flights) {
             System.out.println(String.format("id_vuelo: %s, id_escala: %s aeropuerto_salida %s, " +
                     "aeropuerto llegada: %s, " +
-                    "fecha: %", flight.getTripId(), flight.getConnectionId(), flight.getStartAirport(),
+                    "fecha: %s", flight.getTripId(), flight.getConnectionId(), flight.getStartAirport(),
                     flight.getArriveAirport(), flight.getTripDate()));
         }
     }

@@ -4,7 +4,8 @@ import java.util.Scanner;
 
 public class Register {
 
-    public static boolean yesOrNo( String message) {
+    // Método estático para pedir al usuario que ingrese una opción sí o no
+    public static boolean yesOrNo(String message) {
         Scanner scanner = new Scanner(System.in);
         boolean value = true;
 

@@ -5,8 +5,10 @@ import java.util.Scanner;
 import java.util.function.Supplier;
 
 public class ValidationExist {
-    
-    public static <T> T transformAndValidateObj(Supplier<Optional<T>> supplier){
+
+    // Método genérico para transformar y validar un objeto
+
+    public static <T> T transformAndValidateObj(Supplier<Optional<T>> supplier) {
         T objetoSeleccionado = null;
         while (true) {
             Optional<T> objetoOpcional = supplier.get();
