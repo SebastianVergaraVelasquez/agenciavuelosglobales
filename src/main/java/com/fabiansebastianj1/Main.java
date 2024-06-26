@@ -15,9 +15,13 @@ import com.fabiansebastianj1.country.application.CountryService;
 import com.fabiansebastianj1.customer.adapters.in.CustomerConsoleAdapter;
 import com.fabiansebastianj1.customer.adapters.out.CustomerMYSQLRepository;
 import com.fabiansebastianj1.customer.application.CustomerService;
+import com.fabiansebastianj1.documenttype.adapters.in.DocumentTypeConsoleAdapter;
 import com.fabiansebastianj1.documenttype.adapters.out.DocumentTypeMYSQLRepository;
+import com.fabiansebastianj1.documenttype.application.DocumentService;
 import com.fabiansebastianj1.employee.adapters.out.EmployeeMYSQLRepository;
+import com.fabiansebastianj1.fare.adapters.in.FareConsoleAdapter;
 import com.fabiansebastianj1.fare.adapters.out.FareMYSQLRepository;
+import com.fabiansebastianj1.fare.application.FareService;
 import com.fabiansebastianj1.gate.adapters.out.GateMYSQLRepository;
 import com.fabiansebastianj1.manufacturers.adapters.out.ManufacturerMYSQLRepository;
 import com.fabiansebastianj1.manufacturers.application.ManufacturerService;
@@ -26,6 +30,7 @@ import com.fabiansebastianj1.model.adapters.out.ModelMYSQLRepository;
 import com.fabiansebastianj1.planes.adapters.in.PlaneConsoleAdapter;
 import com.fabiansebastianj1.planes.adapters.out.PlaneMySQLRepository;
 import com.fabiansebastianj1.planes.application.PlaneService;
+import com.fabiansebastianj1.print.PrintSeats;
 import com.fabiansebastianj1.revemployee.adapters.out.RevEmployeeMYSQLRepository;
 import com.fabiansebastianj1.revision.adapters.out.RevisionMYSQLRepository;
 import com.fabiansebastianj1.revisiondetail.adapters.out.RevisioDetailMYSQLRepository;
@@ -71,14 +76,17 @@ public class Main {
         TripulationRoleMYSQLRepository tripulationRoleMYSQLRepository = new TripulationRoleMYSQLRepository(url,user,password);
 
         
-        
-        CustomerService customerService = new CustomerService(customerMYSQLRepository, documentTypeMYSQLRepository);
-        CustomerConsoleAdapter customerConsoleAdapter = new CustomerConsoleAdapter(customerService);
-        customerConsoleAdapter.start();
+        // FareService fareService = new FareService(fareMYSQLRepository);
+        // FareConsoleAdapter fareConsoleAdapter = new FareConsoleAdapter(fareService);
+        // fareConsoleAdapter.start(); 
 
+        // CustomerService customerService = new CustomerService(customerMYSQLRepository, documentTypeMYSQLRepository);
+        // CustomerConsoleAdapter customerConsoleAdapter = new CustomerConsoleAdapter(customerService);
+        // customerConsoleAdapter.start();
         
-        
-        
+        // DocumentService documentService = new DocumentService(documentTypeMYSQLRepository);
+        // DocumentTypeConsoleAdapter documentTypeConsoleAdapter = new DocumentTypeConsoleAdapter(documentService);
+        // documentTypeConsoleAdapter.start();
         
         // ConnectionService connectionService = new ConnectionService(connectionMYSQLRepository, airportMYSQLRepository, planeMySQLRepository);
         // ConnectionConsoleAdapter connectionConsoleAdapter = new ConnectionConsoleAdapter(connectionService);

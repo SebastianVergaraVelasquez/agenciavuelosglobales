@@ -37,8 +37,8 @@ public class DocumentTypeMYSQLRepository implements DocumentTypeRepository {
         try (Connection connection = DriverManager.getConnection(url,user,password)){
             String query = "UPDATE document_type SET name = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)){
-                statement.setInt(1,documentType.getId());
-                statement.setString(2,documentType.getName());
+                statement.setString(1,documentType.getName());
+                statement.setInt(2,documentType.getId());
                 statement.executeUpdate();
             }
         }catch (SQLException e){

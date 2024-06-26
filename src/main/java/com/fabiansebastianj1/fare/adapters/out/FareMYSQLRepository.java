@@ -106,7 +106,7 @@ public class FareMYSQLRepository implements FareRepository {
                 statement.setString(1, fare.getDescription());
                 statement.setString(2, fare.getDetail());
                 statement.setDouble(3, fare.getValue());
-                statement.setInt(1, fare.getId());
+                statement.setInt(4, fare.getId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {

@@ -14,6 +14,7 @@ import com.fabiansebastianj1.documenttype.domain.models.DocumentType;
 import com.fabiansebastianj1.fare.domain.models.Fare;
 import com.fabiansebastianj1.passenger.domain.models.Passenger;
 import com.fabiansebastianj1.planes.domain.models.Plane;
+import com.fabiansebastianj1.print.PrintSeats;
 import com.fabiansebastianj1.trip.domain.models.Trip;
 import com.fabiansebastianj1.tripbooking.application.TripBookingService;
 import com.fabiansebastianj1.tripbooking.domain.models.TripBooking;
@@ -232,7 +233,7 @@ public class TripBookingConsoleAdapter {
         Plane planeOrigin = tripBookingService.findPlaneById(tripOrigin.getPlaneId()).get();
         List<String> occupiedSeats = tripBookingService.getAllOccupiedSeats(tripOrigin.getTripId()); //Me devuelve los string de todos los puestos ocupados
         //Ahora imprimir en pantalla
-        
+        // PrintSeats.printSeats(occupiedSeats, planeOrigin);
         return passengers;
     }
 

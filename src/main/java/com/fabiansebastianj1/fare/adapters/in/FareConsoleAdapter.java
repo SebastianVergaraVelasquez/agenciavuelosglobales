@@ -25,36 +25,44 @@ public class FareConsoleAdapter {
         while (executing) {
             System.out.println("*** Modulo de tarifas ***");
             System.out.println(" ");
-            System.out.println("***Lista de tarifas***");
-            showFares();
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
             System.out.println(
-                    "1.Registrar Tarifa \n2.Actualizar Tarifa \n3. Consultar Tarifa \n4.Eliminar tarifa \n5. Salir");
-            int choice = scanner.nextInt();
-            System.out.println(" ");
-
-            switch (choice) {
-                case 1:
+                "1. Registrar Tarifa \n2. Actualizar Tarifa \n3. Consultar Tarifa \n4. Eliminar tarifa \n5. Salir");
+                int choice = scanner.nextInt();
+                System.out.println(" ");
+                
+                switch (choice) {
+                    case 1:
                     System.out.println("***Registrar tarifa***");
                     newFareInfo(inputVali);
                     System.out.println("Tarifa registrada");
                     break;
-                case 2:
+                    case 2:
                     System.out.println("***Actualizar tarifa***");
+                    System.out.println(" ");
+                    System.out.println("***Lista de tarifas***");
+                    showFares();
                     Fare fareToUpdate = returnFare(inputVali);
                     showFareInfo(fareToUpdate);
                     updateFare(fareToUpdate, inputVali);
                     System.out.println("Tarifa actualizada");
                     break;
-                case 3:
+                    case 3:
                     System.out.println("***Consultar tarifa***");
                     Fare showFare = returnFare(inputVali);
                     showFareInfo(showFare);
                     break;
-                case 4:
+                    case 4:
                     System.out.println("***Eliminar tarifa***");
+                    System.out.println(" ");
+                    System.out.println("***Lista de tarifas***");
+                    showFares();
                     Fare fareToDelete = returnFare(inputVali);
                     fareService.deleteFare(fareToDelete.getId());
+                    break;
+                case 5:
+                    executing = false;
+                    System.out.println("Saliendo del modulo de tarifas");
                     break;
                 default:
                     break;
@@ -62,22 +70,22 @@ public class FareConsoleAdapter {
         }
     }
 
-    public void updateFare(Fare fare, InputVali inputVali){
+    public void updateFare(Fare fare, InputVali inputVali) {
         boolean newInput;
-        newInput = Register.yesOrNo("Desea cambiar el nombre de la tarifa? Ingrese el valor numérico: "+
-        "1 (si) 2 (no)");
+        newInput = Register.yesOrNo("Desea cambiar el nombre de la tarifa? Ingrese el valor numérico: " +
+                "1 (si) 2 (no)");
         if (newInput) {
             String newName = inputVali.stringNotNull("Ingrese el nombre de la tarifa");
             fare.setDescription(newName);
         }
-        newInput = Register.yesOrNo("Desea cambiar el detalle de la tarifa? Ingrese el valor numérico: "+
-        "1 (si) 2 (no)");
+        newInput = Register.yesOrNo("Desea cambiar el detalle de la tarifa? Ingrese el valor numérico: " +
+                "1 (si) 2 (no)");
         if (newInput) {
             String newDetail = inputVali.stringNotNull("Ingrese el detalle de la tarifa");
             fare.setDetail(newDetail);
         }
-        newInput = Register.yesOrNo("Desea cambiar el valor de la tarifa? Ingrese el valor numérico: "+
-        "1 (si) 2 (no)");
+        newInput = Register.yesOrNo("Desea cambiar el valor de la tarifa? Ingrese el valor numérico: " +
+                "1 (si) 2 (no)");
         if (newInput) {
             Double newValue = inputVali.readDouble(inputVali.stringNotNull("Ingrese el detalle de la tarifa"));
             fare.setValue(newValue);
