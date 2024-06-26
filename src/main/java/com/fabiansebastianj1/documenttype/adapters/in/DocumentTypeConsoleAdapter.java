@@ -80,10 +80,10 @@ public class DocumentTypeConsoleAdapter {
     }
 
     public DocumentType returnDocumentType(InputVali inputVali) {
-        DocumentType searchedFare = ValidationExist.transformAndValidateObj(
+        DocumentType documentType = ValidationExist.transformAndValidateObj(
                 () -> documentService.getDocumentTypeById(
                         inputVali.readInt(inputVali.stringNotNull("Ingrese la id del Tipo de Documento"))));
-        return searchedFare;
+        return documentType;
     }
 
     public void showDocumentTypeInfo(DocumentType documentType) {
