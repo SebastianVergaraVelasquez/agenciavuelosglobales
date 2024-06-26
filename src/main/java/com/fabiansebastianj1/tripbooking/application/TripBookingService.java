@@ -13,6 +13,9 @@ import com.fabiansebastianj1.documenttype.domain.models.DocumentType;
 import com.fabiansebastianj1.documenttype.infraestructure.DocumentTypeRepository;
 import com.fabiansebastianj1.fare.domain.models.Fare;
 import com.fabiansebastianj1.fare.infrastructure.FareRepository;
+import com.fabiansebastianj1.passenger.infrastructure.PassengerRepository;
+import com.fabiansebastianj1.planes.domain.models.Plane;
+import com.fabiansebastianj1.planes.infrastructure.PlaneRepository;
 import com.fabiansebastianj1.trip.domain.models.Trip;
 import com.fabiansebastianj1.trip.infrastructure.TripRepository;
 import com.fabiansebastianj1.tripbooking.domain.models.TripBooking;
@@ -22,8 +25,6 @@ import com.fabiansebastianj1.tripbookingdetails.infrastructure.TripBookingDetail
 
 import java.util.List;
 import java.util.Optional;
-
-import javax.print.DocFlavor.READER;
 
 public class TripBookingService {
 
@@ -36,12 +37,15 @@ public class TripBookingService {
     private final AirportRepository airportRepository;
     private final TripRepository tripRepository;
     private final DocumentTypeRepository documentTypeRepository;
+    private final PlaneRepository planeRepository;
+    private final PassengerRepository passengerRepository;
 
     public TripBookingService(TripBookingRepository tripBookingRepository, CustomerRepository customerRepository,
             ConnectionRepository connectionRepository, FareRepository fareRepository,
             TripBookingDetailsRepository tripBookingDetailsRepository, CityRepository cityRepository,
             AirportRepository airportRepository, TripRepository tripRepository,
-            DocumentTypeRepository documentTypeRepository) {
+            DocumentTypeRepository documentTypeRepository, PlaneRepository planeRepository,
+            PassengerRepository passengerRepository) {
         this.tripBookingRepository = tripBookingRepository;
         this.customerRepository = customerRepository;
         this.connectionRepository = connectionRepository;
@@ -51,6 +55,8 @@ public class TripBookingService {
         this.airportRepository = airportRepository;
         this.tripRepository = tripRepository;
         this.documentTypeRepository = documentTypeRepository;
+        this.planeRepository = planeRepository;
+        this.passengerRepository = passengerRepository;
     }
 
     public void createTripBooking(TripBooking tripBooking) {
@@ -139,5 +145,22 @@ public class TripBookingService {
 
     public Optional<DocumentType> getDocumentType(int id){
         return documentTypeRepository.findById(id);
+    }
+
+    //Esta trae la info del vuelo como DTO, pero con datos diferentes incluyendo el planeId
+    public Optional<ConnectionDTO> findConnectionInfoById(int id){
+        return connectionRepository.showConnectionInfo(id);
+    }
+
+    public Optional<Plane> findPlaneById(int id){
+        return planeRepository.findById(id);
+    }
+
+    public List<String> getAllOccupiedSeats(int id){
+        return passengerRepository.getOccupiedSeats(id);
+    }
+
+    public int getTotalOccupiedSeats(int id){
+        return passengerRepository.getTotalOccupiedSeats(id);
     }
 }

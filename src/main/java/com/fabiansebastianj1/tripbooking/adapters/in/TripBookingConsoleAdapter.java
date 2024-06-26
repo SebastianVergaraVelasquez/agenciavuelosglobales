@@ -13,6 +13,7 @@ import com.fabiansebastianj1.customer.domain.models.Customer;
 import com.fabiansebastianj1.documenttype.domain.models.DocumentType;
 import com.fabiansebastianj1.fare.domain.models.Fare;
 import com.fabiansebastianj1.passenger.domain.models.Passenger;
+import com.fabiansebastianj1.planes.domain.models.Plane;
 import com.fabiansebastianj1.trip.domain.models.Trip;
 import com.fabiansebastianj1.tripbooking.application.TripBookingService;
 import com.fabiansebastianj1.tripbooking.domain.models.TripBooking;
@@ -134,7 +135,16 @@ public class TripBookingConsoleAdapter {
                 case 1:
                     System.out.println("*** Reserva de vuelos ***");
                     int[] tripsIdSelected = showAndSelectFlights(inputVali); //Aquí se listan y se seleccionan los vuelos
-                    List<Passenger> passengers = savePassengers(tripsIdSelected);
+                    if (tripsIdSelected[0] == 0 && tripsIdSelected[1] == 0) {
+                        System.out.println("*** Error al reservar ***");
+                        break;
+                    }
+                    List<Passenger> passengers = savePassengers(tripsIdSelected); //Aquí se registra la info de los pasajeros
+                    if (passengers.isEmpty()) {
+                        System.out.println("*** Error al reservar ***");
+                        break;
+                    }
+
                 default:
                     break;
             }
@@ -215,21 +225,40 @@ public class TripBookingConsoleAdapter {
         }
     }
 
+    public List<Passenger> asignSeats(List<Passenger> passengers, int[] tripsIdSelected){
+        //Vuelo de ida
+        //traer el avión
+        ConnectionDTO tripOrigin = tripBookingService.findConnectionInfoById(tripsIdSelected[0]).get();
+        Plane planeOrigin = tripBookingService.findPlaneById(tripOrigin.getPlaneId()).get();
+        List<String> occupiedSeats = tripBookingService.getAllOccupiedSeats(tripOrigin.getTripId()); //Me devuelve los string de todos los puestos ocupados
+        //Ahora imprimir en pantalla
+        
+        return passengers;
+    }
+
     public List<Passenger> savePassengers(int[] tripsIdSelected){
         InputVali inputVali = new InputVali();
         List<Passenger> passengers = new ArrayList<>();
         int passengersNumber = inputVali.readInt(inputVali.stringNotNull("Ingrese el numero de pasajeros a registrar. Valor numérico por favor"));
-        for (int i = 0; i < passengersNumber; i++) {
-            System.out.println("Selección de tipo de documento");
-            showDocumentTypes();
-            DocumentType documentType = returnDocumentType(inputVali);
-            String nif = inputVali.stringNotNull(String.format("Ingrese el docuemnto del pasajero %s", i));
-            String name = inputVali.stringNotNull(String.format("Ingrese el nombre del pasajero %s", i));
-            int age = inputVali.readInt(inputVali.stringNotNull(String.format("Ingrese el nombre del pasajero %s", i)));
-            Passenger passenger = new Passenger(nif, name, age, "", documentType.getId(), 0);
-            passengers.add(passenger);
+        //Conocer la información del vuelo seleccionado, id de avion y de ahí sacar su capacidad
+        ConnectionDTO tripOrigin = tripBookingService.findConnectionInfoById(tripsIdSelected[0]).get();
+        Plane planeOrigin = tripBookingService.findPlaneById(tripOrigin.getPlaneId()).get();
+        int ocupados = tripBookingService.getTotalOccupiedSeats(tripOrigin.getPlaneId()); //Esto retorna cantos puestos ocupados hay
+        if ((planeOrigin.getCapacity() - ocupados) > passengersNumber ) {
+            for (int i = 0; i < passengersNumber; i++) {
+                System.out.println("Selección de tipo de documento");
+                showDocumentTypes();
+                DocumentType documentType = returnDocumentType(inputVali);
+                String nif = inputVali.stringNotNull(String.format("Ingrese el docuemnto del pasajero %s", i));
+                String name = inputVali.stringNotNull(String.format("Ingrese el nombre del pasajero %s", i));
+                int age = inputVali.readInt(inputVali.stringNotNull(String.format("Ingrese el nombre del pasajero %s", i)));
+                Passenger passenger = new Passenger(nif, name, age, "", documentType.getId(), 0);
+                passengers.add(passenger);
+            }
+            System.out.println("Pasajeros guardados");
+            return passengers;
         }
-        System.out.println("Pasajeros guardados");
+        System.out.println("Cupos incompletos");
         return passengers;
     }
 
