@@ -159,13 +159,13 @@ public class TripConsoleAdapter {
 
     public void showTrip(Trip trip) {
         Optional<ConnectionDTO> tripAsConnection = tripService.findTripAsConnectionByTripId(trip.getId());
-        String format = "| %-10s | %-13s | %-18s | %-15s | %-15s | %-12s |%n";
+        String format = "| %-10s | %-13s | %-18s | %-15s | %-15s | %-12s | %-12s |%n";
         System.out.format(
-                "+------------+---------------+--------------------+---------------+---------------+--------------+%n");
+                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
         System.out.format(
-                "| Trip ID    | Connection ID | Connection Number  | Start Airport | Arrive Airport| Trip Date    |%n");
+                "| Trip ID    | Connection ID | Connection Number  | Start Airport | Arrive Airport| Trip Date    | Price        |%n");
         System.out.format(
-                "+------------+---------------+--------------------+---------------+---------------+--------------+%n");
+                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
 
         
             System.out.format(format,
@@ -175,8 +175,8 @@ public class TripConsoleAdapter {
             tripAsConnection.get().getStartAirport(),
             tripAsConnection.get().getArriveAirport(),
             tripAsConnection.get().getTripDate());
+            trip.getPrice();
             System.out.format(
-                "+------------+---------------+--------------------+---------------+---------------+--------------+%n");
-        System.out.println(String.format("Value: %s", trip.getPrice()));
+                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
     }
 }

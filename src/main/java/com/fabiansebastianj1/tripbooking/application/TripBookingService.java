@@ -1,5 +1,9 @@
 package com.fabiansebastianj1.tripbooking.application;
 
+import com.fabiansebastianj1.airport.domain.models.Airport;
+import com.fabiansebastianj1.airport.infrastructure.AirportRepository;
+import com.fabiansebastianj1.city.domain.models.City;
+import com.fabiansebastianj1.city.infrastructure.CityRepository;
 import com.fabiansebastianj1.connection.domain.models.ConnectionDTO;
 import com.fabiansebastianj1.connection.domain.models.Connections;
 import com.fabiansebastianj1.connection.infraestructure.ConnectionRepository;
@@ -22,15 +26,20 @@ public class TripBookingService {
     private final ConnectionRepository connectionRepository;
     private final FareRepository fareRepository;
     private final TripBookingDetailsRepository tripBookingDetailsRepository;
+    private final CityRepository cityRepository;
+    private final AirportRepository airportRepository;
 
     public TripBookingService(TripBookingRepository tripBookingRepository, CustomerRepository customerRepository,
-        ConnectionRepository connectionRepository, FareRepository fareRepository, TripBookingDetailsRepository tripBookingDetailsRepository) {
+            ConnectionRepository connectionRepository, FareRepository fareRepository,
+            TripBookingDetailsRepository tripBookingDetailsRepository, CityRepository cityRepository,
+            AirportRepository airportRepository) {
         this.tripBookingRepository = tripBookingRepository;
         this.customerRepository = customerRepository;
         this.connectionRepository = connectionRepository;
         this.fareRepository = fareRepository;
         this.tripBookingDetailsRepository = tripBookingDetailsRepository;
-        
+        this.cityRepository = cityRepository;
+        this.airportRepository = airportRepository;
     }
 
     public void createTripBooking(TripBooking tripBooking) {
@@ -89,4 +98,23 @@ public class TripBookingService {
         tripBookingDetailsRepository.delete(id);
     }
 
+    public List<City> findAllCities(){
+        return cityRepository.findAll();
+    }
+
+    public Optional<City> findCityById(String id){
+        return cityRepository.findById(id);
+    }
+
+    public List<Airport> findAllAirportsByCityId(String id){
+        return airportRepository.findAllAirportsByCityId(id);
+    }
+
+    public Optional <Airport> findAirportById(String id){
+        return airportRepository.findById(id);
+    }
+
+    public List<ConnectionDTO> findAllFlightsByAirportsId(String airpId1, String airpId2, String fecha){
+        return connectionRepository.listFlightsByAirportsId(airpId1, airpId2, fecha);
+    }
 }

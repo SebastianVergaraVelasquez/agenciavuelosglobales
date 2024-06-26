@@ -16,4 +16,5 @@ public interface ConnectionRepository {
     List<ConnectionDTO> findAllByTripId(int tripId);
     Optional<ConnectionDTO> showConnectionInfo(int id);
     List<Connections>findAllConnectionsByTripId(int tripId);
+    List<ConnectionDTO> listFlightsByAirportsId(String AirportId1, String AirportId2, String fecha);
 }

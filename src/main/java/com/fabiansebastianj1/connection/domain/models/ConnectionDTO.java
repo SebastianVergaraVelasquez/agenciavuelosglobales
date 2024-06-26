@@ -13,8 +13,9 @@ public class ConnectionDTO {
     private int planeId;
     private String planePlates;
     private String tripDate;
+    private Double price;
     
-    public ConnectionDTO(int tripId, int connection_id, String connectionNumber, int planeId, String startAirport, String arriveAirport, String tripDate) {
+    public ConnectionDTO(int tripId, int connection_id, String connectionNumber, int planeId, String startAirport, String arriveAirport, String tripDate, Double price) {
         this.tripId = tripId;
         this.connectionId = connection_id;
         this.connectionNumber = connectionNumber;
@@ -22,6 +23,7 @@ public class ConnectionDTO {
         this.startAirport = startAirport;
         this.arriveAirport = arriveAirport;
         this.tripDate = tripDate;
+        this.price = price;
     }
 
     //Este es para mostrar la información mofificable de la escala
@@ -101,6 +103,14 @@ public class ConnectionDTO {
 
     public void setTripDate(String tripDate) {
         this.tripDate = tripDate;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     

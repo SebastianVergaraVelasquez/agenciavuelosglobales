@@ -18,4 +18,7 @@ public interface AirportRepository {
     List<Airport> findAll();
 
     Optional<AirportDTO> findAirportCityById(String id);
+
+    List<Airport> findAllAirportsByCityId(String id);
+    
 }

@@ -177,13 +177,14 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
         List<ConnectionDTO> flights = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT " +
-               "c1.id_trip AS id_vuelo,"+
+               "c1.id_trip AS id_vuelo, "+
                "c1.id AS id_connection, "+
-               "c1.connection_number AS con_number," +
+               "c1.connection_number AS con_number, " +
                "c1.id_airport AS aeropuerto_salida, "+
-               "c2.id_airport AS aeropuerto_llegada," + 
-               "tr.trip_date As Fecha" +
-               "FROM connection c1" +
+               "c2.id_airport AS aeropuerto_llegada, " +
+               "tr.trip_date As Fecha " +
+               "tr.price_tripe AS precio "+
+               "FROM connection c1 " +
                "JOIN trip_status ts1 ON c1.id_trip_status = ts1.id " +
                "JOIN connection c2 ON c1.id_trip = c2.id_trip " +
                "JOIN trip_status ts2 ON c2.id_trip_status = ts2.id " +
@@ -199,7 +200,8 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                             resultSet.getInt("id_plane"),
                             resultSet.getString("aeropuerto_salida"), 
                             resultSet.getString("aeropuerto_llegada"),
-                            resultSet.getString("Fecha"));
+                            resultSet.getString("Fecha"),
+                            resultSet.getDouble("precio"));
                         flights.add(flight);
                     }
                 }
@@ -208,6 +210,51 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
         }
         return flights;
     }
+
+    //Este me lista todos los aeropuertos segun idAirport de origen y destino
+    @Override
+    public List<ConnectionDTO> listFlightsByAirportsId(String AirportId1, String AirportId2, String fecha){
+        List<ConnectionDTO> flights = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT " +
+               "c1.id_trip AS id_vuelo,"+
+               "c1.id AS id_connection, "+
+               "c1.connection_number AS con_number, " +
+               "c1.id_airport AS aeropuerto_salida, "+
+               "c2.id_airport AS aeropuerto_llegada, " + 
+               "tr.trip_date As Fecha" +
+               "tr.price_tripe AS precio "+
+               "FROM connection c1" +
+               "JOIN trip_status ts1 ON c1.id_trip_status = ts1.id " +
+               "JOIN connection c2 ON c1.id_trip = c2.id_trip " +
+               "JOIN trip_status ts2 ON c2.id_trip_status = ts2.id " +
+               "JOIN trip tr ON c2.id_trip ON tr.id " +
+               "WHERE c1.id_trip_status = 1 AND c2.id_trip_status = 3 AND c1.id_airport = ? AND c2.id_airport = ? AND tr.trip_date = ?;";
+            try(PreparedStatement statement = connection.prepareStatement(query)){
+                statement.setString(1, AirportId1);
+                statement.setString(2, AirportId2);
+                statement.setString(3, fecha);
+                try(ResultSet resultSet = statement.executeQuery()){
+                    while (resultSet.next()) {
+                        ConnectionDTO flight = new ConnectionDTO(
+                            resultSet.getInt("id_vuelo"), 
+                            resultSet.getInt("id_connection"),
+                            resultSet.getString("con_number"),
+                            resultSet.getInt("id_plane"),
+                            resultSet.getString("aeropuerto_salida"), 
+                            resultSet.getString("aeropuerto_llegada"),
+                            resultSet.getString("Fecha"),
+                            resultSet.getDouble("precio"));
+                        flights.add(flight);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return flights;
+    }
+
     //Esta método me devuelve el vuelo como conexión (De aquí extraigo el id de connection usando id_trip)
     @Override
     public Optional<ConnectionDTO> findConnectionDTO(int id) {
@@ -220,6 +267,7 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                "c1.id_airport AS aeropuerto_salida, "+
                "c2.id_airport AS aeropuerto_llegada," + 
                "tr.trip_date As Fecha" +
+               "tr.price_tripe AS precio "+
                "FROM connection c1" +
                "JOIN trip_status ts1 ON c1.id_trip_status = ts1.id " +
                "JOIN connection c2 ON c1.id_trip = c2.id_trip " +
@@ -238,7 +286,8 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                             resultSet.getInt("id_plane"),
                             resultSet.getString("aeropuerto_salida"), 
                             resultSet.getString("aeropuerto_llegada"),
-                            resultSet.getString("Fecha"));
+                            resultSet.getString("Fecha"),
+                            resultSet.getDouble("precio"));
                     return Optional.of(connections);
                     }
                 }

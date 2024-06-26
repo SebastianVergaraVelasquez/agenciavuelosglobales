@@ -59,6 +59,29 @@ public class AirportMYSQLRepository implements AirportRepository {
     }
 
     @Override
+    public List<Airport> findAllAirportsByCityId(String cityId) {
+        List<Airport> airports = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM airport WHERE id_city = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, cityId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        Airport airport = new Airport(
+                                resultSet.getString("id"),
+                                resultSet.getString("name"),
+                                resultSet.getString("id_city"));
+                        airports.add(airport);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return airports;
+    }
+
+    @Override
     public Optional<Airport> findById(String id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT * FROM airport WHERE id = ?";
@@ -110,12 +133,12 @@ public class AirportMYSQLRepository implements AirportRepository {
         }
     }
 
-    @Override 
-    public Optional<AirportDTO> findAirportCityById(String id){
+    @Override
+    public Optional<AirportDTO> findAirportCityById(String id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT ai.id AS airport_id, ai.name AS airport, ci.name AS city FROM airport AS ai "+
-            "JOIN city ci ON ci.id = ai.id_city "+
-            "WHERE ai.id = ?";
+            String query = "SELECT ai.id AS airport_id, ai.name AS airport, ci.name AS city FROM airport AS ai " +
+                    "JOIN city ci ON ci.id = ai.id_city " +
+                    "WHERE ai.id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {

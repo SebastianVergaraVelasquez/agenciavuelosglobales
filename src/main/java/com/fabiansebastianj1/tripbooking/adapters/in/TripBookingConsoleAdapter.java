@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+import com.fabiansebastianj1.airport.domain.models.Airport;
+import com.fabiansebastianj1.city.domain.models.City;
 import com.fabiansebastianj1.connection.domain.models.ConnectionDTO;
 import com.fabiansebastianj1.connection.domain.models.Connections;
 import com.fabiansebastianj1.customer.domain.models.Customer;
@@ -12,6 +14,7 @@ import com.fabiansebastianj1.tripbooking.application.TripBookingService;
 import com.fabiansebastianj1.tripbooking.domain.models.TripBooking;
 import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetails;
 import com.fabiansebastianj1.validations.InputVali;
+import com.fabiansebastianj1.validations.Register;
 import com.fabiansebastianj1.validations.ValidationExist;
 
 public class TripBookingConsoleAdapter {
@@ -105,10 +108,69 @@ public class TripBookingConsoleAdapter {
         }
     }
 
+
+    public void bookingCustomerMenu(){
+        Scanner scanner = new Scanner(System.in);
+        boolean executing = true;
+        InputVali inputVali = new InputVali();
+        boolean newInput; 
+
+        while (executing) {
+            System.out.println("*** Menú de reservas para clientes ***");
+            System.out.println(" ");
+            System.out.println("Qué acción desea realizar, digite una opcion numérica");
+            System.out.println("1.Reservar vuelo \n2.Consultar reservas \n3.Cancelar reserva \n4. Modificar reserva \n5.Salir");
+            int choice = scanner.nextInt();
+            System.out.println(" ");
+
+            switch (choice) {
+                case 1:
+                    System.out.println("*** Reserva de vuelos ***");
+                    System.out.println("*** Buscar vuelo ***");
+                    System.out.println("Ingrese la información solicitada a continuación");
+                    System.out.println("Estas son las ciudades disponibles");
+                    showCities();
+
+                    //seleccionar origen
+                    System.out.println("Seleccón de la ciudad de origen");
+                    City originCity = returnCity(inputVali);
+                    System.out.println("Estas son los aeropuertos disponibles");
+                    showAirports(originCity.getId());
+                    System.out.println("Seleccón del aeropuerto de origen");
+                    Airport orginAirport = returnAirport(inputVali);
+
+                    //seleccionar destino
+                    System.out.println("Seleccón de la ciudad de destino");
+                    City destinationCity = returnCity(inputVali);
+                    System.out.println("Estos son los aeropuertos disponibles");
+                    showAirports(destinationCity.getId());
+                    System.out.println("Seleccón del aeropuerto de destino");
+                    Airport destinationAirport = returnAirport(inputVali);
+                    newInput = Register.yesOrNo("Es un viaje de ida y vuelta? Ingrese la opción numérica: 1(Sí) 2(No)" );
+                    
+                    
+                    //Verificar si es un viaje de ida y vuelta
+                    String departureDate = inputVali.stringNotNull("Ingrese la fecha de salida");
+                    if (newInput) {
+                        String returnDate = inputVali.stringNotNull("Ingrese la fecha de regreso");
+                    }
+
+                    //Mostrar los vuelos disponibles segun aeropuertos y fechas
+                    System.out.println("Estos son los vuelos de ida");
+                    showFlightsByAirports(orginAirport.getId(), destinationAirport.getId(), departureDate);
+
+                    break;
+            
+                default:
+                    break;
+            }
+        }
+    }
+
      public void mostrarVuelos() {
         List<ConnectionDTO> flights = tripBookingService.listFlights();
         for (ConnectionDTO flight : flights) {
-            System.out.println(String.format("id_vuelo: %s, id_escala: %s aeropuerto_salida %s, " +
+            System.out.println(String.format("id_vuelo: %s, id_escala: %s, aeropuerto_salida %s, " +
                     "aeropuerto llegada: %s, " +
                     "fecha: %", flight.getTripId(), flight.getConnectionId(), flight.getStartAirport(),
                     flight.getArriveAirport(), flight.getTripDate()));
@@ -122,5 +184,56 @@ public class TripBookingConsoleAdapter {
         }
     }
 
+    public void showCities(){
+        List<City> cities = tripBookingService.findAllCities();
+        for (City city : cities) {
+            System.out.println(String.format("id_city: %s, name: %s",city.getId(), city.getName()));
+        }
+    }
 
+    public City returnCity(InputVali inputVali){
+        City city = ValidationExist.transformAndValidateObj(
+            () -> tripBookingService.findCityById(inputVali.stringNotNull("Ingrese el id de la ciudad"))
+        );
+        return city;
+    }
+
+    public void showAirports(String id){
+        List<Airport> airports = tripBookingService.findAllAirportsByCityId(id);
+        for (Airport airport : airports) {
+            System.out.println(String.format("id_city: %s, name: %s",airport.getId(), airport.getName()));
+        }
+    }
+
+    public Airport returnAirport(InputVali inputVali){
+        Airport airport = ValidationExist.transformAndValidateObj(
+            () -> tripBookingService.findAirportById(inputVali.stringNotNull("Ingrese el id del aeropuerto"))
+        );
+        return airport;
+    }
+
+    public void showFlightsByAirports(String airportId1, String airportId2, String fecha){
+        List<ConnectionDTO> flights = tripBookingService.findAllFlightsByAirportsId(airportId1, airportId2, fecha);
+        String format = "| %-10s | %-13s | %-18s | %-15s | %-15s | %-12s | %-12s |%n";
+        System.out.format(
+                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
+        System.out.format(
+                "| Trip ID    | Connection ID | Connection Number  | Start Airport | Arrive Airport| Trip Date    | Price        |%n");
+        System.out.format(
+                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
+
+            for (ConnectionDTO connectionDTO : flights) {
+                System.out.format(format,
+                connectionDTO.getTripId(),
+                connectionDTO.getConnectionId(),
+                connectionDTO.getConnectionNumber(),
+                connectionDTO.getStartAirport(),
+                connectionDTO.getArriveAirport(),
+                connectionDTO.getTripDate());
+                connectionDTO.getPrice();
+            System.out.format(
+                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
+            }
+            
+    }
 }
