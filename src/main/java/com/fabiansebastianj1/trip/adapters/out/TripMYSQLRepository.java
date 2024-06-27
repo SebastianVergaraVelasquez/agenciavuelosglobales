@@ -104,7 +104,7 @@ public class TripMYSQLRepository implements TripRepository {
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, trip.getDate());
                 statement.setDouble(2, trip.getPrice());
-                statement.setInt(2, trip.getId());
+                statement.setInt(3, trip.getId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {

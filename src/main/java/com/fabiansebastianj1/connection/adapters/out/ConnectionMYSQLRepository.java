@@ -180,16 +180,17 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                "c1.id_trip AS id_vuelo, "+
                "c1.id AS id_connection, "+
                "c1.connection_number AS con_number, " +
+               "c1.id_plane AS id_plane, " +
                "c1.id_airport AS aeropuerto_salida, "+
                "c2.id_airport AS aeropuerto_llegada, " +
-               "tr.trip_date As Fecha " +
+               "tr.trip_date As Fecha, " +
                "tr.price_tripe AS precio "+
                "FROM connection c1 " +
                "JOIN trip_status ts1 ON c1.id_trip_status = ts1.id " +
                "JOIN connection c2 ON c1.id_trip = c2.id_trip " +
                "JOIN trip_status ts2 ON c2.id_trip_status = ts2.id " +
-               "JOIN trip tr ON c2.id_trip ON tr.id " +
-               "WHERE c1.id_trip_status = 1 AND c2.id_trip_status = 2;";
+               "JOIN trip tr ON c2.id_trip = tr.id " +
+               "WHERE c1.id_trip_status = 1 AND c2.id_trip_status = 3;";
             try(PreparedStatement statement = connection.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery()){
                     while (resultSet.next()) {

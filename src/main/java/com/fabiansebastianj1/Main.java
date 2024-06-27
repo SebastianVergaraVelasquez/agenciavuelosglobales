@@ -42,9 +42,13 @@ import com.fabiansebastianj1.revisiondetail.adapters.out.RevisioDetailMYSQLRepos
 import com.fabiansebastianj1.status.adapters.out.StatusMYSQLRepository;
 import com.fabiansebastianj1.status.application.StatusService;
 import com.fabiansebastianj1.status.domain.models.Status;
+import com.fabiansebastianj1.trip.adapters.in.TripConsoleAdapter;
 import com.fabiansebastianj1.trip.adapters.out.TripMYSQLRepository;
+import com.fabiansebastianj1.trip.application.TripService;
 import com.fabiansebastianj1.tripbookingdetails.adapters.out.TripBookingDetailsMYSQLRepository;
+import com.fabiansebastianj1.tripcrew.adapters.in.TripCrewConsoleAdapter;
 import com.fabiansebastianj1.tripcrew.adapters.out.TripCrewMYSQLRepository;
+import com.fabiansebastianj1.tripcrew.application.TripCrewService;
 import com.fabiansebastianj1.tripstatus.adapters.out.TripStatusMYSQLRepository;
 import com.fabiansebastianj1.tripulationrole.adapters.out.TripulationRoleMYSQLRepository;
 import com.fabiansebastianj1.validations.InputVali;
@@ -53,8 +57,8 @@ public class Main {
     public static void main(String[] args) {
 
         String url = "jdbc:mysql://localhost:3306/agencia";
-        String user = "root";
-        String password = "Fauroro.95";
+        String user = "campus2023";
+        String password = "campus2023";
 
         // falta tripbooking y passenger
 
@@ -108,6 +112,12 @@ public class Main {
         AirportService airportService = new AirportService(airportMYSQLRepository, cityMYSQLRepository);
         AirportConsoleAdapter airportConsoleAdapter = new AirportConsoleAdapter(airportService);
 
+        TripService tripService = new TripService(tripMYSQLRepository, connectionMYSQLRepository, planeMySQLRepository);
+        TripConsoleAdapter tripConsoleAdapter = new TripConsoleAdapter(tripService); 
+
+        TripCrewService tripCrewService = new TripCrewService(tripCrewMYSQLRepository, connectionMYSQLRepository, employeeMYSQLRepository, tripMYSQLRepository);
+        TripCrewConsoleAdapter tripCrewConsoleAdapter = new TripCrewConsoleAdapter(tripCrewService);
+
         Scanner scanner = new Scanner(System.in);
         boolean executing = true;
         InputVali inputVali = new InputVali();
@@ -116,9 +126,9 @@ public class Main {
             System.out.println("\n *** MENU PRINCIPAL AGENCIA VUELOS GLOBALES ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println(
-                    "1. Modulo Aeropuerto? \n2. Modulo Conexiones\n3. Modulo Customer \n4. Modulo Tipi Documento \n5. Modulo Tarifa\n 6. Modulo Avion\n7. Modulo Revision\n8. Salir");
-            int choice = scanner.nextInt();
+            // System.out.println(
+            //         "1. Modulo Aeropuerto? \n2. Modulo Conexiones\n3. Modulo Customer \n4. Modulo Tipo Documento \n5. Modulo Tarifa\n6. Modulo Avion\n7. Modulo Revision\n0. Salir");
+            int choice = inputVali.readInt(("1. Modulo Aeropuerto? \n2. Modulo Conexiones\n3. Modulo Customer \n4. Modulo Tipo Documento \n5. Modulo Tarifa\n6. Modulo Avion\n7. Modulo Revision\n0. Salir"));
             System.out.println(" ");
 
             switch (choice) {
@@ -142,6 +152,12 @@ public class Main {
                     break;
                 case 7:
                     revisionConsoleAdapter.start();
+                    break;
+                case 8:
+                    tripConsoleAdapter.start();
+                    break;
+                case 9:
+                    tripCrewConsoleAdapter.start();
                     break;
                 default:
                     executing = false;

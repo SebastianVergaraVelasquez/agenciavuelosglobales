@@ -27,7 +27,7 @@ public class TripConsoleAdapter {
         InputVali inputVali = new InputVali();
 
         while (executing) {
-            System.out.println("*** Modulo de cliente ***");
+            System.out.println("*** Modulo de trip ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
             System.out.println(
@@ -51,24 +51,29 @@ public class TripConsoleAdapter {
                     showTrip(tripToUpdate);
                     updateTrip(tripToUpdate);
                     System.out.println("Actualización exitosa");
+                    break;
                 case 4:
                     System.out.println("*** Eliminar trayecto ***");
                     Trip tripToDelete = returnTrip(inputVali);
                     tripService.deleteTrip(tripToDelete.getId());
-                    Optional<ConnectionDTO> tripAsConnection = tripService.findTripAsConnectionByTripId(tripToDelete.getId());
-                    List<Connections> connectionsToDelete = tripService.findAllConnectionsByTripId(tripAsConnection.get().getTripId());
+                    Optional<ConnectionDTO> tripAsConnection = tripService
+                            .findTripAsConnectionByTripId(tripToDelete.getId());
+                    List<Connections> connectionsToDelete = tripService
+                            .findAllConnectionsByTripId(tripAsConnection.get().getTripId());
                     for (Connections connections : connectionsToDelete) {
                         tripService.deleteConnection(connections.getId());
                     }
                     System.out.println("Trayecto eliminado exitosamente");
                     break;
                 default:
+                    executing = false;
+                    System.out.println("Saliendo del modulo de trip");
                     break;
             }
         }
     }
 
-    public void updateTrip(Trip trip){
+    public void updateTrip(Trip trip) {
         boolean newInput;
         InputVali inputVali = new InputVali();
         newInput = Register.yesOrNo("Desea cambiar la fecha del trayecto? Ingrese el valor numérico 1(si) 2(no)");
@@ -84,19 +89,18 @@ public class TripConsoleAdapter {
         tripService.updateTrip(trip);
     }
 
-    public void asignPlaneToTrip(Trip trip){
+    public void asignPlaneToTrip(Trip trip) {
         boolean reAsign;
         InputVali inputVali = new InputVali();
         Optional<ConnectionDTO> tripAsConnection = tripService.findTripAsConnectionByTripId(trip.getId());
         if (tripAsConnection.get().getPlaneId() == 0) {
             System.out.println("Este trayecto no tiene un avión asignado");
-           showAvailablePlanes();
-           Plane plane = returnPlane(inputVali);
-           Connections connection = tripService.findConnectionById(tripAsConnection.get().getConnectionId()).get();
-           connection.setId_plane(plane.getId());
-           tripService.updateConnection(connection);
-        }
-        else{
+            showAvailablePlanes();
+            Plane plane = returnPlane(inputVali);
+            Connections connection = tripService.findConnectionById(tripAsConnection.get().getConnectionId()).get();
+            connection.setId_plane(plane.getId());
+            tripService.updateConnection(connection);
+        } else {
             System.out.println("Este trayecto ya tiene un avión asignado");
             reAsign = Register.yesOrNo("Desea reasignarlo? Ingrese el valor numérico 1(si) 2(no)");
             if (reAsign) {
@@ -105,8 +109,10 @@ public class TripConsoleAdapter {
                 Connections connection = tripService.findConnectionById(tripAsConnection.get().getConnectionId()).get();
                 connection.setId_plane(plane.getId());
                 tripService.updateConnection(connection);
+                System.out.println("Asignación completa");
+            } else {
+                System.out.println("Asignación cancelada");
             }
-            else{System.out.println("Asignación cancelada");}
         }
     }
 
@@ -122,7 +128,7 @@ public class TripConsoleAdapter {
     public Plane returnPlane(InputVali inputVali) {
         Plane plane = ValidationExist.transformAndValidateObj(
                 () -> tripService.findPlaneById(
-                        inputVali.readInt(inputVali.stringNotNull("Ingrese las placas del avión para asignarlo"))));
+                        inputVali.readInt(inputVali.stringNotNull("Ingrese el id del avión para asignarlo"))));
         return plane;
     }
 
@@ -135,17 +141,18 @@ public class TripConsoleAdapter {
 
     public void showTrips() {
         List<ConnectionDTO> trips = tripService.findAllTripsAsConnectionDTO();
-        String format = "| %-10s | %-13s | %-18s | %-15s | %-15s | %-12s |%n";
+        String format = "| %-10s | %-10s | %-13s | %-18s | %-13s | %-13s | %-12s |%n";
         System.out.format(
-                "+------------+---------------+--------------------+---------------+---------------+--------------+%n");
+                "+------------+------------+---------------+--------------------+---------------+---------------+--------------+%n");
         System.out.format(
-                "| Trip ID    | Connection ID | Connection Number  | Start Airport | Arrive Airport| Trip Date    |%n");
+                "| Trip ID    | Plane ID   | Connection ID | Connection Number  | Start Airport | Arrive Airport| Trip Date    |%n");
         System.out.format(
-                "+------------+---------------+--------------------+---------------+---------------+--------------+%n");
+                "+------------+------------+---------------+--------------------+---------------+---------------+--------------+%n");
 
         for (ConnectionDTO trip : trips) {
             System.out.format(format,
                     trip.getTripId(),
+                    trip.getPlaneId(),
                     trip.getConnectionId(),
                     trip.getConnectionNumber(),
                     trip.getStartAirport(),
@@ -154,29 +161,29 @@ public class TripConsoleAdapter {
         }
 
         System.out.format(
-                "+------------+---------------+--------------------+---------------+---------------+--------------+%n");
+                "+------------+------------+---------------+--------------------+---------------+---------------+--------------+%n");
     }
 
     public void showTrip(Trip trip) {
         Optional<ConnectionDTO> tripAsConnection = tripService.findTripAsConnectionByTripId(trip.getId());
-        String format = "| %-10s | %-13s | %-18s | %-15s | %-15s | %-12s | %-12s |%n";
+        String format = "| %-10s | %-10s | %-13s | %-18s | %-13s | %-13s | %-12s | %-12f |%n";
         System.out.format(
-                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
+                "+------------+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
         System.out.format(
-                "| Trip ID    | Connection ID | Connection Number  | Start Airport | Arrive Airport| Trip Date    | Price        |%n");
+                "| Trip ID    | Plane ID   | Connection ID | Connection Number  | Start Airport | Arrive Airport| Trip Date    | Price        |%n");
         System.out.format(
-                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
+                "+------------+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
 
-        
-            System.out.format(format,
-            tripAsConnection.get().getTripId(),
-            tripAsConnection.get().getConnectionId(),
-            tripAsConnection.get().getConnectionNumber(),
-            tripAsConnection.get().getStartAirport(),
-            tripAsConnection.get().getArriveAirport(),
-            tripAsConnection.get().getTripDate());
-            trip.getPrice();
-            System.out.format(
-                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
+        System.out.format(format,
+                tripAsConnection.get().getTripId(),
+                tripAsConnection.get().getPlaneId(),
+                tripAsConnection.get().getConnectionId(),
+                tripAsConnection.get().getConnectionNumber(),
+                tripAsConnection.get().getStartAirport(),
+                tripAsConnection.get().getArriveAirport(),
+                tripAsConnection.get().getTripDate(),
+                trip.getPrice());
+        System.out.format(
+                "+------------+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
     }
 }
