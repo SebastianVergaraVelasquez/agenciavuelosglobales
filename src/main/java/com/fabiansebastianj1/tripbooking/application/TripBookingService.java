@@ -195,7 +195,11 @@ public class TripBookingService {
         return passengerRepository.passengersByTripBookingId(id);
     }
 
-    public Optional<TripBookingDetailsDTO> findByTripBookingId(int id){
+    public Optional<TripBookingDetailsDTO> findByTripBookingIdAsDTO(int id){
+        return tripBookingDetailsRepository.findByTripBookingIdAsDTO(id);
+    }
+
+    public Optional<TripBookingDetails> findByTripBookingId(int id){
         return tripBookingDetailsRepository.findByTripBookingId(id);
     }
 

@@ -238,7 +238,10 @@ public class TripBookingConsoleAdapter {
                     for (Passenger passenger : passengersToDelete) {
                         tripBookingService.deleletePassengers(passenger.getNif()); //Eliminar uno por uno de la base
                     }
-                    
+                    Optional<TripBookingDetails> details = tripBookingService.findByTripBookingId(bookingToDelete.getId());
+                    details.get().setTripConditionId(2);
+
+                    tripBookingService.updateTripBookingDetail(details.get());
                     System.out.println("Reserva cancelada");
                     break;
                 default:
@@ -516,7 +519,7 @@ public class TripBookingConsoleAdapter {
     }
 
     public void showBookingDetails(int bookingId){
-        Optional<TripBookingDetailsDTO> details = tripBookingService.findByTripBookingId(bookingId);
+        Optional<TripBookingDetailsDTO> details = tripBookingService.findByTripBookingIdAsDTO(bookingId);
         System.out.println(String.format("id_details: %s \n"+
         "id_booking: %s \nid_customer: %s \nfare: %s \nCondition: %s", details.get().getId(),details.get().getTripBookingId(),
             details.get().getCustomerId(), details.get().getFareName(), details.get().getTripConditionName()));

@@ -22,6 +22,15 @@ public class TripBookingDetails {
         this.fareId = fareId;
     }
 
+    
+    public TripBookingDetails(int id, int tripBookingId, String customerId, int fareId, int tripConditionId) {
+        this.id = id;
+        this.tripBookingId = tripBookingId;
+        this.customerId = customerId;
+        this.fareId = fareId;
+        this.tripConditionId = tripConditionId;
+    }
+
     public int getId() {
         return id;
     }
