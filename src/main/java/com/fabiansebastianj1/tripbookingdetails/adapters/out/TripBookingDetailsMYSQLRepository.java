@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.fabiansebastianj1.tripbooking.domain.models.TripBooking;
 import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetails;
 import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetailsDTO;
 import com.fabiansebastianj1.tripbookingdetails.infrastructure.TripBookingDetailsRepository;
@@ -118,7 +119,7 @@ public class TripBookingDetailsMYSQLRepository implements TripBookingDetailsRepo
     @Override
     public Optional<TripBookingDetails> findByTripBookingId(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM trip_booking_detail WHERE id_trip_booking;";
+            String query = "SELECT * FROM trip_booking_detail WHERE id_trip_booking = ?;";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -143,11 +144,12 @@ public class TripBookingDetailsMYSQLRepository implements TripBookingDetailsRepo
     @Override
     public void save(TripBookingDetails tripBookingDetail) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "INSERT INTO trip_booking_detail (id_trip_booking, id_customer, id_fare) VALUES (?,?,?)";
+            String query = "INSERT INTO trip_booking_detail (id_trip_booking, id_customer, id_fare , id_trip_condition) VALUES (?,?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, tripBookingDetail.getTripBookingId());
                 statement.setString(2, tripBookingDetail.getCustomerId());
                 statement.setInt(3, tripBookingDetail.getFareId());
+                statement.setInt(4, tripBookingDetail.getTripConditionId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -158,12 +160,13 @@ public class TripBookingDetailsMYSQLRepository implements TripBookingDetailsRepo
     @Override
     public void update(TripBookingDetails tripBookingDetail) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE trip_booking_detail SET id_trip_booking = ?, id_customer = ?, id_fare = ?  WHERE id = ?";
+            String query = "UPDATE trip_booking_detail SET id_trip_booking = ?, id_customer = ?, id_fare = ?, id_trip_condition = ? WHERE id = ?;";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, tripBookingDetail.getTripBookingId());
                 statement.setString(2, tripBookingDetail.getCustomerId());
                 statement.setInt(3, tripBookingDetail.getFareId());
-                statement.setInt(4, tripBookingDetail.getId());
+                statement.setInt(4, tripBookingDetail.getTripConditionId());
+                statement.setInt(5, tripBookingDetail.getId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -246,4 +249,27 @@ public class TripBookingDetailsMYSQLRepository implements TripBookingDetailsRepo
         }
         return tripBookingDetails;
     }
+
+    @Override
+    public Optional<TripBookingDetails> findLastBDetail() {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM trip_booking_detail ORDER BY id DESC LIMIT 1";
+            try (PreparedStatement statement = connection.prepareStatement(query);
+                 ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    TripBookingDetails tripBookingDetails = new TripBookingDetails(
+                            resultSet.getInt("id"),
+                            resultSet.getInt("id_trip_booking"),
+                            resultSet.getString("id_customer"),
+                            resultSet.getInt("id_fare"),
+                            resultSet.getInt("id_trip_condition"));
+                    return Optional.of(tripBookingDetails);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+    
 }

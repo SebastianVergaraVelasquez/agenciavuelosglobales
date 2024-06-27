@@ -355,20 +355,25 @@ public class TripBookingConsoleUtils {
         tripBookingService.createPayment(newPayment);
 
         // generar tripBooking, generar payment, generar detail
-
+        int tripIdCondition = 1;
         TripBooking tripBooking1 = new TripBooking(formattedDate, tripsIdSelected[0]); // Crear booking
         tripBookingService.createTripBooking(tripBooking1);
         Optional<TripBooking> lasTripBooking1 = tripBookingService.findLastTripBooking();// retornar último
                                                                                          // booking
         TripBookingDetails tripBookingDetail1 = new TripBookingDetails(lasTripBooking1.get().getId(),
-                newCustomer.getId(), fare.getId(), 1); // Crear booking detail
+                newCustomer.getId(), fare.getId(), tripIdCondition); // Crear booking detail
         tripBookingService.createTripBookingDetail(tripBookingDetail1);
+
+        Optional<TripBookingDetails> lasTripBookingDetail1 = tripBookingService.findLastTripBookingDetail();// retornar
+                                                                                                            // último
+                                                                                                            // booking
+                                                                                                            // detail
         System.out.println(String.format(
                 "Este es su identificador de reserva %s (Viaje de ida). Ha sido enviado a su correo electrónico (%s)",
                 lasTripBooking1.get().getId(), email));
 
         for (Passenger passenger : passengers1) {
-            passenger.setTripBookingDetailId(lasTripBooking1.get().getId()); // cambiar
+            passenger.setTripBookingDetailId(lasTripBookingDetail1.get().getId()); // cambiar
             tripBookingService.createPassenger(passenger); // generar passengers
         }
 
@@ -376,13 +381,17 @@ public class TripBookingConsoleUtils {
             TripBooking tripBooking2 = new TripBooking(formattedDate, tripsIdSelected[1]);
             tripBookingService.createTripBooking(tripBooking2);
             Optional<TripBooking> lasTripBooking2 = tripBookingService.findLastTripBooking();// retornar
-                                                                                             // último
-                                                                                             // booking
+            // último
+            // booking
             TripBookingDetails tripBookingDetail2 = new TripBookingDetails(lasTripBooking2.get().getId(),
                     newCustomer.getId(), fare.getId(), 1);
             tripBookingService.createTripBookingDetail(tripBookingDetail2);
+            Optional<TripBookingDetails> lasTripBookingDetail2 = tripBookingService.findLastTripBookingDetail();// retornar
+                                                                                                                // último
+                                                                                                                // booking
+                                                                                                                // detail
             for (Passenger passenger : passengers2) {
-                passenger.setTripBookingDetailId(lasTripBooking2.get().getId()); // cambiar
+                passenger.setTripBookingDetailId(lasTripBookingDetail2.get().getId()); // cambiar
                 tripBookingService.createPassenger(passenger); // generar passengers
             }
             System.out.println(String.format(

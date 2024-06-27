@@ -65,8 +65,8 @@ public class Main {
     public static void main(String[] args) {
 
         String url = "jdbc:mysql://localhost:3306/agencia";
-        String user = "campus2023";
-        String password = "campus2023";
+        String user = "root";
+        String password = "Fauroro.95";
 
         // falta tripbooking y passenger
 

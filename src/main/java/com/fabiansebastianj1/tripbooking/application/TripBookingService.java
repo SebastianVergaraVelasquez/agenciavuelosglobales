@@ -121,6 +121,10 @@ public class TripBookingService {
     public Optional<TripBooking> findLastTripBooking(){
        return tripBookingRepository.findLast();
     }
+    
+    public Optional<TripBookingDetails> findLastTripBookingDetail(){
+       return tripBookingDetailsRepository.findLastBDetail();
+    }
 
     public void deleteTripBookingDetailForId(int id) {
         tripBookingDetailsRepository.delete(id);

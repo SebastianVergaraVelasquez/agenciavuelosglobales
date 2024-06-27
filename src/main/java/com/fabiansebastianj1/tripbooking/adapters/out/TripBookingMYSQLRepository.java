@@ -2,6 +2,7 @@ package com.fabiansebastianj1.tripbooking.adapters.out;
 
 import com.fabiansebastianj1.tripbooking.domain.models.TripBooking;
 import com.fabiansebastianj1.tripbooking.infraestructure.TripBookingRepository;
+import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetails;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class TripBookingMYSQLRepository implements TripBookingRepository {
     @Override
     public void save(TripBooking tripBooking) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "INSERT INTO trip_booking (date,id_trip) VALUES (?,?)";
+            String query = "INSERT INTO trip_booking (date,id_trip) VALUES (?,?);";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, tripBooking.getDate());
                 statement.setInt(2, tripBooking.getId_trip());
@@ -37,7 +38,7 @@ public class TripBookingMYSQLRepository implements TripBookingRepository {
     @Override
     public void update(TripBooking tripBooking) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE trip_booking SET date=?, id_trip=? WHERE id=?";
+            String query = "UPDATE trip_booking SET date=?, id_trip=? WHERE id=?;";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, tripBooking.getDate());
                 statement.setInt(2, tripBooking.getId_trip());
@@ -52,7 +53,7 @@ public class TripBookingMYSQLRepository implements TripBookingRepository {
     @Override
     public void delete(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "DELETE FROM trip_booking WHERE id=?";
+            String query = "DELETE FROM trip_booking WHERE id=?;";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, id);
                 statement.executeUpdate();

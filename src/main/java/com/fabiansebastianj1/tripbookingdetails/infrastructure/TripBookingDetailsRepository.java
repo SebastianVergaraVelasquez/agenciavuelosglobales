@@ -16,4 +16,5 @@ public interface TripBookingDetailsRepository {
     List<TripBookingDetails> findAll();
     Optional<TripBookingDetailsDTO> findByTripBookingIdAsDTO(int id);
     Optional<TripBookingDetails> findByTripBookingId(int id);
+    Optional<TripBookingDetails> findLastBDetail();
 }

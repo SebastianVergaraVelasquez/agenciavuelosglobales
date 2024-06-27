@@ -12,7 +12,7 @@ public class TripBookingDetails {
         this.tripBookingId = tripBookingId;
         this.customerId = customerId;
         this.fareId = fareId;
-        this.tripConditionId = tripBookingId;
+        this.tripConditionId = tripConditionId;
     }
 
     public TripBookingDetails(int id, int tripBookingId, String customerId, int fareId) {
