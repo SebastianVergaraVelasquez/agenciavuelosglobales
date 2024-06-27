@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.fabiansebastianj1.documenttype.domain.models.DocumentType;
 import com.fabiansebastianj1.passenger.domain.models.Passenger;
 import com.fabiansebastianj1.passenger.infrastructure.PassengerRepository;
+import com.fabiansebastianj1.planes.domain.models.Plane;
 
 public class PassengerMYSQLRepository implements PassengerRepository {
 
@@ -103,6 +103,40 @@ public class PassengerMYSQLRepository implements PassengerRepository {
         }catch (SQLException e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<Passenger> passengersByTripBookingId(int tripIdBookingId) {
+        List<Passenger> passengers = new ArrayList<>();
+        String query = "SELECT pas.seat AS puestos_ocupados " +
+                       "FROM passenger AS pas " +
+                       "JOIN trip_booking_detail AS tbd ON pas.id_trip_booking_detail = tbd.id " +
+                       "JOIN trip_booking AS tb ON tb.id = tbd.id_trip_booking " +
+                       "WHERE pas.= ?";
+
+        try (Connection connection = DriverManager.getConnection(url, user, password);
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, tripIdBookingId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Passenger passenger = new Passenger(
+                            resultSet.getInt("id"),
+                            resultSet.getString("nif"),
+                            resultSet.getString("name"),
+                            resultSet.getInt("age"),
+                            resultSet.getString("seat"),
+                            resultSet.getInt("id_document_type"),
+                            resultSet.getInt("id_trip_booking_detail")
+                    );
+                    passengers.add(passenger);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return passengers;
     }
 
 

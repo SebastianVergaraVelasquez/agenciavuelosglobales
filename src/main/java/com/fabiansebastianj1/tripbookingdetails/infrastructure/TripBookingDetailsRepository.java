@@ -14,4 +14,5 @@ public interface TripBookingDetailsRepository {
     List<TripBookingDetailsDTO> findTripBookingByCustomerId(String id);
     List<TripBookingDetailsDTO> findTripBookingByTripId(int id);
     List<TripBookingDetails> findAll();
+    Optional<TripBookingDetailsDTO> findByTripBookingId(int id);
 }

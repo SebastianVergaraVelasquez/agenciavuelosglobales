@@ -85,6 +85,36 @@ public class TripBookingDetailsMYSQLRepository implements TripBookingDetailsRepo
     }
 
     @Override
+    public Optional<TripBookingDetailsDTO> findByTripBookingId(int id) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT tbd.id AS id, tbd.id_trip_booking AS id_trip_booking, "+
+            "tbd.id_customer AS id_customer, fare.name AS fare, tp.name AS booking_condition "+
+            "FROM trip_booking_detail AS tbd"+
+            "JOIN fare ON fare.id = tbd.id_fare "+
+            "JOIN trip_condition tp ON tp.id = tbd.id_trip_condition "+
+            "WHERE  = tbd.id_trip_booking ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        TripBookingDetailsDTO tripBookingDetail = new TripBookingDetailsDTO(
+                            resultSet.getInt("id"),
+                            resultSet.getInt("id_trip_booking"),
+                            resultSet.getString("id_customer"),
+                            resultSet.getString("fare"),
+                            resultSet.getString("booking_condition")
+                            );
+                        return Optional.of(tripBookingDetail);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public void save(TripBookingDetails tripBookingDetail) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "INSERT INTO trip_booking_detail (id_trip_booking, id_customer, id_fare) VALUES (?,?,?)";

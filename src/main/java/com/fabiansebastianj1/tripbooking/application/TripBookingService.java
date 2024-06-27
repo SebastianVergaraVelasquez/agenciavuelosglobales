@@ -26,6 +26,7 @@ import com.fabiansebastianj1.trip.infrastructure.TripRepository;
 import com.fabiansebastianj1.tripbooking.domain.models.TripBooking;
 import com.fabiansebastianj1.tripbooking.infraestructure.TripBookingRepository;
 import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetails;
+import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetailsDTO;
 import com.fabiansebastianj1.tripbookingdetails.infrastructure.TripBookingDetailsRepository;
 
 import java.util.List;
@@ -188,5 +189,21 @@ public class TripBookingService {
 
     public List<PayType> findAllPayTypes(){
         return payTypeRepository.findAll();
+    }
+
+    public List<Passenger> getPassengersByBookingId(int id){
+        return passengerRepository.passengersByTripBookingId(id);
+    }
+
+    public Optional<TripBookingDetailsDTO> findByTripBookingId(int id){
+        return tripBookingDetailsRepository.findByTripBookingId(id);
+    }
+
+    public void deleletePassengers(String id){
+        passengerRepository.delete(id);
+    }
+
+    public void updateTripBookingDetail(TripBookingDetails bookingDetails){
+        tripBookingDetailsRepository.update(bookingDetails);
     }
 }

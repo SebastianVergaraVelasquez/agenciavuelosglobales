@@ -29,6 +29,8 @@ public class Passenger {
         this.tripBookingDetailId = tripBookingDetailId;
     }
 
+    
+
     public int getId() {
         return id;
     }
