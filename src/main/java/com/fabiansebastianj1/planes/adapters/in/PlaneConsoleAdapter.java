@@ -34,7 +34,7 @@ public class PlaneConsoleAdapter {
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
             System.out.println(
-                    "1.Registrar avión \n2.Eliminar avión \n3. Consultar Avion \n4.Actualizar avión \n5. Salir");
+                    "1. Registrar avión \n2. Eliminar avión \n3. Consultar Avion \n4. Salir");
             int choice = scanner.nextInt();
             System.out.println(" ");
 
@@ -47,16 +47,18 @@ public class PlaneConsoleAdapter {
                     String plates = verifyPlatesUntilOk(inputVali);
 
                     int capacity = inputVali.readInt(inputVali.stringNotNull("Ingrese la capacidad del avión"));
-                    scanner.nextLine();
-                    System.out.println("Ingrese la fecha de fabricación en formato yyyy-MM-dd:");
+                    String fabricationDate = inputVali.stringNotNull("Ingrese la fecha de fabricación en formato yyyy-MM-dd:");
+                    
+                    // System.out.println("Ingrese la fecha de fabricación en formato yyyy-MM-dd:");
                     // Date fabricationDate = dateValidation.dateCheck(); //No sé de qué manera
                     // dejarlo
-                    String fabricationDate = scanner.nextLine();
+                    // String fabricationDate = scanner.nextLine();
                     // Acá deberíamos mostrar las opciones que tiene de estado, listarlas y que en
                     showStatuses();
 
                     Status showStatus = ValidationExist.transformAndValidateObj(
-                            () -> planeService.findStatusById(inputVali.readInt(inputVali.stringNotNull("Ingrese la id del estado del avión"))));
+                            () -> planeService.findStatusById(
+                                    inputVali.readInt(inputVali.stringNotNull("Ingrese la id del estado del avión"))));
                     int statusId = showStatus.getId();
 
                     showAirlines();
@@ -69,7 +71,8 @@ public class PlaneConsoleAdapter {
                     showModels();
 
                     Model showModel = ValidationExist.transformAndValidateObj(
-                            () -> planeService.findModelById(inputVali.readInt(inputVali.stringNotNull("Ingrese la id del modelo del avión"))));
+                            () -> planeService.findModelById(
+                                    inputVali.readInt(inputVali.stringNotNull("Ingrese la id del modelo del avión"))));
 
                     int modelId = showModel.getId();
 
@@ -82,7 +85,7 @@ public class PlaneConsoleAdapter {
                     System.out.println("*** Eliminar avión ***");
                     System.out.println(" ");
                     List<Plane> planes = planeService.findAllPlanes();
-                    String leftAlignFormat = "| %-4d | %-10s | %-8d | %-15s | %-9d | %-8d | %-7d | %-15s |%n";
+                    String leftAlignFormat = "| %-4d | %-10s | %-8d | %-15s | %-9d | %-8d | %-7d |%n";
                     System.out.format(
                             "+------+------------+----------+-----------------+-----------+----------+---------+%n");
                     System.out.format(
@@ -101,10 +104,12 @@ public class PlaneConsoleAdapter {
 
                     Plane showPlane = ValidationExist.transformAndValidateObj(
                             () -> planeService.findPlaneById(
-                                    inputVali.readInt(inputVali.stringNotNull("Ingrese el id del avión"))));
+                                    inputVali.readInt(inputVali.stringNotNull("Ingrese el id del avión -> "))));
                     int id = showPlane.getId();
 
                     planeService.deletePlane(id);
+                    System.out.println("Avion dado de baja");
+
                     break;
                 case 3:
                     System.out.println("*** Consultar avión ***");
@@ -115,10 +120,9 @@ public class PlaneConsoleAdapter {
 
                     break;
                 case 4:
-                    System.out.println("Actualizar info avión");
-
+                    executing = false;
+                    System.out.println("Saliendo del modulo de aviones");
                     break;
-
                 default:
                     executing = false;
                     System.out.println("Saliendo del módulo de aviones");
@@ -189,14 +193,15 @@ public class PlaneConsoleAdapter {
         } else {
             newIdAirline = showPlane.getAirlineId();
         }
-        Plane updatedPlane = new Plane(showPlane.getId(),showPlane.getPlates(),showPlane.getCapacity(),showPlane.getFabricationDate(),newIdStatus,newIdAirline,showPlane.getModelId());
+        Plane updatedPlane = new Plane(showPlane.getId(), showPlane.getPlates(), showPlane.getCapacity(),
+                showPlane.getFabricationDate(), newIdStatus, newIdAirline, showPlane.getModelId());
         planeService.updatePlane(updatedPlane);
     }
 
     public Plane returnPlane(InputVali inputVali) {
         Plane showPlane = ValidationExist.transformAndValidateObj(
                 () -> planeService.findPlaneByPlate(
-                        inputVali.stringNotNull("Ingrese la placa del avión")));
+                        inputVali.stringNotNull("Ingrese la placa del avión -> ")));
         return showPlane;
     }
 
@@ -204,15 +209,17 @@ public class PlaneConsoleAdapter {
         Optional<PlaneDTO> planeDTO = planeService.findPlaneInfoAdditional(showPlane.getPlates());
         PlaneDTO planeFinded = planeDTO.get();
 
-        String leftAlignFormat = "| %-4d | %-10s | %-8d | %-15s | %-9d | %-8d | %-7d | %-15s |%n";
+        String leftAlignFormat = "| %-4d | %-10s | %-8d | %-16s | %-9s | %-16s | %-7s |%n";
         System.out.format(
-                "+------+------------+----------+-----------------+-----------+----------+---------+%n");
+                "+------+------------+----------+------------------+-----------+------------------+---------+%n");
         System.out.format(
-                "| ID   | Plates     | Capacity | Fabrication Date| Status | Airline| Model |%n");
+                "| ID   | Plates     | Capacity | Fabrication Date | Status    | Airline          | Model   |%n");
         System.out.format(
-                "+------+------------+----------+-----------------+-----------+----------+---------+%n");
+                "+------+------------+----------+------------------+-----------+------------------+---------+%n");
         System.out.format(leftAlignFormat, planeFinded.getId(), planeFinded.getPlates(), planeFinded.getCapacity(),
                 planeFinded.getFabricationDate(), planeFinded.getStatusName(), planeFinded.getAirlineName(),
                 planeFinded.getModelName());
+        System.out.format(
+                "+------+------------+----------+------------------+-----------+------------------+---------+%n");
     }
 }

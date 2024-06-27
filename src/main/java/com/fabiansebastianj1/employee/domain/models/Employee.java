@@ -8,9 +8,9 @@ public class Employee {
     private int rolId;
     private Date ingressDate;
     private int airlineId;
-    private int airportId;
+    private String airportId;
     
-    public Employee(String id, String name, int rolId, Date ingressDate, int airlineId, int airportId) {
+    public Employee(String id, String name, int rolId, Date ingressDate, int airlineId, String airportId) {
         this.id = id;
         this.name = name;
         this.rolId = rolId;
@@ -59,11 +59,11 @@ public class Employee {
         this.airlineId = airlineId;
     }
 
-    public int getAirportId() {
+    public String getAirportId() {
         return airportId;
     }
 
-    public void setAirportId(int airportId) {
+    public void setAirportId(String airportId) {
         this.airportId = airportId;
     }
 

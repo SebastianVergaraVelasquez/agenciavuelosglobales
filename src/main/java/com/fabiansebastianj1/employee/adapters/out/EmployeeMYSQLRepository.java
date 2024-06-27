@@ -50,7 +50,7 @@ public class EmployeeMYSQLRepository implements EmployeeRepository {
                             resultSet.getInt("id_rol"),
                             resultSet.getDate("ingress_date"),
                             resultSet.getInt("id_airline"),
-                            resultSet.getInt("id_airport")
+                            resultSet.getString("id_airport")
                             );
                         employees.add(employee);
                 }
@@ -75,7 +75,7 @@ public class EmployeeMYSQLRepository implements EmployeeRepository {
                             resultSet.getInt("id_rol"),
                             resultSet.getDate("ingress_date"),
                             resultSet.getInt("id_airline"),
-                            resultSet.getInt("id_airport")
+                            resultSet.getString("id_airport")
                             );
                         return Optional.of(employee);
                     }
@@ -97,7 +97,7 @@ public class EmployeeMYSQLRepository implements EmployeeRepository {
                 statement.setInt(3, employee.getRolId());
                 statement.setDate(4, employee.getIngressDate());
                 statement.setInt(5, employee.getAirlineId());
-                statement.setInt(6, employee.getAirportId());
+                statement.setString(6, employee.getAirportId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -114,7 +114,7 @@ public class EmployeeMYSQLRepository implements EmployeeRepository {
                 statement.setInt(2, employee.getRolId());
                 statement.setDate(3, employee.getIngressDate());
                 statement.setInt(4, employee.getAirlineId());
-                statement.setInt(5, employee.getAirportId());
+                statement.setString(5, employee.getAirportId());
                 statement.setString(1, employee.getId());
                 statement.executeUpdate();
             }

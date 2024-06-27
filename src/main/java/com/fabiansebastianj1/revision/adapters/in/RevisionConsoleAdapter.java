@@ -42,11 +42,11 @@ public class RevisionConsoleAdapter {
                             () -> revisionService.findPlaneById(
                                     inputVali.readInt(inputVali.stringNotNull("Ingrese el id del avión"))));
                     int planeId = showPlane.getId();
-                    String revisionDate = inputVali.stringNotNull("Ingrese la fecha de la revisión");
+                    String revisionDate = inputVali.stringNotNull("Ingrese la fecha de la revisión en formato yyyy-MM-dd: ");
                     String description = inputVali.stringNotNull("Ingrese una descripción del procedimiento");
 
                     Employee showEmployee = ValidationExist.transformAndValidateObj(
-                            () -> revisionService.findEmployeeById(inputVali.stringNotNull("Ingrese el id del avión")));
+                            () -> revisionService.findEmployeeById(inputVali.stringNotNull("Ingrese el id del empleado")));
                     String employeeId = showEmployee.getId();
 
                     // Registrar en revision
@@ -92,7 +92,7 @@ public class RevisionConsoleAdapter {
                     List<Revision> revisions = revisionService.findAllRevisions();
                     String leftAlignFormat = "| %-4d | %-10s | %-8d |%n";
                     System.out.format("+------+------------+----------+%n");
-                    System.out.format("| ID   | Date     | Id_Plane |%n");
+                    System.out.format("| ID   | Date       | Id_Plane |%n");
                     System.out.format("+------+------------+----------+%n");
 
                     for (Revision revision : revisions) {

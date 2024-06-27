@@ -1,5 +1,7 @@
 package com.fabiansebastianj1;
 
+import java.util.Scanner;
+
 import com.fabiansebastianj1.airlines.adapters.out.AirlineMYSQLRepository;
 import com.fabiansebastianj1.airport.adapters.in.AirportConsoleAdapter;
 import com.fabiansebastianj1.airport.adapters.out.AirportMYSQLRepository;
@@ -32,7 +34,10 @@ import com.fabiansebastianj1.planes.adapters.out.PlaneMySQLRepository;
 import com.fabiansebastianj1.planes.application.PlaneService;
 import com.fabiansebastianj1.print.PrintSeats;
 import com.fabiansebastianj1.revemployee.adapters.out.RevEmployeeMYSQLRepository;
+import com.fabiansebastianj1.revemployee.infraestructure.RevEmployeeRepository;
+import com.fabiansebastianj1.revision.adapters.in.RevisionConsoleAdapter;
 import com.fabiansebastianj1.revision.adapters.out.RevisionMYSQLRepository;
+import com.fabiansebastianj1.revision.application.RevisionService;
 import com.fabiansebastianj1.revisiondetail.adapters.out.RevisioDetailMYSQLRepository;
 import com.fabiansebastianj1.status.adapters.out.StatusMYSQLRepository;
 import com.fabiansebastianj1.status.application.StatusService;
@@ -42,6 +47,7 @@ import com.fabiansebastianj1.tripbookingdetails.adapters.out.TripBookingDetailsM
 import com.fabiansebastianj1.tripcrew.adapters.out.TripCrewMYSQLRepository;
 import com.fabiansebastianj1.tripstatus.adapters.out.TripStatusMYSQLRepository;
 import com.fabiansebastianj1.tripulationrole.adapters.out.TripulationRoleMYSQLRepository;
+import com.fabiansebastianj1.validations.InputVali;
 
 public class Main {
     public static void main(String[] args) {
@@ -50,7 +56,7 @@ public class Main {
         String user = "root";
         String password = "Fauroro.95";
 
-        //falta tripbooking y passenger
+        // falta tripbooking y passenger
 
         AirlineMYSQLRepository airlineMYSQLRepository = new AirlineMYSQLRepository(url, user, password);
         AirportMYSQLRepository airportMYSQLRepository = new AirportMYSQLRepository(url, user, password);
@@ -67,45 +73,82 @@ public class Main {
         PlaneMySQLRepository planeMySQLRepository = new PlaneMySQLRepository(url, user, password);
         RevEmployeeMYSQLRepository revEmployeeMYSQLRepository = new RevEmployeeMYSQLRepository(url, user, password);
         RevisionMYSQLRepository revisionMYSQLRepository = new RevisionMYSQLRepository(url, user, password);
-        RevisioDetailMYSQLRepository revisioDetailMYSQLRepository  = new RevisioDetailMYSQLRepository(url, user, password);
+        RevisioDetailMYSQLRepository revisioDetailMYSQLRepository = new RevisioDetailMYSQLRepository(url, user,
+                password);
         StatusMYSQLRepository statusMYSQLRepository = new StatusMYSQLRepository(url, user, password);
         TripMYSQLRepository tripMYSQLRepository = new TripMYSQLRepository(url, user, password);
-        TripBookingDetailsMYSQLRepository tripBookingDetailsMYSQLRepository  = new TripBookingDetailsMYSQLRepository(url, user, password);
+        TripBookingDetailsMYSQLRepository tripBookingDetailsMYSQLRepository = new TripBookingDetailsMYSQLRepository(url,
+                user, password);
         TripCrewMYSQLRepository tripCrewMYSQLRepository = new TripCrewMYSQLRepository(url, user, password);
-        TripStatusMYSQLRepository tripStatusMYSQLRepository = new TripStatusMYSQLRepository(url,user,password);
-        TripulationRoleMYSQLRepository tripulationRoleMYSQLRepository = new TripulationRoleMYSQLRepository(url,user,password);
+        TripStatusMYSQLRepository tripStatusMYSQLRepository = new TripStatusMYSQLRepository(url, user, password);
+        TripulationRoleMYSQLRepository tripulationRoleMYSQLRepository = new TripulationRoleMYSQLRepository(url, user,
+                password);
 
-        
-        // FareService fareService = new FareService(fareMYSQLRepository);
-        // FareConsoleAdapter fareConsoleAdapter = new FareConsoleAdapter(fareService);
-        // fareConsoleAdapter.start(); 
+        RevisionService revisionService = new RevisionService(revisionMYSQLRepository, planeMySQLRepository,
+                employeeMYSQLRepository, revEmployeeMYSQLRepository);
+        RevisionConsoleAdapter revisionConsoleAdapter = new RevisionConsoleAdapter(revisionService);
 
-        // CustomerService customerService = new CustomerService(customerMYSQLRepository, documentTypeMYSQLRepository);
-        // CustomerConsoleAdapter customerConsoleAdapter = new CustomerConsoleAdapter(customerService);
-        // customerConsoleAdapter.start();
-        
-        // DocumentService documentService = new DocumentService(documentTypeMYSQLRepository);
-        // DocumentTypeConsoleAdapter documentTypeConsoleAdapter = new DocumentTypeConsoleAdapter(documentService);
-        // documentTypeConsoleAdapter.start();
-        
-        // ConnectionService connectionService = new ConnectionService(connectionMYSQLRepository, airportMYSQLRepository, planeMySQLRepository);
-        // ConnectionConsoleAdapter connectionConsoleAdapter = new ConnectionConsoleAdapter(connectionService);
-        // connectionConsoleAdapter.start();
-        
-        // AirportService airportService = new AirportService(airportMYSQLRepository, cityMYSQLRepository);
-        // AirportConsoleAdapter airportConsoleAdapter = new AirportConsoleAdapter(airportService);
-        // airportConsoleAdapter.start();
+        PlaneService planeService = new PlaneService(planeMySQLRepository, statusMYSQLRepository,
+                airlineMYSQLRepository, modelMYSQLRepository);
+        PlaneConsoleAdapter planeConsoleAdapter = new PlaneConsoleAdapter(planeService);
 
-        // PlaneService planeService = new PlaneService(planeMySQLRepository, statusMYSQLRepository,airlineMYSQLRepository,modelMYSQLRepository );
-        // PlaneConsoleAdapter planeConsoleAdapter = new PlaneConsoleAdapter(planeService);
-        // planeConsoleAdapter.start();
+        FareService fareService = new FareService(fareMYSQLRepository);
+        FareConsoleAdapter fareConsoleAdapter = new FareConsoleAdapter(fareService);
 
-        // ManufacturerService manufacturerService = new ManufacturerService(manufacturerMYSQLRepository);
-        // Manufacturer manufacturer = new Manufacturer("Owo");
-        // manufacturerService.createManufacturer(manufacturer);
+        CustomerService customerService = new CustomerService(customerMYSQLRepository, documentTypeMYSQLRepository);
+        CustomerConsoleAdapter customerConsoleAdapter = new CustomerConsoleAdapter(customerService);
 
-        // StatusService statusService = new StatusService(statusMYSQLRepository);
-        // Status status = new Status("fail");
-        // statusService.createStatus(status);
+        DocumentService documentService = new DocumentService(documentTypeMYSQLRepository);
+        DocumentTypeConsoleAdapter documentTypeConsoleAdapter = new DocumentTypeConsoleAdapter(documentService);
+
+        ConnectionService connectionService = new ConnectionService(connectionMYSQLRepository, airportMYSQLRepository,
+                planeMySQLRepository);
+        ConnectionConsoleAdapter connectionConsoleAdapter = new ConnectionConsoleAdapter(connectionService);
+
+        AirportService airportService = new AirportService(airportMYSQLRepository, cityMYSQLRepository);
+        AirportConsoleAdapter airportConsoleAdapter = new AirportConsoleAdapter(airportService);
+
+        Scanner scanner = new Scanner(System.in);
+        boolean executing = true;
+        InputVali inputVali = new InputVali();
+
+        while (executing) {
+            System.out.println("\n *** MENU PRINCIPAL AGENCIA VUELOS GLOBALES ***");
+            System.out.println(" ");
+            System.out.println("Qué acción desea realizar, digite una opcion numérica");
+            System.out.println(
+                    "1. Modulo Aeropuerto? \n2. Modulo Conexiones\n3. Modulo Customer \n4. Modulo Tipi Documento \n5. Modulo Tarifa\n 6. Modulo Avion\n7. Modulo Revision\n8. Salir");
+            int choice = scanner.nextInt();
+            System.out.println(" ");
+
+            switch (choice) {
+                case 1:
+                    airportConsoleAdapter.start();
+                    break;
+                case 2:
+                    connectionConsoleAdapter.start();
+                    break;
+                case 3:
+                    customerConsoleAdapter.start();
+                    break;
+                case 4:
+                    documentTypeConsoleAdapter.start();
+                    break;
+                case 5:
+                    fareConsoleAdapter.start();
+                    break;
+                case 6:
+                    planeConsoleAdapter.start();
+                    break;
+                case 7:
+                    revisionConsoleAdapter.start();
+                    break;
+                default:
+                    executing = false;
+                    System.out.println("Gracias por usar nuestros servicios");
+                    break;
+            }
+        }
+
     }
 }

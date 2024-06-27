@@ -188,12 +188,12 @@ public class PlaneMySQLRepository implements PlaneRepository {
     @Override
     public Optional<PlaneDTO> findPlaneInfoAdditional(String plates) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT p.id AS id_plane, p.plates AS plates, p.capacity AS capacity, p.fabircation_date AS fabrication_date," +
-                    "s.name AS status, a.name AS airline, m.name AS model" +
-                    "FROM plane AS p"+
-                    "JOIN status AS st ON p.id_status = st.id" +
-                    "JOIN airline AS a ON p.id_airline = a.id" +
-                    "JOIN model AS m ON p.id_model = m.id" +
+            String query = "SELECT p.id AS id_plane, p.plates AS plates, p.capacity AS capacity, p.fabircation_date AS fabrication_date, " +
+                    "st.name AS status, a.name AS airline, m.name AS model " +
+                    "FROM plane AS p "+
+                    "JOIN status AS st ON p.id_status = st.id " +
+                    "JOIN airline AS a ON p.id_airline = a.id " +
+                    "JOIN model AS m ON p.id_model = m.id " +
                     "WHERE p.plates = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, plates);
