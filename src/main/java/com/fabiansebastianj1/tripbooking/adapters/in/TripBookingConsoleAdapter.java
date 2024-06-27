@@ -1,5 +1,7 @@
 package com.fabiansebastianj1.tripbooking.adapters.in;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +15,8 @@ import com.fabiansebastianj1.customer.domain.models.Customer;
 import com.fabiansebastianj1.documenttype.domain.models.DocumentType;
 import com.fabiansebastianj1.fare.domain.models.Fare;
 import com.fabiansebastianj1.passenger.domain.models.Passenger;
+import com.fabiansebastianj1.pay_type.domain.models.PayType;
+import com.fabiansebastianj1.payment.domain.models.Payment;
 import com.fabiansebastianj1.planes.domain.models.Plane;
 import com.fabiansebastianj1.print.PrintSeats;
 import com.fabiansebastianj1.trip.domain.models.Trip;
@@ -51,15 +55,15 @@ public class TripBookingConsoleAdapter {
                     System.out.println("*** Creación de reserva ***");
                     Customer showCustomer = ValidationExist.transformAndValidateObj(
                             () -> tripBookingService
-                                    .findCostumergById(inputVali.stringNotNull("Ingrese el id del cliente")));
+                                    .findCostumerById(inputVali.stringNotNull("Ingrese el id del cliente")));
                     String customerId = showCustomer.getId();
-                    mostrarVuelos();
+                    showTrips();
                     Connections showConnection = ValidationExist.transformAndValidateObj(
                             () -> tripBookingService.findFlightById(
                                     inputVali.readInt(inputVali.stringNotNull("Ingrese el id de la tarifa"))));
                     int flightId = showConnection.getId_trip();
                     String tripDate = inputVali.stringNotNull("Ingrese la fecha de la reserva");
-                    mostrarTarifas();
+                    showFares();
                     Fare showFare = ValidationExist.transformAndValidateObj(
                             () -> tripBookingService.findFareById(
                                     inputVali.readInt(inputVali.stringNotNull("Ingrese el id de la tarifa"))));
@@ -71,7 +75,7 @@ public class TripBookingConsoleAdapter {
                     Optional<TripBooking> tripBookingSaved = tripBookingService.findLastTripBooking();
                     TripBooking lasTripBooking = tripBookingSaved.get();
                     TripBookingDetails tripBookingDetails = new TripBookingDetails(lasTripBooking.getId(), customerId,
-                            fareId);
+                            fareId,1);
                     tripBookingService.createTripBookingDetail(tripBookingDetails);
                     break;
                 case 2:
@@ -121,7 +125,12 @@ public class TripBookingConsoleAdapter {
         Scanner scanner = new Scanner(System.in);
         boolean executing = true;
         InputVali inputVali = new InputVali();
-        boolean newInput;
+
+        LocalDateTime now = LocalDateTime.now();
+        // Crear un formateador con el patrón deseado solo para la fecha
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        // Formatear la fecha a una cadena
+        String formattedDate = now.format(formatter);
 
         while (executing) {
             System.out.println("*** Menú de reservas para clientes ***");
@@ -135,25 +144,101 @@ public class TripBookingConsoleAdapter {
             switch (choice) {
                 case 1:
                     System.out.println("*** Reserva de vuelos ***");
-                    int[] tripsIdSelected = showAndSelectFlights(inputVali); //Aquí se listan y se seleccionan los vuelos
+                    int[] tripsIdSelected = showAndSelectFlights(inputVali); // Aquí se listan y se seleccionan los
+                                                                             // vuelos
                     if (tripsIdSelected[0] == 0 && tripsIdSelected[1] == 0) {
                         System.out.println("*** Error al reservar ***");
                         break;
                     }
-                    List<Passenger> passengers = savePassengers(tripsIdSelected); //Aquí se registra la info de los pasajeros
+                    List<Passenger> passengers = savePassengers(tripsIdSelected); // Aquí se registra la info de los
+                                                                                  // pasajeros
                     if (passengers.isEmpty()) {
                         System.out.println("*** Error al reservar ***");
                         break;
                     }
+                    List<Passenger> passengers1 = asignSeats(passengers, tripsIdSelected[0]);
+                    List<Passenger> passengers2 = new ArrayList<>();
+                    if (tripsIdSelected.length == 2) {
+                        passengers2 = asignSeats(passengers, tripsIdSelected[1]);
+                    }
 
+                    System.out.println("Escoja el id de una de las tarifas mostradas");
+                    showFares();
+                    Fare fare = returnFare(inputVali);
+
+                    System.out.println("*** Información de pago ***");// Pago
+                    // Después de realizado el pago se genera un booking y booking detail con los
+                    // datos de quién paga
+
+                    Customer newCustomer = registerPayment();
+                    String email = inputVali.stringNotNull("Ingrese su email");
+                    showPayTypes();
+                    System.out.println("Al ingresar el método de pago se procesará la transacción");
+                    PayType payType = returnPayType(inputVali);
+
+                    System.out.println("Transacción realizada exitosamente");
+
+                    //info de pago y registrar en payment
+
+                    Double totalPayment = tripsIdSelected[0]*1.19*passengers.size();
+                    if (tripsIdSelected.length == 2) {
+                       totalPayment += tripsIdSelected[0]*1.19*passengers.size();
+                    }
+                    Payment newPayment = new Payment(formattedDate, payType.getId(), totalPayment, newCustomer.getId());
+                    tripBookingService.createPayment(newPayment);
+
+                    // generar tripBooking, generar payment, generar detail
+
+                    TripBooking tripBooking1 = new TripBooking(formattedDate, tripsIdSelected[0]); //Crear booking
+                    tripBookingService.createTripBooking(tripBooking1); 
+                    Optional<TripBooking> lasTripBooking1 = tripBookingService.findLastTripBooking();//retornar último booking
+                    TripBookingDetails tripBookingDetail1 = new TripBookingDetails(lasTripBooking1.get().getId(), newCustomer.getId(), fare.getId(), 1); //Crear booking detail
+                    tripBookingService.createTripBookingDetail(tripBookingDetail1);
+
+                    for (Passenger passenger : passengers1) {
+                        passenger.setTripBookingDetailId(lasTripBooking1.get().getId()); // cambiar
+                        tripBookingService.createPassenger(passenger); // generar passengers
+                    }
+
+                    if (tripsIdSelected.length == 2) {
+                        TripBooking tripBooking2 = new TripBooking(formattedDate, tripsIdSelected[1]);
+                        tripBookingService.createTripBooking(tripBooking2);
+                        Optional<TripBooking> lasTripBooking2 = tripBookingService.findLastTripBooking();//retornar último booking
+                        TripBookingDetails tripBookingDetail2 = new TripBookingDetails(lasTripBooking2.get().getId(), newCustomer.getId(), fare.getId(), 1);
+                        tripBookingService.createTripBookingDetail(tripBookingDetail2);
+                        for (Passenger passenger : passengers2) {
+                            passenger.setTripBookingDetailId(lasTripBooking2.get().getId()); // cambiar
+                            tripBookingService.createPassenger(passenger); // generar passengers
+                        }
+                    }
                 default:
                     break;
             }
         }
     }
 
+    public Customer registerPayment() {
+        InputVali inputVali = new InputVali();
+        String customerId = inputVali.stringNotNull("Ingrese el numero de identificación");
+        System.out.println("***Selección de tipo de documento***");
+        showDocumentTypes();
+        DocumentType docType = returnDocumentType(inputVali);
+        String name = inputVali.stringNotNull("Ingrese su nombre");
+        int edad = inputVali.readInt(inputVali.stringNotNull("Ingrese su edad"));
+        Customer newCustomer = new Customer(customerId, name, edad, docType.getId());
+        Optional<Customer> customer = tripBookingService.findCostumerById(customerId);
+        // Verificar si ya hay un cliente con esa id para no volverlo a registrar en
+        // base
+        if (customer.isPresent()) {
+            return customer.get();
+        } else {
+            tripBookingService.createCustomer(newCustomer);
+            return newCustomer;
+        }
+    }
+
     public int[] showAndSelectFlights(InputVali inputVali) {
-        int[] tripsSelected = new int[2]; //Aquí almaceno los trip_id
+        int[] tripsSelected = new int[2]; // Aquí almaceno los trip_id
         boolean newInput;
         System.out.println("*** Buscar vuelo ***");
         System.out.println("Ingrese la información solicitada a continuación");
@@ -196,7 +281,7 @@ public class TripBookingConsoleAdapter {
                 // para el tema de pasajeros DEVOLVER EN UN ARRAY
                 System.out.println("Vuelo seleccionado");
                 return tripsSelected; // Esto debería ser un return o algo así, para separar modulos y que me devuelva
-                       // los id_trip al finalizar
+                // los id_trip al finalizar
             } else {
                 System.out.println("No hay vuelos disponibles");
                 return tripsSelected;
@@ -226,33 +311,44 @@ public class TripBookingConsoleAdapter {
         }
     }
 
-    public List<Passenger> asignSeats(List<Passenger> passengers, int[] tripsIdSelected){
-        //Vuelo de ida
-        //traer el avión
-        ConnectionDTO tripOrigin = tripBookingService.findConnectionInfoById(tripsIdSelected[0]).get();
+    public List<Passenger> asignSeats(List<Passenger> passengers, int tripId) {
+        // traer el avión
+        InputVali inputVali = new InputVali();
+        ConnectionDTO tripOrigin = tripBookingService.findConnectionInfoById(tripId).get();
         Plane planeOrigin = tripBookingService.findPlaneById(tripOrigin.getPlaneId()).get();
-        List<String> occupiedSeats = tripBookingService.getAllOccupiedSeats(tripOrigin.getTripId()); //Me devuelve los string de todos los puestos ocupados
-        //Ahora imprimir en pantalla
-        // PrintSeats.printSeats(occupiedSeats, planeOrigin);
+        List<String> occupiedSeats = tripBookingService.getAllOccupiedSeats(tripOrigin.getTripId()); // Me devuelve los
+                                                                                                     // string de todos
+                                                                                                     // los puestos
+                                                                                                     // ocupados
+        // Ahora imprimir en pantalla
+        PrintSeats.printSeats(occupiedSeats, planeOrigin);
+        for (Passenger passenger : passengers) {
+            passenger.setSeat((inputVali.stringWithLeght(
+                    "Ingrese el numero de asiento de la siguiente manera: Ex. Si desea el 3 escribirá 003", 3)));
+        }
         return passengers;
     }
 
-    public List<Passenger> savePassengers(int[] tripsIdSelected){
+    public List<Passenger> savePassengers(int[] tripsIdSelected) {
         InputVali inputVali = new InputVali();
         List<Passenger> passengers = new ArrayList<>();
-        int passengersNumber = inputVali.readInt(inputVali.stringNotNull("Ingrese el numero de pasajeros a registrar. Valor numérico por favor"));
-        //Conocer la información del vuelo seleccionado, id de avion y de ahí sacar su capacidad
+        int passengersNumber = inputVali.readInt(
+                inputVali.stringNotNull("Ingrese el numero de pasajeros a registrar. Valor numérico por favor"));
+        // Conocer la información del vuelo seleccionado, id de avion y de ahí sacar su
+        // capacidad
         ConnectionDTO tripOrigin = tripBookingService.findConnectionInfoById(tripsIdSelected[0]).get();
         Plane planeOrigin = tripBookingService.findPlaneById(tripOrigin.getPlaneId()).get();
-        int ocupados = tripBookingService.getTotalOccupiedSeats(tripOrigin.getPlaneId()); //Esto retorna cantos puestos ocupados hay
-        if ((planeOrigin.getCapacity() - ocupados) > passengersNumber ) {
+        int ocupados = tripBookingService.getTotalOccupiedSeats(tripOrigin.getPlaneId()); // Esto retorna cantos puestos
+                                                                                          // ocupados hay
+        if ((planeOrigin.getCapacity() - ocupados) > passengersNumber) {
             for (int i = 0; i < passengersNumber; i++) {
                 System.out.println("Selección de tipo de documento");
                 showDocumentTypes();
                 DocumentType documentType = returnDocumentType(inputVali);
                 String nif = inputVali.stringNotNull(String.format("Ingrese el docuemnto del pasajero %s", i));
                 String name = inputVali.stringNotNull(String.format("Ingrese el nombre del pasajero %s", i));
-                int age = inputVali.readInt(inputVali.stringNotNull(String.format("Ingrese el nombre del pasajero %s", i)));
+                int age = inputVali
+                        .readInt(inputVali.stringNotNull(String.format("Ingrese el nombre del pasajero %s", i)));
                 Passenger passenger = new Passenger(nif, name, age, "", documentType.getId(), 0);
                 passengers.add(passenger);
             }
@@ -278,7 +374,7 @@ public class TripBookingConsoleAdapter {
         }
     }
 
-    public void mostrarVuelos() {
+    public void showTrips() {
         List<ConnectionDTO> flights = tripBookingService.listFlights();
         for (ConnectionDTO flight : flights) {
             System.out.println(String.format("id_vuelo: %s, id_escala: %s, aeropuerto_salida %s, " +
@@ -288,12 +384,19 @@ public class TripBookingConsoleAdapter {
         }
     }
 
-    public void mostrarTarifas() {
+    public void showFares() {
         List<Fare> fares = tripBookingService.listFares();
         for (Fare fare : fares) {
             System.out.println(String.format("id: %s, descripción: %, valor: %s", fare.getId(), fare.getDescription(),
                     fare.getValue()));
         }
+    }
+
+    public Fare returnFare(InputVali inputVali) {
+        Fare fare = ValidationExist.transformAndValidateObj(
+                () -> tripBookingService
+                        .findFareById(inputVali.readInt(inputVali.stringNotNull("Ingrese el id de la ciudad"))));
+        return fare;
     }
 
     public void showCities() {
@@ -357,5 +460,19 @@ public class TripBookingConsoleAdapter {
                         .findTripById(inputVali
                                 .readInt(inputVali.stringNotNull("Ingrese el id del vuelo a seleccionar (id_trip)"))));
         return trip;
+    }
+
+    public PayType returnPayType(InputVali inputVali) {
+        PayType payType = ValidationExist.transformAndValidateObj(
+                () -> tripBookingService.findPayTypeById(
+                        inputVali.readInt(inputVali.stringNotNull("Ingrese el id del medio de pago"))));
+        return payType;
+    }
+
+    public void showPayTypes() {
+        List<PayType> payTypes = tripBookingService.findAllPayTypes();
+        for (PayType payType : payTypes) {
+            System.out.println(String.format("id_city: %s, name: %s", payType.getId(), payType.getName()));
+        }
     }
 }

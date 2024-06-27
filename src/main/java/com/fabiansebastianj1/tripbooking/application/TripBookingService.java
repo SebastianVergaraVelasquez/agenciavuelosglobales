@@ -13,7 +13,12 @@ import com.fabiansebastianj1.documenttype.domain.models.DocumentType;
 import com.fabiansebastianj1.documenttype.infraestructure.DocumentTypeRepository;
 import com.fabiansebastianj1.fare.domain.models.Fare;
 import com.fabiansebastianj1.fare.infrastructure.FareRepository;
+import com.fabiansebastianj1.passenger.domain.models.Passenger;
 import com.fabiansebastianj1.passenger.infrastructure.PassengerRepository;
+import com.fabiansebastianj1.pay_type.domain.models.PayType;
+import com.fabiansebastianj1.pay_type.infraestructure.PayTypeRepository;
+import com.fabiansebastianj1.payment.domain.models.Payment;
+import com.fabiansebastianj1.payment.infraestructure.PaymentRepository;
 import com.fabiansebastianj1.planes.domain.models.Plane;
 import com.fabiansebastianj1.planes.infrastructure.PlaneRepository;
 import com.fabiansebastianj1.trip.domain.models.Trip;
@@ -39,13 +44,16 @@ public class TripBookingService {
     private final DocumentTypeRepository documentTypeRepository;
     private final PlaneRepository planeRepository;
     private final PassengerRepository passengerRepository;
+    private final PaymentRepository paymentRepository;
+    private final PayTypeRepository payTypeRepository;
 
     public TripBookingService(TripBookingRepository tripBookingRepository, CustomerRepository customerRepository,
             ConnectionRepository connectionRepository, FareRepository fareRepository,
             TripBookingDetailsRepository tripBookingDetailsRepository, CityRepository cityRepository,
             AirportRepository airportRepository, TripRepository tripRepository,
             DocumentTypeRepository documentTypeRepository, PlaneRepository planeRepository,
-            PassengerRepository passengerRepository) {
+            PassengerRepository passengerRepository, PaymentRepository paymentRepository,
+            PayTypeRepository payTypeRepository) {
         this.tripBookingRepository = tripBookingRepository;
         this.customerRepository = customerRepository;
         this.connectionRepository = connectionRepository;
@@ -57,6 +65,8 @@ public class TripBookingService {
         this.documentTypeRepository = documentTypeRepository;
         this.planeRepository = planeRepository;
         this.passengerRepository = passengerRepository;
+        this.paymentRepository = paymentRepository;
+        this.payTypeRepository = payTypeRepository;
     }
 
     public void createTripBooking(TripBooking tripBooking) {
@@ -79,12 +89,12 @@ public class TripBookingService {
         return tripBookingRepository.findAll();
     }
 
-    public Optional<Customer> findCostumergById(String id) {
-        return customerRepository.findById(id);
+    public void createCustomer(Customer customer){
+        customerRepository.save(customer);
     }
 
-    public Optional<Connections> findCostumergById(int id) {
-        return connectionRepository.findById(id);
+    public Optional<Customer> findCostumerById(String id) {
+        return customerRepository.findById(id);
     }
 
     public List<ConnectionDTO> listFlights() {
@@ -162,5 +172,21 @@ public class TripBookingService {
 
     public int getTotalOccupiedSeats(int id){
         return passengerRepository.getTotalOccupiedSeats(id);
+    }
+
+    public void createPassenger(Passenger passenger){
+        passengerRepository.save(passenger);
+    }
+
+    public void createPayment(Payment payment){
+        paymentRepository.save(payment);
+    }
+
+    public Optional<PayType> findPayTypeById(int id){
+        return payTypeRepository.findById(id);
+    }
+
+    public List<PayType> findAllPayTypes(){
+        return payTypeRepository.findAll();
     }
 }

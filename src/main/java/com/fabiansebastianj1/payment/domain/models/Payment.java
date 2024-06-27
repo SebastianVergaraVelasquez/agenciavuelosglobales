@@ -7,7 +7,13 @@ public class Payment {
     private Double total_pay;
     private String id_customer;
     
-    public Payment() {
+    
+
+    public Payment(String pay_date, int id_pay_type, Double total_pay, String id_customer) {
+        this.pay_date = pay_date;
+        this.id_pay_type = id_pay_type;
+        this.total_pay = total_pay;
+        this.id_customer = id_customer;
     }
 
     public Payment(int id, String pay_date, int id_pay_type, Double total_pay, String id_customer) {

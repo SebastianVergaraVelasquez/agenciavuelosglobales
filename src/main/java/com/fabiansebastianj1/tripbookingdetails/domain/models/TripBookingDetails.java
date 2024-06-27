@@ -5,13 +5,14 @@ public class TripBookingDetails {
     private int tripBookingId;
     private String customerId;
     private int fareId;
+    private int tripConditionId;
     
-    
+    public TripBookingDetails(int tripBookingId, String customerId, int fareId, int tripConditionId) {
 
-    public TripBookingDetails(int tripBookingId, String customerId, int fareId) {
         this.tripBookingId = tripBookingId;
         this.customerId = customerId;
         this.fareId = fareId;
+        this.tripConditionId = tripBookingId;
     }
 
     public TripBookingDetails(int id, int tripBookingId, String customerId, int fareId) {
@@ -27,6 +28,14 @@ public class TripBookingDetails {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getTripConditionId() {
+        return tripConditionId;
+    }
+
+    public void setTripConditionId(int tripConditionId) {
+        this.tripConditionId = tripConditionId;
     }
 
     public int getTripBookingId() {
