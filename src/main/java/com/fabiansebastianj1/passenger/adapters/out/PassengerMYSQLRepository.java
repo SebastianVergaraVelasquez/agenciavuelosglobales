@@ -42,7 +42,7 @@ public class PassengerMYSQLRepository implements PassengerRepository {
     @Override
     public Optional<Passenger> findById(String id) {
         try (Connection connection = DriverManager.getConnection(url,user,password)){
-            String query = "SELECT * FROM passenger WHERE nif = ?";
+            String query = "SELECT * FROM passenger WHERE nif = ?;";
             try (PreparedStatement statement =connection.prepareStatement(query)){
                 statement.setString(1, id);
             try(ResultSet resultSet = statement.executeQuery()){
@@ -70,7 +70,7 @@ public class PassengerMYSQLRepository implements PassengerRepository {
     @Override
     public void save(Passenger passenger) {
         try (Connection connection = DriverManager.getConnection(url,user,password)){
-            String query = "INSERT INTO passenger (nif,name,age,seat,id_document_type,id_trip_booking_detail) VALUES (?,?,?,?,?,?)";
+            String query = "INSERT INTO passenger (nif,name,age,seat,id_document_type,id_trip_booking_detail) VALUES (?,?,?,?,?,?);";
             try (PreparedStatement statement = connection.prepareStatement(query)){
                 statement.setString(1,passenger.getNif());
                 statement.setString(2,passenger.getName());
@@ -89,7 +89,7 @@ public class PassengerMYSQLRepository implements PassengerRepository {
     @Override
     public void update(Passenger passenger) {
         try (Connection connection = DriverManager.getConnection(url,user,password)){
-            String query = "UPDATE passenger SET nif = ?,name=?,age=?,seat=?,id_document_type=?,id_trip_booking_detail=? WHERE nif = ?";
+            String query = "UPDATE passenger SET nif = ?,name=?,age=?,seat=?,id_document_type=?,id_trip_booking_detail=? WHERE nif = ?;";
             try (PreparedStatement statement = connection.prepareStatement(query)){
                 statement.setString(1,passenger.getNif());
                 statement.setString(1,passenger.getName());
@@ -108,11 +108,11 @@ public class PassengerMYSQLRepository implements PassengerRepository {
     @Override
     public List<Passenger> passengersByTripBookingId(int tripIdBookingId) {
         List<Passenger> passengers = new ArrayList<>();
-        String query = "SELECT pas.seat AS puestos_ocupados " +
+        String query = "SELECT pas.* " +
                        "FROM passenger AS pas " +
                        "JOIN trip_booking_detail AS tbd ON pas.id_trip_booking_detail = tbd.id " +
                        "JOIN trip_booking AS tb ON tb.id = tbd.id_trip_booking " +
-                       "WHERE pas.= ?";
+                       "WHERE tbd.id_trip_booking = ?;";
 
         try (Connection connection = DriverManager.getConnection(url, user, password);
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -147,7 +147,7 @@ public class PassengerMYSQLRepository implements PassengerRepository {
                        "FROM passenger AS pas " +
                        "JOIN trip_booking_detail AS tbd ON pas.id_trip_booking_detail = tbd.id " +
                        "JOIN trip_booking AS tb ON tb.id = tbd.id_trip_booking " +
-                       "WHERE tb.id_trip = ?";
+                       "WHERE tb.id_trip = ?;";
 
         try (Connection connection = DriverManager.getConnection(url, user, password);
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -172,7 +172,7 @@ public class PassengerMYSQLRepository implements PassengerRepository {
                            "FROM passenger AS pas " +
                            "JOIN trip_booking_detail AS tbd ON pas.id_trip_booking_detail = tbd.id " +
                            "JOIN trip_booking AS tb ON tb.id = tbd.id_trip_booking " +
-                           "WHERE tb.id_trip = ?";
+                           "WHERE tb.id_trip = ?;";
     
             try (Connection connection = DriverManager.getConnection(url, user, password);
                  PreparedStatement statement = connection.prepareStatement(query)) {

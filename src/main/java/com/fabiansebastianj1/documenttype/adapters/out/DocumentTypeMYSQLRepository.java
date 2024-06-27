@@ -85,7 +85,7 @@ public class DocumentTypeMYSQLRepository implements DocumentTypeRepository {
     public List<DocumentType> findAll() {
         List<DocumentType> documentTypes = new ArrayList<>();
         try (Connection connection =DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM document_type";
+            String query = "SELECT * FROM document_type;";
             try (PreparedStatement statement = connection.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()){

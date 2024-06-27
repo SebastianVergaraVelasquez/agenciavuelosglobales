@@ -29,6 +29,10 @@ import com.fabiansebastianj1.manufacturers.adapters.out.ManufacturerMYSQLReposit
 import com.fabiansebastianj1.manufacturers.application.ManufacturerService;
 import com.fabiansebastianj1.manufacturers.domain.models.Manufacturer;
 import com.fabiansebastianj1.model.adapters.out.ModelMYSQLRepository;
+import com.fabiansebastianj1.passenger.adapters.out.PassengerMYSQLRepository;
+import com.fabiansebastianj1.passenger.domain.models.Passenger;
+import com.fabiansebastianj1.pay_type.adapters.out.PayTypeMYSQLRepository;
+import com.fabiansebastianj1.payment.adapters.out.PaymentMYSQLRepository;
 import com.fabiansebastianj1.planes.adapters.in.PlaneConsoleAdapter;
 import com.fabiansebastianj1.planes.adapters.out.PlaneMySQLRepository;
 import com.fabiansebastianj1.planes.application.PlaneService;
@@ -45,6 +49,9 @@ import com.fabiansebastianj1.status.domain.models.Status;
 import com.fabiansebastianj1.trip.adapters.in.TripConsoleAdapter;
 import com.fabiansebastianj1.trip.adapters.out.TripMYSQLRepository;
 import com.fabiansebastianj1.trip.application.TripService;
+import com.fabiansebastianj1.tripbooking.adapters.in.TripBookingConsoleAdapter;
+import com.fabiansebastianj1.tripbooking.adapters.out.TripBookingMYSQLRepository;
+import com.fabiansebastianj1.tripbooking.application.TripBookingService;
 import com.fabiansebastianj1.tripbookingdetails.adapters.out.TripBookingDetailsMYSQLRepository;
 import com.fabiansebastianj1.tripcrew.adapters.in.TripCrewConsoleAdapter;
 import com.fabiansebastianj1.tripcrew.adapters.out.TripCrewMYSQLRepository;
@@ -87,6 +94,10 @@ public class Main {
         TripStatusMYSQLRepository tripStatusMYSQLRepository = new TripStatusMYSQLRepository(url, user, password);
         TripulationRoleMYSQLRepository tripulationRoleMYSQLRepository = new TripulationRoleMYSQLRepository(url, user,
                 password);
+        TripBookingMYSQLRepository tripBookingMYSQLRepository = new TripBookingMYSQLRepository(url, user, password);
+        PassengerMYSQLRepository passengerMYSQLRepository = new PassengerMYSQLRepository(url, user, password);
+        PaymentMYSQLRepository paymentMYSQLRepository = new PaymentMYSQLRepository(url, user, password);
+        PayTypeMYSQLRepository payTypeMYSQLRepository = new PayTypeMYSQLRepository(url, user, password);
 
         RevisionService revisionService = new RevisionService(revisionMYSQLRepository, planeMySQLRepository,
                 employeeMYSQLRepository, revEmployeeMYSQLRepository);
@@ -113,10 +124,18 @@ public class Main {
         AirportConsoleAdapter airportConsoleAdapter = new AirportConsoleAdapter(airportService);
 
         TripService tripService = new TripService(tripMYSQLRepository, connectionMYSQLRepository, planeMySQLRepository);
-        TripConsoleAdapter tripConsoleAdapter = new TripConsoleAdapter(tripService); 
+        TripConsoleAdapter tripConsoleAdapter = new TripConsoleAdapter(tripService);
 
-        TripCrewService tripCrewService = new TripCrewService(tripCrewMYSQLRepository, connectionMYSQLRepository, employeeMYSQLRepository, tripMYSQLRepository);
+        TripCrewService tripCrewService = new TripCrewService(tripCrewMYSQLRepository, connectionMYSQLRepository,
+                employeeMYSQLRepository, tripMYSQLRepository);
         TripCrewConsoleAdapter tripCrewConsoleAdapter = new TripCrewConsoleAdapter(tripCrewService);
+
+        TripBookingService tripBookingService = new TripBookingService(tripBookingMYSQLRepository,
+                customerMYSQLRepository, connectionMYSQLRepository, fareMYSQLRepository,
+                tripBookingDetailsMYSQLRepository, cityMYSQLRepository, airportMYSQLRepository, tripMYSQLRepository,
+                documentTypeMYSQLRepository, planeMySQLRepository, passengerMYSQLRepository, paymentMYSQLRepository,
+                payTypeMYSQLRepository);
+        TripBookingConsoleAdapter tripBookingConsoleAdapter = new TripBookingConsoleAdapter(tripBookingService);
 
         Scanner scanner = new Scanner(System.in);
         boolean executing = true;
@@ -126,7 +145,8 @@ public class Main {
             System.out.println("\n *** MENU PRINCIPAL AGENCIA VUELOS GLOBALES ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            int choice = inputVali.readInt(("1. Modulo Aeropuerto? \n2. Modulo Conexiones\n3. Modulo Customer \n4. Modulo Tipo Documento \n5. Modulo Tarifa\n6. Modulo Avion\n7. Modulo Revision\n0. Salir"));
+            int choice = inputVali.readInt(
+                    ("1. Modulo Aeropuerto? \n2. Modulo Conexiones\n3. Modulo Customer \n4. Modulo Tipo Documento \n5. Modulo Tarifa\n6. Modulo Avion\n7. Modulo Revision\n0. Salir"));
             System.out.println(" ");
 
             switch (choice) {
@@ -156,6 +176,9 @@ public class Main {
                     break;
                 case 9:
                     tripCrewConsoleAdapter.start();
+                    break;
+                case 10:
+                    tripBookingConsoleAdapter.bookingCustomerMenu();;
                     break;
                 default:
                     executing = false;

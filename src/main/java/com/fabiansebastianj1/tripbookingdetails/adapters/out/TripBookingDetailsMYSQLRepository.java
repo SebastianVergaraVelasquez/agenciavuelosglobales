@@ -88,11 +88,11 @@ public class TripBookingDetailsMYSQLRepository implements TripBookingDetailsRepo
     public Optional<TripBookingDetailsDTO> findByTripBookingIdAsDTO(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT tbd.id AS id, tbd.id_trip_booking AS id_trip_booking, "+
-            "tbd.id_customer AS id_customer, fare.name AS fare, tp.name AS booking_condition, tbd.id_booking_condition "+
-            "FROM trip_booking_detail AS tbd"+
-            "JOIN fare ON fare.id = tbd.id_fare "+
+            "tbd.id_customer AS id_customer, flight_fare.description AS fare, tp.name AS booking_condition, tbd.id_trip_condition AS id_booking_condition "+
+            "FROM trip_booking_detail AS tbd "+
+            "JOIN flight_fare ON flight_fare.id = tbd.id_fare "+
             "JOIN trip_condition tp ON tp.id = tbd.id_trip_condition "+
-            "WHERE  = tbd.id_trip_booking ?";
+            "WHERE tbd.id_trip_booking = ?;";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -118,7 +118,7 @@ public class TripBookingDetailsMYSQLRepository implements TripBookingDetailsRepo
     @Override
     public Optional<TripBookingDetails> findByTripBookingId(int id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM trip_booking_detail WHERE id_trip_booking";
+            String query = "SELECT * FROM trip_booking_detail WHERE id_trip_booking;";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -186,7 +186,7 @@ public class TripBookingDetailsMYSQLRepository implements TripBookingDetailsRepo
             "JOIN customer cus ON cus.id = tbd.id_customer "+
             "JOIN flight_fare f ON f.id = tbd.id_fare "+
             "JOIN trip_bookig tb ON tb.id = tbd.id_trip_booking "+
-            "WHERE tbd.id_customer = ?";
+            "WHERE tbd.id_customer = ?;";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -224,7 +224,7 @@ public class TripBookingDetailsMYSQLRepository implements TripBookingDetailsRepo
             "JOIN customer cus ON cus.id = tbd.id_customer "+
             "JOIN flight_fare f ON f.id = tbd.id_fare "+
             "JOIN trip_bookig tb ON tb.id = tbd.id_trip_booking "+
-            "WHERE tbd.id_customer = ?";
+            "WHERE tbd.id_customer = ?;";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
