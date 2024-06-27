@@ -31,8 +31,7 @@ public class RevisionConsoleAdapter {
             System.out.println("*** Modulo de Revisión de aviones ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println("1.Registrar revisión \n2. Consultar historial de revision\n3. Actualizar Informacion de Revision\n4. Eliminar Revision\n5. Salir");
-            int choice = scanner.nextInt();
+            int choice = inputVali.readInt("1.Registrar revisión \n2. Consultar historial de revision\n3. Actualizar Informacion de Revision\n4. Eliminar Revision\n5. Salir");
             System.out.println(" ");
 
             switch (choice) {
@@ -40,7 +39,7 @@ public class RevisionConsoleAdapter {
                     mostrarAviones();
                     Plane showPlane = ValidationExist.transformAndValidateObj(
                             () -> revisionService.findPlaneById(
-                                    inputVali.readInt(inputVali.stringNotNull("Ingrese el id del avión"))));
+                                    inputVali.readInt(("Ingrese el id del avión"))));
                     int planeId = showPlane.getId();
                     String revisionDate = inputVali.stringNotNull("Ingrese la fecha de la revisión en formato yyyy-MM-dd: ");
                     String description = inputVali.stringNotNull("Ingrese una descripción del procedimiento");
@@ -80,7 +79,7 @@ public class RevisionConsoleAdapter {
                     System.out.println("Informacion actual de la revision");
                     Revision showRevision = ValidationExist.transformAndValidateObj(
                             () -> revisionService.findRevisionById(
-                                    inputVali.readInt(inputVali.stringNotNull("Ingrese el Id de la revision que desea editar")))
+                                    inputVali.readInt(("Ingrese el Id de la revision que desea editar")))
                     );
                     showRevisionsByPlaneId(showRevision.getPlaneId());
                     updateRevision(showRevision);
@@ -103,7 +102,7 @@ public class RevisionConsoleAdapter {
 
                     Revision showRevisions = ValidationExist.transformAndValidateObj(
                             () -> revisionService.findRevisionById(
-                                    inputVali.readInt(inputVali.stringNotNull("Ingrese el ID de la revision que desea aliminar"))));
+                                    inputVali.readInt(("Ingrese el ID de la revision que desea aliminar"))));
 
                     revisionService.deleteRevEmployee(showRevisions.getId());
                     revisionService.deleteRevision(showRevisions.getId());

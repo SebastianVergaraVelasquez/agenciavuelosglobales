@@ -26,18 +26,17 @@ public class FareConsoleAdapter {
             System.out.println("*** Modulo de tarifas ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println(
-                "1. Registrar Tarifa \n2. Actualizar Tarifa \n3. Consultar Tarifa \n4. Eliminar tarifa \n5. Salir");
-                int choice = scanner.nextInt();
-                System.out.println(" ");
-                
-                switch (choice) {
-                    case 1:
+            int choice = inputVali.readInt(
+                    "1. Registrar Tarifa \n2. Actualizar Tarifa \n3. Consultar Tarifa \n4. Eliminar tarifa \n5. Salir");
+            System.out.println(" ");
+
+            switch (choice) {
+                case 1:
                     System.out.println("***Registrar tarifa***");
                     newFareInfo(inputVali);
                     System.out.println("Tarifa registrada");
                     break;
-                    case 2:
+                case 2:
                     System.out.println("***Actualizar tarifa***");
                     System.out.println(" ");
                     System.out.println("***Lista de tarifas***");
@@ -47,12 +46,12 @@ public class FareConsoleAdapter {
                     updateFare(fareToUpdate, inputVali);
                     System.out.println("Tarifa actualizada");
                     break;
-                    case 3:
+                case 3:
                     System.out.println("***Consultar tarifa***");
                     Fare showFare = returnFare(inputVali);
                     showFareInfo(showFare);
                     break;
-                    case 4:
+                case 4:
                     System.out.println("***Eliminar tarifa***");
                     System.out.println(" ");
                     System.out.println("***Lista de tarifas***");
@@ -104,7 +103,7 @@ public class FareConsoleAdapter {
     public Fare returnFare(InputVali inputVali) {
         Fare searchedFare = ValidationExist.transformAndValidateObj(
                 () -> fareService
-                        .findFareById(inputVali.readInt(inputVali.stringNotNull("Ingrese la id de la tarifa"))));
+                        .findFareById(inputVali.readInt(("Ingrese la id de la tarifa"))));
         return searchedFare;
     }
 

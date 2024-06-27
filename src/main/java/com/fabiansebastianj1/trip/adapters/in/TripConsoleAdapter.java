@@ -30,9 +30,8 @@ public class TripConsoleAdapter {
             System.out.println("*** Modulo de trip ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println(
+            int choice = inputVali.readInt(
                     "1.Registrar trayecto? \n2.Asignar avión a trayecto \n3.Actualizar información de trayecto \n4.Eliminar trayecto \n5.Salir");
-            int choice = scanner.nextInt();
             System.out.println(" ");
 
             switch (choice) {
@@ -128,14 +127,14 @@ public class TripConsoleAdapter {
     public Plane returnPlane(InputVali inputVali) {
         Plane plane = ValidationExist.transformAndValidateObj(
                 () -> tripService.findPlaneById(
-                        inputVali.readInt(inputVali.stringNotNull("Ingrese el id del avión para asignarlo"))));
+                        inputVali.readInt(("Ingrese el id del avión para asignarlo"))));
         return plane;
     }
 
     public Trip returnTrip(InputVali inputVali) {
         Trip trip = ValidationExist.transformAndValidateObj(
                 () -> tripService
-                        .findTripById(inputVali.readInt(inputVali.stringNotNull("Ingrese el id del trayecto"))));
+                        .findTripById(inputVali.readInt(("Ingrese el id del trayecto"))));
         return trip;
     }
 

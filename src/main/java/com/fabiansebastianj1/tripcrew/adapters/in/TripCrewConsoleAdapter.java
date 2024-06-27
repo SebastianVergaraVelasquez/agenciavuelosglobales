@@ -33,8 +33,7 @@ public class TripCrewConsoleAdapter {
             System.out.println("*** Modulo de tripulantes ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println("1.Asignar Tripulación \n2.Consultar asignación de tripulación \n3.Salir");
-            int choice = scanner.nextInt();
+            int choice = inputVali.readInt("1.Asignar Tripulación \n2.Consultar asignación de tripulación \n3.Salir");
             System.out.println(" ");
 
             switch (choice) {
@@ -44,7 +43,7 @@ public class TripCrewConsoleAdapter {
                     //Consulto que el id connection exista en la tabla connection
                     Connections showConnections = ValidationExist.transformAndValidateObj(
                             () -> tripCrewService.findConnectionById(
-                                    inputVali.readInt(inputVali.stringNotNull("Ingrese la id_escala mostrada para el vuelo al que desea asignar la tripulación"))));
+                                    inputVali.readInt(("Ingrese la id_escala mostrada para el vuelo al que desea asignar la tripulación"))));
                     int idConnection = showConnections.getId();
 
                     boolean employeesExists = verificarEmpleados();
@@ -62,7 +61,7 @@ public class TripCrewConsoleAdapter {
                     //Consulto el tripId y extraigo el tripId
                     Trip searchedTrip = ValidationExist.transformAndValidateObj(
                             () -> tripCrewService.findTripById(
-                                    inputVali.readInt(inputVali.stringNotNull("Ingrese el id del vuelo"))));
+                                    inputVali.readInt(("Ingrese el id del vuelo"))));
                     //Consulto el connectionId y extraigo el connectionId
                     ConnectionDTO searchedTripAsConnection = ValidationExist.transformAndValidateObj(
                             () -> tripCrewService.findTripAsConnectionByTripId(searchedTrip.getId())

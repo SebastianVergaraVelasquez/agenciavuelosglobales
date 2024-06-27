@@ -26,10 +26,9 @@ public class DocumentTypeConsoleAdapter {
             System.out.println("*** Modulo de Tipo de Documento ***");
             System.out.println(" ");
             System.out.println("Que accion desea realizar, digite una opcion numerica");
-            System.out.println(
+            int choice = inputVali.readInt(
                     "1. Registrar tipo de documento\n2. Actualizar tipo de documento\n3. Eliminar tipo de documento" +
                             "\n4. Consultar tipo de documento\n5. Salir");
-            int choice = scanner.nextInt();
             System.out.println(" ");
 
             switch (choice) {
@@ -89,7 +88,7 @@ public class DocumentTypeConsoleAdapter {
     public DocumentType returnDocumentType(InputVali inputVali) {
         DocumentType documentType = ValidationExist.transformAndValidateObj(
                 () -> documentService.getDocumentTypeById(
-                        inputVali.readInt(inputVali.stringNotNull("Ingrese la id del Tipo de Documento"))));
+                        inputVali.readInt(("Ingrese la id del Tipo de Documento"))));
         return documentType;
     }
 

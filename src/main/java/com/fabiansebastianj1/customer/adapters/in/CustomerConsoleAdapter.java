@@ -25,9 +25,8 @@ public class CustomerConsoleAdapter {
             System.out.println("*** Modulo de cliente ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println(
+            int choice = inputVali.readInt(
                     "1.Visualizar información del cliente \n2.Registrar cliente \n3. Actualizar info de cliente \n4.Salir");
-            int choice = scanner.nextInt();
             System.out.println(" ");
 
             switch (choice) {
@@ -68,7 +67,7 @@ public class CustomerConsoleAdapter {
         // verificar si desea cambiar la edad
         newInput = Register.yesOrNo("Desea cambiar la edad del cliente? Ingrese el valor numerico 1 (si) o 2(no)");
         if (newInput == true) {
-            newAge = inputVali.readInt(inputVali.stringNotNull("Ingrese la edad"));
+            newAge = inputVali.readInt(("Ingrese la edad"));
         } else {
             newAge = showCustomer.getAge();
         }
@@ -78,7 +77,7 @@ public class CustomerConsoleAdapter {
             showDocumentTypes();
             DocumentType showDocumentType = ValidationExist.transformAndValidateObj(
                     () -> customerService.findDocumentTypeById(
-                            inputVali.readInt(inputVali.stringNotNull("Ingrese el id del tipo de documento"))));
+                            inputVali.readInt(("Ingrese el id del tipo de documento"))));
             newIdDocumentType = showDocumentType.getId();
         } else {
             newIdDocumentType = showCustomer.getDocumentTypeId();
@@ -119,11 +118,11 @@ public class CustomerConsoleAdapter {
     public void insertCustomerInfo(InputVali inputVali) {
         String id = inputVali.stringNotNull("Ingrese la id del cliente");
         String nombre = inputVali.stringNotNull("Ingrese el nombre del cliente");
-        int edad = inputVali.readInt(inputVali.stringNotNull("Ingrese la edad del cliente"));
+        int edad = inputVali.readInt(("Ingrese la edad del cliente"));
         showDocumentTypes();
         DocumentType showDocumentType = ValidationExist.transformAndValidateObj(
                 () -> customerService.findDocumentTypeById(
-                        inputVali.readInt(inputVali.stringNotNull("Ingrese el id del tipo de documento"))));
+                        inputVali.readInt(("Ingrese el id del tipo de documento"))));
 
         Customer newCustomer = new Customer(id, nombre, edad, showDocumentType.getId());
         customerService.createCustomer(newCustomer);

@@ -29,9 +29,8 @@ public class ConnectionConsoleAdapter {
             System.out.println("*** Modulo de conexion ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println(
+            int choice = inputVali.readInt(
                     "1.Visualizar información del trayecto \n2.Actualizar escala \n3.Eliminar escala \n4.Salir");
-            int choice = scanner.nextInt();
             System.out.println(" ");
 
             switch (choice) {
@@ -39,7 +38,7 @@ public class ConnectionConsoleAdapter {
 
                     ConnectionDTO trip = ValidationExist.transformAndValidateObj(
                             () -> connectionService.findTripByTripId(
-                                    inputVali.readInt(inputVali.stringNotNull("Ingrese la id del vuelo"))));
+                                    inputVali.readInt(("Ingrese la id del vuelo"))));
                     System.out.println(String.format("id_vuelo: %s\n" +
                             "salida: %s \n" +
                             "llegada: %s \n" +
@@ -78,7 +77,7 @@ public class ConnectionConsoleAdapter {
         }
         newInput = Register.yesOrNo("Desea modificar trip_id? Ingrese el valor numérico: 1 (si) 2(no)");
         if (newInput) {
-            connection.setId_trip(inputVali.readInt(inputVali.stringNotNull("Ingrese nuevo id_trip")));
+            connection.setId_trip(inputVali.readInt(("Ingrese nuevo id_trip")));
         }
         newInput = Register.yesOrNo("Desea modificar el aeropuerto? Ingrese el valor numérico: 1 (si) 2(no)");
         if (newInput) {
@@ -106,7 +105,7 @@ public class ConnectionConsoleAdapter {
     public Connections returnConnection(InputVali inputVali) {
         Connections connection = ValidationExist.transformAndValidateObj(
                 () -> connectionService
-                        .getConnectionById(inputVali.readInt(inputVali.stringNotNull("Ingrese el id de la escala"))));
+                        .getConnectionById(inputVali.readInt(("Ingrese el id de la escala"))));
         return connection;
     }
 

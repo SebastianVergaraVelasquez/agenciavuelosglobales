@@ -126,8 +126,6 @@ public class Main {
             System.out.println("\n *** MENU PRINCIPAL AGENCIA VUELOS GLOBALES ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            // System.out.println(
-            //         "1. Modulo Aeropuerto? \n2. Modulo Conexiones\n3. Modulo Customer \n4. Modulo Tipo Documento \n5. Modulo Tarifa\n6. Modulo Avion\n7. Modulo Revision\n0. Salir");
             int choice = inputVali.readInt(("1. Modulo Aeropuerto? \n2. Modulo Conexiones\n3. Modulo Customer \n4. Modulo Tipo Documento \n5. Modulo Tarifa\n6. Modulo Avion\n7. Modulo Revision\n0. Salir"));
             System.out.println(" ");
 

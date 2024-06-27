@@ -33,9 +33,8 @@ public class PlaneConsoleAdapter {
             System.out.println("*** Modulo de aviones ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println(
+            int choice = inputVali.readInt(
                     "1. Registrar avión \n2. Eliminar avión \n3. Consultar Avion \n4. Salir");
-            int choice = scanner.nextInt();
             System.out.println(" ");
 
             switch (choice) {
@@ -46,9 +45,10 @@ public class PlaneConsoleAdapter {
 
                     String plates = verifyPlatesUntilOk(inputVali);
 
-                    int capacity = inputVali.readInt(inputVali.stringNotNull("Ingrese la capacidad del avión"));
-                    String fabricationDate = inputVali.stringNotNull("Ingrese la fecha de fabricación en formato yyyy-MM-dd:");
-                    
+                    int capacity = inputVali.readInt(("Ingrese la capacidad del avión"));
+                    String fabricationDate = inputVali
+                            .stringNotNull("Ingrese la fecha de fabricación en formato yyyy-MM-dd:");
+
                     // System.out.println("Ingrese la fecha de fabricación en formato yyyy-MM-dd:");
                     // Date fabricationDate = dateValidation.dateCheck(); //No sé de qué manera
                     // dejarlo
@@ -58,21 +58,21 @@ public class PlaneConsoleAdapter {
 
                     Status showStatus = ValidationExist.transformAndValidateObj(
                             () -> planeService.findStatusById(
-                                    inputVali.readInt(inputVali.stringNotNull("Ingrese la id del estado del avión"))));
+                                    inputVali.readInt(("Ingrese la id del estado del avión"))));
                     int statusId = showStatus.getId();
 
                     showAirlines();
 
                     Airline showAirline = ValidationExist.transformAndValidateObj(
-                            () -> planeService.findAirlineById(inputVali.readInt(
-                                    inputVali.stringNotNull("Ingrese el id de la aerolínea a la que pertenece"))));
+                            () -> planeService.findAirlineById(
+                                    inputVali.readInt(("Ingrese el id de la aerolínea a la que pertenece"))));
                     int airlineId = showAirline.getId();
 
                     showModels();
 
                     Model showModel = ValidationExist.transformAndValidateObj(
                             () -> planeService.findModelById(
-                                    inputVali.readInt(inputVali.stringNotNull("Ingrese la id del modelo del avión"))));
+                                    inputVali.readInt(("Ingrese la id del modelo del avión"))));
 
                     int modelId = showModel.getId();
 
@@ -104,7 +104,7 @@ public class PlaneConsoleAdapter {
 
                     Plane showPlane = ValidationExist.transformAndValidateObj(
                             () -> planeService.findPlaneById(
-                                    inputVali.readInt(inputVali.stringNotNull("Ingrese el id del avión -> "))));
+                                    inputVali.readInt(("Ingrese el id del avión -> "))));
                     int id = showPlane.getId();
 
                     planeService.deletePlane(id);
@@ -182,14 +182,14 @@ public class PlaneConsoleAdapter {
         newInput = Register.yesOrNo("Desea cambiar el estado del avión? Ingrese el valor numerico 1 (si) o 2(no)");
         if (newInput == true) {
             showModels();
-            newIdStatus = inputVali.readInt(inputVali.stringNotNull("Ingrese el nuevo nombre"));
+            newIdStatus = inputVali.readInt(("Ingrese el nuevo nombre"));
         } else {
             newIdStatus = showPlane.getStatusId();
         }
         // verificar si desea cambiar la aerolinea
         newInput = Register.yesOrNo("Desea cambiar la edad del cliente? Ingrese el valor numerico 1 (si) o 2(no)");
         if (newInput == true) {
-            newIdAirline = inputVali.readInt(inputVali.stringNotNull("Ingrese la edad"));
+            newIdAirline = inputVali.readInt(("Ingrese la edad"));
         } else {
             newIdAirline = showPlane.getAirlineId();
         }

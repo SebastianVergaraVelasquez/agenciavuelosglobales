@@ -29,16 +29,14 @@ public class AirportConsoleAdapter {
             System.out.println("*** Modulo de Aeropuerto ***");
             System.out.println(" ");
             System.out.println("Que accion desea realizar, digite una opcion numerica");
-            System.out.println(
+            int choice = inputVali.readInt(
                     "1. Registrar Aeropuerto \n2.Consultar Aeropuerto \n3.Actualizar Aeropuerto \n4.Eliminar Aeropuerto \n5. Salir");
-            int choice = scanner.nextInt();
             System.out.println(" ");
 
             switch (choice) {
                 case 1:
                     System.out.println("*** Registro de aeropuerto ***");
                     System.out.println(" ");
-                    scanner.nextLine();
 
                     String airports = verificarAeropuerto(inputVali);
 
