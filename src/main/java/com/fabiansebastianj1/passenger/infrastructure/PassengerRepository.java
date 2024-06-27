@@ -12,4 +12,5 @@ public interface PassengerRepository {
     void update(Passenger passenger);
     Optional<Passenger> findById(String id);
     void delete(String id);
+    List<Passenger> passengersByTripBookingId(int tripIdBookingId);
 }

@@ -23,6 +23,7 @@ import com.fabiansebastianj1.trip.domain.models.Trip;
 import com.fabiansebastianj1.tripbooking.application.TripBookingService;
 import com.fabiansebastianj1.tripbooking.domain.models.TripBooking;
 import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetails;
+import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetailsDTO;
 import com.fabiansebastianj1.validations.InputVali;
 import com.fabiansebastianj1.validations.Register;
 import com.fabiansebastianj1.validations.ValidationExist;
@@ -75,7 +76,7 @@ public class TripBookingConsoleAdapter {
                     Optional<TripBooking> tripBookingSaved = tripBookingService.findLastTripBooking();
                     TripBooking lasTripBooking = tripBookingSaved.get();
                     TripBookingDetails tripBookingDetails = new TripBookingDetails(lasTripBooking.getId(), customerId,
-                            fareId,1);
+                            fareId, 1);
                     tripBookingService.createTripBookingDetail(tripBookingDetails);
                     break;
                 case 2:
@@ -178,22 +179,27 @@ public class TripBookingConsoleAdapter {
 
                     System.out.println("Transacción realizada exitosamente");
 
-                    //info de pago y registrar en payment
+                    // info de pago y registrar en payment
 
-                    Double totalPayment = tripsIdSelected[0]*1.19*passengers.size();
+                    Double totalPayment = tripsIdSelected[0] * 1.19 * passengers.size();
                     if (tripsIdSelected.length == 2) {
-                       totalPayment += tripsIdSelected[0]*1.19*passengers.size();
+                        totalPayment += tripsIdSelected[0] * 1.19 * passengers.size();
                     }
                     Payment newPayment = new Payment(formattedDate, payType.getId(), totalPayment, newCustomer.getId());
                     tripBookingService.createPayment(newPayment);
 
                     // generar tripBooking, generar payment, generar detail
 
-                    TripBooking tripBooking1 = new TripBooking(formattedDate, tripsIdSelected[0]); //Crear booking
-                    tripBookingService.createTripBooking(tripBooking1); 
-                    Optional<TripBooking> lasTripBooking1 = tripBookingService.findLastTripBooking();//retornar último booking
-                    TripBookingDetails tripBookingDetail1 = new TripBookingDetails(lasTripBooking1.get().getId(), newCustomer.getId(), fare.getId(), 1); //Crear booking detail
+                    TripBooking tripBooking1 = new TripBooking(formattedDate, tripsIdSelected[0]); // Crear booking
+                    tripBookingService.createTripBooking(tripBooking1);
+                    Optional<TripBooking> lasTripBooking1 = tripBookingService.findLastTripBooking();// retornar último
+                                                                                                     // booking
+                    TripBookingDetails tripBookingDetail1 = new TripBookingDetails(lasTripBooking1.get().getId(),
+                            newCustomer.getId(), fare.getId(), 1); // Crear booking detail
                     tripBookingService.createTripBookingDetail(tripBookingDetail1);
+                    System.out.println(String.format(
+                            "Este es su identificador de reserva %s (Viaje de ida). Ha sido enviado a su correo electrónico (%s)",
+                            lasTripBooking1.get().getId()));
 
                     for (Passenger passenger : passengers1) {
                         passenger.setTripBookingDetailId(lasTripBooking1.get().getId()); // cambiar
@@ -203,14 +209,38 @@ public class TripBookingConsoleAdapter {
                     if (tripsIdSelected.length == 2) {
                         TripBooking tripBooking2 = new TripBooking(formattedDate, tripsIdSelected[1]);
                         tripBookingService.createTripBooking(tripBooking2);
-                        Optional<TripBooking> lasTripBooking2 = tripBookingService.findLastTripBooking();//retornar último booking
-                        TripBookingDetails tripBookingDetail2 = new TripBookingDetails(lasTripBooking2.get().getId(), newCustomer.getId(), fare.getId(), 1);
+                        Optional<TripBooking> lasTripBooking2 = tripBookingService.findLastTripBooking();// retornar
+                                                                                                         // último
+                                                                                                         // booking
+                        TripBookingDetails tripBookingDetail2 = new TripBookingDetails(lasTripBooking2.get().getId(),
+                                newCustomer.getId(), fare.getId(), 1);
                         tripBookingService.createTripBookingDetail(tripBookingDetail2);
                         for (Passenger passenger : passengers2) {
                             passenger.setTripBookingDetailId(lasTripBooking2.get().getId()); // cambiar
                             tripBookingService.createPassenger(passenger); // generar passengers
                         }
+                        System.out.println(String.format(
+                                "Este es su identificador de reserva %s (Viaje de regreso). Ha sido enviado a su correo electrónico (%s)",
+                                lasTripBooking2.get().getId()));
                     }
+                    break;
+                case 2:
+                    System.out.println("*** Consulta de reserva ***");
+                    TripBooking bookingToShow = returnTripBooking(inputVali); //verifica que exista el id de reserva
+                    showBookingDetails(bookingToShow.getId()); //MOstrar los detalles
+                    showPassengers(bookingToShow.getId()); //Mostrar los pasajeros asociados a ese booking
+                    break;
+                case 3:
+                    System.out.println("*** Cancelar reserva ***");
+                    System.out.println("Si tiene un viaje de ida y vuelta deberá cancelar ambas reservas por separado");
+                    TripBooking bookingToDelete = returnTripBooking(inputVali); //Verificar que exista el booking
+                    List<Passenger> passengersToDelete = tripBookingService.getPassengersByBookingId(bookingToDelete.getId()); //Listar los pasajeros asociados
+                    for (Passenger passenger : passengersToDelete) {
+                        tripBookingService.deleletePassengers(passenger.getNif()); //Eliminar uno por uno de la base
+                    }
+                    
+                    System.out.println("Reserva cancelada");
+                    break;
                 default:
                     break;
             }
@@ -474,5 +504,28 @@ public class TripBookingConsoleAdapter {
         for (PayType payType : payTypes) {
             System.out.println(String.format("id_city: %s, name: %s", payType.getId(), payType.getName()));
         }
+    }
+
+    public void showPassengers(int bookingId) {
+        System.out.println("Lista de pasajeros\n");
+        List<Passenger> passengers = tripBookingService.getPassengersByBookingId(bookingId);
+        for (Passenger passenger : passengers) {
+            System.out.println(String.format("Nif: %s, name: %s, seat: %s \n", passenger.getNif(), passenger.getName(),
+                    passenger.getSeat()));
+        }
+    }
+
+    public void showBookingDetails(int bookingId){
+        Optional<TripBookingDetailsDTO> details = tripBookingService.findByTripBookingId(bookingId);
+        System.out.println(String.format("id_details: %s \n"+
+        "id_booking: %s \nid_customer: %s \nfare: %s \nCondition: %s", details.get().getId(),details.get().getTripBookingId(),
+            details.get().getCustomerId(), details.get().getFareName(), details.get().getTripConditionName()));
+    }
+
+    public TripBooking returnTripBooking(InputVali inputVali){
+        TripBooking tripBooking = ValidationExist.transformAndValidateObj(
+            () -> tripBookingService.findTripBookingById(inputVali.readInt(inputVali.stringNotNull("Ingrese el identificador de reserva")))
+        );
+        return tripBooking;
     }
 }

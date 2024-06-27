@@ -7,6 +7,7 @@ public class TripBookingDetailsDTO {
     private String customerId;
     private String customerName;
     private String fareName;
+    private String tripConditionName;
     
     public TripBookingDetailsDTO(int id, int tripBookingId, int idTrip, String customerId, String customerName,
             String fareName) {
@@ -17,6 +18,16 @@ public class TripBookingDetailsDTO {
         this.customerName = customerName;
         this.fareName = fareName;
     }
+
+    public TripBookingDetailsDTO(int id, int tripBookingId, String customerId, String fareName,
+            String tripConditionName) {
+        this.id = id;
+        this.tripBookingId = tripBookingId;
+        this.customerId = customerId;
+        this.fareName = fareName;
+        this.tripConditionName = tripConditionName;
+    }
+
     public int getId() {
         return id;
     }
@@ -52,6 +63,14 @@ public class TripBookingDetailsDTO {
     }
     public void setFareName(String fareName) {
         this.fareName = fareName;
+    }
+
+    public String getTripConditionName() {
+        return tripConditionName;
+    }
+
+    public void setTripConditionName(String tripConditionName) {
+        this.tripConditionName = tripConditionName;
     }
 
     
