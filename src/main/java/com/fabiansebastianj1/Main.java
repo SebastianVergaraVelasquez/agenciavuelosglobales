@@ -50,6 +50,7 @@ import com.fabiansebastianj1.trip.adapters.in.TripConsoleAdapter;
 import com.fabiansebastianj1.trip.adapters.out.TripMYSQLRepository;
 import com.fabiansebastianj1.trip.application.TripService;
 import com.fabiansebastianj1.tripbooking.adapters.in.TripBookingConsoleAdapter;
+import com.fabiansebastianj1.tripbooking.adapters.in.TripBookingConsoleUtils;
 import com.fabiansebastianj1.tripbooking.adapters.out.TripBookingMYSQLRepository;
 import com.fabiansebastianj1.tripbooking.application.TripBookingService;
 import com.fabiansebastianj1.tripbookingdetails.adapters.out.TripBookingDetailsMYSQLRepository;
@@ -135,7 +136,8 @@ public class Main {
                 tripBookingDetailsMYSQLRepository, cityMYSQLRepository, airportMYSQLRepository, tripMYSQLRepository,
                 documentTypeMYSQLRepository, planeMySQLRepository, passengerMYSQLRepository, paymentMYSQLRepository,
                 payTypeMYSQLRepository);
-        TripBookingConsoleAdapter tripBookingConsoleAdapter = new TripBookingConsoleAdapter(tripBookingService);
+        TripBookingConsoleUtils tripBookingConsoleUtils = new TripBookingConsoleUtils(tripBookingService);
+        TripBookingConsoleAdapter tripBookingConsoleAdapter = new TripBookingConsoleAdapter(tripBookingService,tripBookingConsoleUtils);
 
         Scanner scanner = new Scanner(System.in);
         boolean executing = true;
