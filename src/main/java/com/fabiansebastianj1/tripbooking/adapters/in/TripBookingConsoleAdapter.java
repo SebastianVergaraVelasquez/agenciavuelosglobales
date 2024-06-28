@@ -1,6 +1,5 @@
 package com.fabiansebastianj1.tripbooking.adapters.in;
 
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -36,7 +35,7 @@ public class TripBookingConsoleAdapter {
             System.out.println("*** Modulo de reserva ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            int choice = inputVali.readInt("1.Crear reserva \n2.Consultar reservas \n3. Eliminar reservas \n4.Salir");
+            int choice = inputVali.readInt("1.Crear reserva\n2. Eliminar reservas \n0. Salir");
             System.out.println(" ");
 
             switch (choice) {
@@ -50,7 +49,7 @@ public class TripBookingConsoleAdapter {
                     tripBookingConsoleUtils.showTrips();
                     Connections showConnection = ValidationExist.transformAndValidateObj(
                             () -> tripBookingService.findFlightById(
-                                    inputVali.readInt(("Ingrese el id de la tarifa"))));
+                                    inputVali.readInt(("Ingrese el id del vuelo"))));
                     int flightId = showConnection.getId_trip();
                     String tripDate = inputVali.stringNotNull("Ingrese la fecha de la reserva");
                     tripBookingConsoleUtils.showFares();
@@ -69,8 +68,6 @@ public class TripBookingConsoleAdapter {
                     tripBookingService.createTripBookingDetail(tripBookingDetails);
                     break;
                 case 2:
-                    break;
-                case 3:
                     System.out.println("*** Eliminar reserva ***");
                     System.out.println(" ");
                     List<TripBooking> tripBookings = tripBookingService.findAllTripBookings();
@@ -78,7 +75,7 @@ public class TripBookingConsoleAdapter {
                     System.out.format(
                             "+------+------------+----------+%n");
                     System.out.format(
-                            "| ID   | Date     | Id_Trip |%n");
+                            "| ID   | Date       | Id_Trip  |%n");
                     System.out.format(
                             "+------+------------+----------+%n");
 
@@ -94,12 +91,19 @@ public class TripBookingConsoleAdapter {
                             () -> tripBookingService.findTripBookingById(
                                     inputVali.readInt(("Ingrese el id de la reserva"))));
                     int tripBookingId = showTripBooking.getId();
-
+                    // TripBooking bookingToDelete = tripBookingConsoleUtils.returnTripBooking(inputVali); // Verificar que
+                    //                                                                                     // exista el
+                    //                                                                                     // booking
+                    // List<Passenger> passengersToDelete = tripBookingService
+                    //         .getPassengersByBookingId(bookingToDelete.getId()); // Listar los pasajeros asociados
+                    // for (Passenger passenger : passengersToDelete) {
+                    //     tripBookingService.deleletePassengers(passenger.getNif()); // Eliminar uno por uno de la base
+                    // }
                     tripBookingService.deleteTripBookingDetailForId(tripBookingId);
                     tripBookingService.deleteTripBooking(tripBookingId);
 
                     break;
-                case 4:
+                case 0:
                     executing = false;
                     System.out.println("Saliendo del módulo de reserva");
                     break;
@@ -116,8 +120,6 @@ public class TripBookingConsoleAdapter {
         boolean executing = true;
         InputVali inputVali = new InputVali();
 
-        
-
         while (executing) {
             System.out.println("*** Menú de reservas para clientes ***");
             System.out.println(" ");
@@ -129,30 +131,39 @@ public class TripBookingConsoleAdapter {
             switch (choice) {
                 case 1:
                     System.out.println("*** Reserva de vuelos ***");
-                    int[] tripsIdSelected = tripBookingConsoleUtils.showAndSelectFlights(inputVali); // Aquí se listan y se seleccionan los
-                                                                             // vuelos
+                    int[] tripsIdSelected = tripBookingConsoleUtils.showAndSelectFlights(inputVali); // Aquí se listan y
+                                                                                                     // se seleccionan
+                                                                                                     // los
+                    // vuelos
                     if (tripsIdSelected[0] == 0 && tripsIdSelected[1] == 0) {
                         System.out.println("*** Error al reservar ***");
                         break;
                     }
-                    List<Passenger> passengers = tripBookingConsoleUtils.savePassengers(tripsIdSelected); // Aquí se registra la info de los
-                                                                                  // pasajeros
+                    List<Passenger> passengers = tripBookingConsoleUtils.savePassengers(tripsIdSelected); // Aquí se
+                                                                                                          // registra la
+                                                                                                          // info de los
+                    // pasajeros
                     if (passengers.isEmpty()) {
                         System.out.println("*** Error al reservar ***");
                         break;
                     }
-                    tripBookingConsoleUtils.infoValidateAndSave(tripsIdSelected,passengers);
+                    tripBookingConsoleUtils.infoValidateAndSave(tripsIdSelected, passengers);
                     break;
                 case 2:
                     System.out.println("*** Consulta de reserva ***");
-                    TripBooking bookingToShow = tripBookingConsoleUtils.returnTripBooking(inputVali); // verifica que exista el id de reserva
+                    TripBooking bookingToShow = tripBookingConsoleUtils.returnTripBooking(inputVali); // verifica que
+                                                                                                      // exista el id de
+                                                                                                      // reserva
                     tripBookingConsoleUtils.showBookingDetails(bookingToShow.getId()); // MOstrar los detalles
-                    tripBookingConsoleUtils.showPassengers(bookingToShow.getId()); // Mostrar los pasajeros asociados a ese booking
+                    tripBookingConsoleUtils.showPassengers(bookingToShow.getId()); // Mostrar los pasajeros asociados a
+                                                                                   // ese booking
                     break;
                 case 3:
                     System.out.println("*** Cancelar reserva ***");
                     System.out.println("Si tiene un viaje de ida y vuelta deberá cancelar ambas reservas por separado");
-                    TripBooking bookingToDelete = tripBookingConsoleUtils.returnTripBooking(inputVali); // Verificar que exista el booking
+                    TripBooking bookingToDelete = tripBookingConsoleUtils.returnTripBooking(inputVali); // Verificar que
+                                                                                                        // exista el
+                                                                                                        // booking
                     List<Passenger> passengersToDelete = tripBookingService
                             .getPassengersByBookingId(bookingToDelete.getId()); // Listar los pasajeros asociados
                     for (Passenger passenger : passengersToDelete) {

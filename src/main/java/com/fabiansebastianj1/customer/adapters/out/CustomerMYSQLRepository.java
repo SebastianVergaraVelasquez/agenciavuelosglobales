@@ -63,7 +63,7 @@ public class CustomerMYSQLRepository implements CustomerRepository {
     @Override
     public Optional<Customer> findById(String id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM customer WHERE id = ?";
+            String query = "SELECT * FROM customer WHERE id = ?;";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {

@@ -25,8 +25,7 @@ public class TripBookingDetailsAdapter {
             System.out.println("*** Consulta de reservas ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            System.out.println("1.Consulta de reservas \n2.Consultar reservas \n3.Salir");
-            int choice = scanner.nextInt();
+            int choice = inputVali.readInt("1.Consulta de reservas \n2. Salir");
             System.out.println(" ");
             
             switch (choice) {

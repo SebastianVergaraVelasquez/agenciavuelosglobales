@@ -53,7 +53,9 @@ import com.fabiansebastianj1.tripbooking.adapters.in.TripBookingConsoleAdapter;
 import com.fabiansebastianj1.tripbooking.adapters.in.TripBookingConsoleUtils;
 import com.fabiansebastianj1.tripbooking.adapters.out.TripBookingMYSQLRepository;
 import com.fabiansebastianj1.tripbooking.application.TripBookingService;
+import com.fabiansebastianj1.tripbookingdetails.adapters.in.TripBookingDetailsAdapter;
 import com.fabiansebastianj1.tripbookingdetails.adapters.out.TripBookingDetailsMYSQLRepository;
+import com.fabiansebastianj1.tripbookingdetails.application.TripBookingDetailsService;
 import com.fabiansebastianj1.tripcrew.adapters.in.TripCrewConsoleAdapter;
 import com.fabiansebastianj1.tripcrew.adapters.out.TripCrewMYSQLRepository;
 import com.fabiansebastianj1.tripcrew.application.TripCrewService;
@@ -137,7 +139,12 @@ public class Main {
                 documentTypeMYSQLRepository, planeMySQLRepository, passengerMYSQLRepository, paymentMYSQLRepository,
                 payTypeMYSQLRepository);
         TripBookingConsoleUtils tripBookingConsoleUtils = new TripBookingConsoleUtils(tripBookingService);
-        TripBookingConsoleAdapter tripBookingConsoleAdapter = new TripBookingConsoleAdapter(tripBookingService,tripBookingConsoleUtils);
+        TripBookingConsoleAdapter tripBookingConsoleAdapter = new TripBookingConsoleAdapter(tripBookingService,
+                tripBookingConsoleUtils);
+
+        TripBookingDetailsService tripBookingDetailsService = new TripBookingDetailsService(
+                tripBookingDetailsMYSQLRepository);
+        TripBookingDetailsAdapter tripBookingDetailsAdapter = new TripBookingDetailsAdapter(tripBookingDetailsService);
 
         Scanner scanner = new Scanner(System.in);
         boolean executing = true;
@@ -180,7 +187,13 @@ public class Main {
                     tripCrewConsoleAdapter.start();
                     break;
                 case 10:
-                    tripBookingConsoleAdapter.bookingCustomerMenu();;
+                    tripBookingConsoleAdapter.bookingCustomerMenu();
+                    break;
+                case 11:
+                    tripBookingConsoleAdapter.start();
+                    break;
+                case 12:
+                    tripBookingDetailsAdapter.start();
                     break;
                 default:
                     executing = false;

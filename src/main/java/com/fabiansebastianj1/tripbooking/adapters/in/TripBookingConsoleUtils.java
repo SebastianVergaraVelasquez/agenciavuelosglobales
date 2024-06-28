@@ -53,7 +53,7 @@ public class TripBookingConsoleUtils {
         for (ConnectionDTO flight : flights) {
             System.out.println(String.format("id_vuelo: %s, id_escala: %s, aeropuerto_salida %s, " +
                     "aeropuerto llegada: %s, " +
-                    "fecha: %", flight.getTripId(), flight.getConnectionId(), flight.getStartAirport(),
+                    "fecha: %s", flight.getTripId(), flight.getConnectionId(), flight.getStartAirport(),
                     flight.getArriveAirport(), flight.getTripDate()));
         }
     }

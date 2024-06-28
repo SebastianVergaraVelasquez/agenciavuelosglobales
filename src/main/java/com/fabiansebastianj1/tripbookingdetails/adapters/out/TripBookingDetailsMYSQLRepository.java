@@ -185,10 +185,10 @@ public class TripBookingDetailsMYSQLRepository implements TripBookingDetailsRepo
             "tbd.id_customer AS customer_id, "+
             "cus.name AS customer_name, "+
             "f.description AS fare_description "+
-            "FROM trip_booking_detail AS tbd"+
+            "FROM trip_booking_detail AS tbd "+
             "JOIN customer cus ON cus.id = tbd.id_customer "+
             "JOIN flight_fare f ON f.id = tbd.id_fare "+
-            "JOIN trip_bookig tb ON tb.id = tbd.id_trip_booking "+
+            "JOIN trip_booking tb ON tb.id = tbd.id_trip_booking "+
             "WHERE tbd.id_customer = ?;";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, id);
@@ -223,10 +223,10 @@ public class TripBookingDetailsMYSQLRepository implements TripBookingDetailsRepo
             "tbd.id_customer AS customer_id, "+
             "cus.name AS customer_name, "+
             "f.description AS fare_description "+
-            "FROM trip_booking_detail AS tbd"+
+            "FROM trip_booking_detail AS tbd "+
             "JOIN customer cus ON cus.id = tbd.id_customer "+
             "JOIN flight_fare f ON f.id = tbd.id_fare "+
-            "JOIN trip_bookig tb ON tb.id = tbd.id_trip_booking "+
+            "JOIN trip_booking tb ON tb.id = tbd.id_trip_booking "+
             "WHERE tbd.id_customer = ?;";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, id);
