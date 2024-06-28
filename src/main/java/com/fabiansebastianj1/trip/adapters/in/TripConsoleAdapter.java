@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+import com.fabiansebastianj1.airport.domain.models.Airport;
+import com.fabiansebastianj1.city.domain.models.City;
 import com.fabiansebastianj1.connection.domain.models.ConnectionDTO;
 import com.fabiansebastianj1.connection.domain.models.Connections;
+import com.fabiansebastianj1.country.domain.models.Country;
 import com.fabiansebastianj1.planes.domain.models.Plane;
 import com.fabiansebastianj1.trip.application.TripService;
 import com.fabiansebastianj1.trip.domain.models.Trip;
@@ -36,6 +39,8 @@ public class TripConsoleAdapter {
 
             switch (choice) {
                 case 1:
+                    System.out.println("Información del trayecto");
+
                     break;
                 case 2:
                     System.out.println("*** Asignar avión a trayecto ***");
@@ -70,6 +75,98 @@ public class TripConsoleAdapter {
                     break;
             }
         }
+    }
+
+    public void infoTrip(InputVali inputVali) {
+
+        boolean newInput = true;
+        System.out.println("Información pais/ciudad/aeropuerto de origen"); // Pedir la información de origen
+        showCountries();
+        Country originCountry = returnCountry(inputVali);
+        showCitiesByCountry(originCountry.getId());
+        City originCity = returnCity(inputVali);
+        showAirports(originCity.getId());
+        Airport originAirport = returnAirport(inputVali);
+
+        System.out.println("Información pais/ciudad/aeropuerto de destino"); // pedir la información de destino
+        showCountries();
+        Country destinationCountry = returnCountry(inputVali);
+        showCitiesByCountry(destinationCountry.getId());
+        City destinationCity = returnCity(inputVali);
+        showAirports(destinationCity.getId());
+        Airport destinationAirport = returnAirport(inputVali);
+
+        String date = inputVali.stringNotNull("Ingrese la fecha del viaje (YYYY-MM-DD)"); // Fecha del vuelo
+        Double price = inputVali.readDouble("Ingrese el valor del vuelo"); // valor del vuelo
+        Trip newTrip = new Trip(date, price); // Con la info creo el nuevo idTrip
+        tripService.createTrip(newTrip);
+
+        Optional<Trip> tripRegistered = tripService.findLastTrip();
+
+        createTripAsConnection(tripRegistered.get().getId(), originAirport.getId(), destinationAirport.getId(),
+                inputVali); // Registro
+        // eL origen y destino como connection
+
+        newInput = Register.yesOrNo(inputVali.stringNotNull("Este vuelo tiene escalas?"));
+        if (!newInput) {
+            System.out.println("Vuelo registrado");
+        } else {
+            List<ConnectionDTO> connections = returnAvailableConnections(originAirport.getId(), destinationAirport.getId());
+            if (connections.isEmpty()) {
+                System.out.println("No hay escalas disponibles");
+                System.out.println("Vuelo registrado");
+            }
+            else{
+                showAvailableConnections(connections);
+                System.out.println("Ahora va a añadir vuelo que desea como escala");
+                Trip trip = returnTrip(inputVali);
+                Optional<ConnectionDTO> tripAsDTO = tripService.findTripAsConnectionByTripId(trip.getId());
+                Connections newConnection = new Connections(tripAsDTO.get().getConnectionNumber(),tripRegistered.get().getId(),
+                tripAsDTO.get().getPlaneId(),tripAsDTO.get().getStartAirport(),2);
+                tripService.createConnection(newConnection);
+            }   
+        }
+
+    }
+
+    public List<ConnectionDTO> returnAvailableConnections(String idAirOri, String idAirDest) {
+        List<ConnectionDTO> connections = tripService.listConnectionsAvailable(idAirOri, idAirDest);
+        return connections;
+    }
+
+    public void showAvailableConnections(List<ConnectionDTO> connections) {
+        String format = "| %-10s | %-13s | %-18s | %-13s | %-13s | %-12s | %-12f |%n";
+        System.out.format(
+                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
+        System.out.format(
+                "| Trip ID    | Connection ID | Connection Number  | Start Airport | Arrive Airport| Trip Date    | Price        |%n");
+        System.out.format(
+                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
+
+        for (ConnectionDTO connectionDTO : connections) {
+            System.out.format(format,
+                    connectionDTO.getTripId(),
+                    connectionDTO.getConnectionId(),
+                    connectionDTO.getConnectionNumber(),
+                    connectionDTO.getStartAirport(),
+                    connectionDTO.getArriveAirport(),
+                    connectionDTO.getTripDate(),
+                    connectionDTO.getPrice());
+            System.out.format(
+                    "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
+        }
+    }
+
+    public void createTripAsConnection(int idTrip, String idOriginAirport, String idDestinationAirport,
+            InputVali inputVali) {
+        String con_number1 = inputVali
+                .stringNotNull("Asigne un connection_number para el origen en este formato (CONXXXX): \n");
+        String con_number2 = inputVali
+                .stringNotNull("Asigne un connection_number para el destino en este formato (CONXXXX): \n");
+        Connections connectionOrigen = new Connections(con_number1, idTrip, null, idOriginAirport, 1);
+        tripService.createConnection(connectionOrigen);
+        Connections connectionDestination = new Connections(con_number2, idTrip, null, idDestinationAirport, 3);
+        tripService.createConnection(connectionDestination);
     }
 
     public void updateTrip(Trip trip) {
@@ -122,6 +219,48 @@ public class TripConsoleAdapter {
             System.out.println(String.format("id: %s , plates: %s, capacity: %s", plane.getId(), plane.getPlates(),
                     plane.getCapacity()));
         }
+    }
+
+    public void showAirports(String airportId) {
+        System.out.println("Aeropuertos disponibles");
+        List<Airport> airports = tripService.findAirportsByCity(airportId);
+        for (Airport airport : airports) {
+            System.out.println(String.format("id: %s, name: %s \n", airport.getId(), airport.getName()));
+        }
+    }
+
+    public Airport returnAirport(InputVali inputVali) {
+        Airport airport = ValidationExist.transformAndValidateObj(
+                () -> tripService.findAirport(inputVali.stringNotNull("Ingrese el id del aeropuerto")));
+        return airport;
+    }
+
+    public void showCountries() {
+        System.out.println("Paises disponibles");
+        List<Country> countries = tripService.findAllCountries();
+        for (Country country : countries) {
+            System.out.println(String.format("id: %s, name: %s \n", country.getId(), country.getName()));
+        }
+    }
+
+    public Country returnCountry(InputVali inputVali) {
+        Country country = ValidationExist.transformAndValidateObj(
+                () -> tripService.findCountry(inputVali.stringNotNull("Ingrese el id del país")));
+        return country;
+    }
+
+    public void showCitiesByCountry(String id) {
+        System.out.println("ciudades disponibles");
+        List<City> cities = tripService.findCitiesByCountryId(id);
+        for (City city : cities) {
+            System.out.println(String.format("id: %s, name: %s \n", city.getId(), city.getName()));
+        }
+    }
+
+    public City returnCity(InputVali inputVali) {
+        City city = ValidationExist.transformAndValidateObj(
+                () -> tripService.findCity(inputVali.stringNotNull("Ingrese el id de la ciudad")));
+        return city;
     }
 
     public Plane returnPlane(InputVali inputVali) {

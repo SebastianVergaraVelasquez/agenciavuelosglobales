@@ -48,7 +48,30 @@ public class CityMYSQLRepository implements CityRepository {
                             resultSet.getString("id"),
                             resultSet.getString("name"),
                             resultSet.getString("id_country"));
-                            cities.add(city);
+                    cities.add(city);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cities;
+    }
+
+    @Override
+    public List<City> findAllByCityId(String countryId) {
+        List<City> cities = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM city WHERE id_country = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, countryId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        City city = new City(
+                                resultSet.getString("id"),
+                                resultSet.getString("name"),
+                                resultSet.getString("id_country"));
+                        cities.add(city);
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -66,9 +89,9 @@ public class CityMYSQLRepository implements CityRepository {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
                         City city = new City(
-                            resultSet.getString("id"),
-                            resultSet.getString("name"),
-                            resultSet.getString("id_country"));
+                                resultSet.getString("id"),
+                                resultSet.getString("name"),
+                                resultSet.getString("id_country"));
                         return Optional.of(city);
                     }
                 }

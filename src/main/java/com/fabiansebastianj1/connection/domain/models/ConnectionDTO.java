@@ -10,6 +10,7 @@ public class ConnectionDTO {
     private String connectionNumber;
     private String startAirport;
     private String arriveAirport;
+    private int arriveAirportId;
     private int planeId;
     private String planePlates;
     private String tripDate;
@@ -25,6 +26,21 @@ public class ConnectionDTO {
         this.tripDate = tripDate;
         this.price = price;
     }
+
+    public ConnectionDTO(int tripId, int connectionId, String connectionNumber, int planeId, String startAirport,
+            String arriveAirport, int arriveAirportId, String tripDate, Double price) {
+        this.tripId = tripId;
+        this.connectionId = connectionId;
+        this.connectionNumber = connectionNumber;
+        this.planeId = planeId;
+        this.startAirport = startAirport;
+        this.arriveAirport = arriveAirport;
+        this.arriveAirportId = arriveAirportId;
+        this.tripDate = tripDate;
+        this.price = price;
+    }
+
+
 
     //Este es para mostrar la información mofificable de la escala
     public ConnectionDTO( int connectionId, String connectionNumber, int tripId, String startAirport, int planeId, String planePlates) {
@@ -43,6 +59,14 @@ public class ConnectionDTO {
 
     public int getTripId() {
         return tripId;
+    }
+
+    public int getArriveAirportId() {
+        return arriveAirportId;
+    }
+
+    public void setArriveAirportId(int arriveAirportId) {
+        this.arriveAirportId = arriveAirportId;
     }
 
     public void setTripId(int tripId) {

@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import com.fabiansebastianj1.trip.domain.models.Trip;
 import com.fabiansebastianj1.trip.infrastructure.TripRepository;
+import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetails;
 
 public class TripMYSQLRepository implements TripRepository {
 
@@ -110,6 +111,26 @@ public class TripMYSQLRepository implements TripRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Optional<Trip> findLastTrip() {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM trip ORDER BY id DESC LIMIT 1";
+            try (PreparedStatement statement = connection.prepareStatement(query);
+                 ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    Trip trip = new Trip(
+                            resultSet.getInt("id"),
+                            resultSet.getString("trip_date"),
+                            resultSet.getDouble("price_tripe"));   
+                    return Optional.of(trip);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 
 }

@@ -13,6 +13,11 @@ public class Trip {
         this.price = price;
     }
 
+    public Trip(String date, double price) {
+        this.date = date;
+        this.price = price;
+    }
+
     public int getId() {
         return id;
     }

@@ -11,4 +11,5 @@ public interface TripRepository {
     void delete(int id);
     Optional<Trip> findById(int id);
     List<Trip> findAll();
+    Optional<Trip> findLastTrip();
 }

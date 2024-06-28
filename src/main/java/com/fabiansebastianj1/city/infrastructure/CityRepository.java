@@ -11,4 +11,5 @@ public interface CityRepository {
     void delete (String id);
     Optional <City> findById(String id);
     List<City> findAll();
+    List<City> findAllByCityId(String countryId);
 }
