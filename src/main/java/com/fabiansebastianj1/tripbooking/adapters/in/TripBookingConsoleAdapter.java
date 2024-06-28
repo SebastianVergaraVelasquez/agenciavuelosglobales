@@ -8,10 +8,12 @@ import com.fabiansebastianj1.connection.domain.models.Connections;
 import com.fabiansebastianj1.customer.domain.models.Customer;
 import com.fabiansebastianj1.fare.domain.models.Fare;
 import com.fabiansebastianj1.passenger.domain.models.Passenger;
+import com.fabiansebastianj1.trip.domain.models.Trip;
 import com.fabiansebastianj1.tripbooking.application.TripBookingService;
 import com.fabiansebastianj1.tripbooking.domain.models.TripBooking;
 import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetails;
 import com.fabiansebastianj1.validations.InputVali;
+import com.fabiansebastianj1.validations.Register;
 import com.fabiansebastianj1.validations.ValidationExist;
 
 public class TripBookingConsoleAdapter {
@@ -176,12 +178,35 @@ public class TripBookingConsoleAdapter {
                     tripBookingService.updateTripBookingDetail(details.get());
                     System.out.println("Reserva cancelada");
                     break;
+                case 4:
+                    System.out.println("*** Modificar reserva ***");
+                    System.out.println("*** Consulta de reserva ***");
+                    TripBooking bookingToUpdate = tripBookingConsoleUtils.returnTripBooking(inputVali); // verifica que
+                                                                                                      // exista el id de
+                                                                                                      // reserva //Tomar la fecha
+                    tripBookingConsoleUtils.showBookingDetails(bookingToUpdate.getId()); // MOstrar los detalles
+                    tripBookingConsoleUtils.showPassengers(bookingToUpdate.getId()); // Mostrar los pasajeros asociados a
+                                                                                   // ese booking
+                    Trip trip = tripBookingConsoleUtils.returnTripById(bookingToUpdate.getId_trip());
+                    
+
+                    break;
                 default:
                     executing = false;
                     System.out.println("Saliendo del modulo");
                     break;
+               
             }
         }
     }
 
+    public void updateTripBookingDetail(TripBooking bookingToUpdate,Trip trip ){
+        boolean newInput;
+        InputVali inputVali = new InputVali();
+        newInput = Register.yesOrNo("Desea cambiar la fecha?: Ingrese el valor numérico 1(Si) 2(No)");
+        if (newInput) {
+            String newDate = inputVali.stringNotNull("Ingrese la nueva fecha que desea volar (YYYY-MM-DD): -> ");
+            tripBookingConsoleUtils.showTrips();
+        }
+    }
 }

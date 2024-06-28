@@ -136,6 +136,13 @@ public class TripBookingConsoleUtils {
         return trip;
     }
 
+    public Trip returnTripById(int id){
+        Trip trip = ValidationExist.transformAndValidateObj(
+                () -> tripBookingService
+                        .findTripById(id));
+        return trip;
+    }
+
     public PayType returnPayType(InputVali inputVali) {
         PayType payType = ValidationExist.transformAndValidateObj(
                 () -> tripBookingService.findPayTypeById(
