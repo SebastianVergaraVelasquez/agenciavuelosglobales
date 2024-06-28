@@ -216,7 +216,7 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
     }
 
     @Override
-    public List<ConnectionDTO> listConnectionsAvailable(String idAirportOrigin, String idAirportDestination) {
+    public List<ConnectionDTO> listConnectionsAvailable(String idAirportOrigin, String idAirportDestination, String date) {
         List<ConnectionDTO> flights = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT " +
@@ -233,10 +233,11 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                     "JOIN connection c2 ON c1.id_trip = c2.id_trip " +
                     "JOIN trip_status ts2 ON c2.id_trip_status = ts2.id " +
                     "JOIN trip tr ON c2.id_trip = tr.id " +
-                    "WHERE c1.id_trip_status = 1 AND c2.id_trip_status = 3 AND c2.id_airport = ? AND c1.id_airport != ?;";
+                    "WHERE c1.id_trip_status = 1 AND c2.id_trip_status = 3 AND c2.id_airport = ? AND c1.id_airport != ? AND tr.trip_date = ?;";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, idAirportDestination);
                 statement.setString(2, idAirportOrigin);
+                statement.setString(3, date);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
                         ConnectionDTO flight = new ConnectionDTO(

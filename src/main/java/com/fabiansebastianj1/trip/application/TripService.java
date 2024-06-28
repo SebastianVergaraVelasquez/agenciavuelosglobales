@@ -126,8 +126,8 @@ public class TripService {
         connectionRepository.save(connection);
     }
 
-    public List<ConnectionDTO> listConnectionsAvailable(String idAirportOrigin, String idAirportDestination){
-        return connectionRepository.listConnectionsAvailable(idAirportOrigin,idAirportDestination );
+    public List<ConnectionDTO> listConnectionsAvailable(String idAirportOrigin, String idAirportDestination, String date){
+        return connectionRepository.listConnectionsAvailable(idAirportOrigin,idAirportDestination,date);
     }
 }
 

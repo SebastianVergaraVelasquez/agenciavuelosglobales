@@ -118,7 +118,7 @@ public class TripConsoleAdapter {
             System.out.println("\n* Vuelo registrado *\n");
         } else {
             List<ConnectionDTO> connections = returnAvailableConnections(originAirport.getId(),
-                    destinationAirport.getId());
+                    destinationAirport.getId(),date);
             if (connections.isEmpty()) {
                 System.out.println("No hay escalas disponibles");
                 System.out.println("\n* Vuelo registrado *\n");
@@ -137,8 +137,8 @@ public class TripConsoleAdapter {
 
     }
 
-    public List<ConnectionDTO> returnAvailableConnections(String idAirOri, String idAirDest) {
-        List<ConnectionDTO> connections = tripService.listConnectionsAvailable(idAirOri, idAirDest);
+    public List<ConnectionDTO> returnAvailableConnections(String idAirOri, String idAirDest, String date) {
+        List<ConnectionDTO> connections = tripService.listConnectionsAvailable(idAirOri, idAirDest,date);
         return connections;
     }
 
