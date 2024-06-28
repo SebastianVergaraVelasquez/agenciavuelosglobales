@@ -184,6 +184,9 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                     "c1.id AS id_connection, " +
                     "c1.connection_number AS con_number, " +
                     "c1.id_plane AS id_plane, " +
+                    "pl.plates AS plates, "+
+                    "ai.id AS id_airline, "+
+                    "ai.name as name_airline, "+
                     "c1.id_airport AS aeropuerto_salida, " +
                     "c2.id_airport AS aeropuerto_llegada, " +
                     "tr.trip_date As Fecha, " +
@@ -193,6 +196,8 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                     "JOIN connection c2 ON c1.id_trip = c2.id_trip " +
                     "JOIN trip_status ts2 ON c2.id_trip_status = ts2.id " +
                     "JOIN trip tr ON c2.id_trip = tr.id " +
+                    "JOIN plane pl ON pl.id = c1.id_plane "+
+                    "JOIN airline ai ON ai.id = pl.id_airline "+
                     "WHERE c1.id_trip_status = 1 AND c2.id_trip_status = 3;";
             try (PreparedStatement statement = connection.prepareStatement(query);
                     ResultSet resultSet = statement.executeQuery()) {
@@ -202,6 +207,9 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                             resultSet.getInt("id_connection"),
                             resultSet.getString("con_number"),
                             resultSet.getInt("id_plane"),
+                            resultSet.getString("plates"),
+                            resultSet.getInt("id_airline"),
+                            resultSet.getString("name_airline"),
                             resultSet.getString("aeropuerto_salida"),
                             resultSet.getString("aeropuerto_llegada"),
                             resultSet.getString("Fecha"),
@@ -224,6 +232,9 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                     "c1.id AS id_connection, " +
                     "c1.connection_number AS con_number, " +
                     "c1.id_plane AS id_plane, " +
+                    "pl.plates AS plates, "+
+                    "ai.id AS id_airline, "+
+                    "ai.name as name_airline, "+
                     "c1.id_airport AS aeropuerto_salida, " +
                     "c2.id_airport AS aeropuerto_llegada, " +
                     "tr.trip_date AS Fecha, " +
@@ -233,6 +244,8 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                     "JOIN connection c2 ON c1.id_trip = c2.id_trip " +
                     "JOIN trip_status ts2 ON c2.id_trip_status = ts2.id " +
                     "JOIN trip tr ON c2.id_trip = tr.id " +
+                    "JOIN plane pl ON pl.id = c1.id_plane "+
+                    "JOIN airline ai ON ai.id = pl.id_airline "+
                     "WHERE c1.id_trip_status = 1 AND c2.id_trip_status = 3 AND c2.id_airport = ? AND c1.id_airport != ? AND tr.trip_date = ?;";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, idAirportDestination);
@@ -245,6 +258,9 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                                 resultSet.getInt("id_connection"),
                                 resultSet.getString("con_number"),
                                 resultSet.getInt("id_plane"),
+                                resultSet.getString("plates"),
+                                resultSet.getInt("id_airline"),
+                                resultSet.getString("name_airline"),
                                 resultSet.getString("aeropuerto_salida"),
                                 resultSet.getString("aeropuerto_llegada"),
                                 resultSet.getString("Fecha"),
@@ -269,6 +285,9 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                     "c1.id AS id_connection, " +
                     "c1.connection_number AS con_number, " +
                     "c1.id_plane AS id_plane, " +
+                    "pl.plates AS plates, "+
+                    "ai.id AS id_airline, "+
+                    "ai.name as name_airline, "+
                     "c1.id_airport AS aeropuerto_salida, " +
                     "c2.id_airport AS aeropuerto_llegada, " +
                     "tr.trip_date As Fecha, " +
@@ -278,6 +297,8 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                     "JOIN connection c2 ON c1.id_trip = c2.id_trip " +
                     "JOIN trip_status ts2 ON c2.id_trip_status = ts2.id " +
                     "JOIN trip tr ON c2.id_trip = tr.id " +
+                    "JOIN plane pl ON pl.id = c1.id_plane "+
+                    "JOIN airline ai ON ai.id = pl.id_airline "+
                     "WHERE c1.id_trip_status = 1 AND c2.id_trip_status = 3 AND c1.id_airport = ? AND c2.id_airport = ? AND tr.trip_date = ?;";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, AirportId1);
@@ -286,14 +307,17 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
                         ConnectionDTO flight = new ConnectionDTO(
-                                resultSet.getInt("id_vuelo"),
-                                resultSet.getInt("id_connection"),
-                                resultSet.getString("con_number"),
-                                resultSet.getInt("id_plane"),
-                                resultSet.getString("aeropuerto_salida"),
-                                resultSet.getString("aeropuerto_llegada"),
-                                resultSet.getString("Fecha"),
-                                resultSet.getDouble("precio"));
+                            resultSet.getInt("id_vuelo"),
+                            resultSet.getInt("id_connection"),
+                            resultSet.getString("con_number"),
+                            resultSet.getInt("id_plane"),
+                            resultSet.getString("plates"),
+                            resultSet.getInt("id_airline"),
+                            resultSet.getString("name_airline"),
+                            resultSet.getString("aeropuerto_salida"),
+                            resultSet.getString("aeropuerto_llegada"),
+                            resultSet.getString("Fecha"),
+                            resultSet.getDouble("precio"));
                         flights.add(flight);
                     }
                 }

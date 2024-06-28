@@ -52,9 +52,9 @@ public class TripBookingConsoleUtils {
         List<ConnectionDTO> flights = tripBookingService.listFlights();
         for (ConnectionDTO flight : flights) {
             System.out.println(String.format("id_vuelo: %s, id_escala: %s, aeropuerto_salida %s, " +
-                    "aeropuerto llegada: %s, " +
+                    "aeropuerto llegada: %s, " + "airline: %s"+
                     "fecha: %s", flight.getTripId(), flight.getConnectionId(), flight.getStartAirport(),
-                    flight.getArriveAirport(), flight.getTripDate()));
+                    flight.getArriveAirport(), flight.getAirlineName(), flight.getTripDate()));
         }
     }
 
@@ -125,6 +125,7 @@ public class TripBookingConsoleUtils {
                     connectionDTO.getPrice());
             System.out.format(
                     "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
+            System.out.println(String.format("Airline: %s", connectionDTO.getAirlineName()));
         }
     }
 

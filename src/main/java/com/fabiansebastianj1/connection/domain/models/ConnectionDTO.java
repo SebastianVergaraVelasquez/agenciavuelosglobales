@@ -8,11 +8,12 @@ public class ConnectionDTO {
     private String connectionNumber;
     private String startAirport;
     private String arriveAirport;
-    private int arriveAirportId;
     private int planeId;
     private String planePlates;
     private String tripDate;
     private Double price;
+    private int airlineId;
+    private String airlineName;
     
     public ConnectionDTO(int tripId, int connection_id, String connectionNumber, int planeId, String startAirport, String arriveAirport, String tripDate, Double price) {
         this.tripId = tripId;
@@ -25,20 +26,20 @@ public class ConnectionDTO {
         this.price = price;
     }
 
-    public ConnectionDTO(int tripId, int connectionId, String connectionNumber, int planeId, String startAirport,
-            String arriveAirport, int arriveAirportId, String tripDate, Double price) {
+    public ConnectionDTO(int tripId, int connectionId, String connectionNumber, int planeId, String planePlates, int airlineId, String airlineName, String startAirport,
+            String arriveAirport, String tripDate, Double price) {
         this.tripId = tripId;
         this.connectionId = connectionId;
         this.connectionNumber = connectionNumber;
         this.planeId = planeId;
+        this.planePlates = planePlates;
+        this.airlineId = airlineId;
+        this.airlineName= airlineName;
         this.startAirport = startAirport;
         this.arriveAirport = arriveAirport;
-        this.arriveAirportId = arriveAirportId;
         this.tripDate = tripDate;
         this.price = price;
     }
-
-
 
     //Este es para mostrar la información mofificable de la escala
     public ConnectionDTO( int connectionId, String connectionNumber, int tripId, String startAirport, int planeId, String planePlates) {
@@ -50,6 +51,22 @@ public class ConnectionDTO {
         this.planePlates = planePlates;
     }
 
+    public int getAirlineId() {
+        return airlineId;
+    }
+
+    public void setAirlineId(int airlineId) {
+        this.airlineId = airlineId;
+    }
+
+    public String getAirlineName() {
+        return airlineName;
+    }
+
+    public void setAirlineName(String airlineName) {
+        this.airlineName = airlineName;
+    }
+
     public ConnectionDTO(String connectionNumber, String startAirport) {
         this.connectionNumber = connectionNumber;
         this.startAirport = startAirport;
@@ -57,14 +74,6 @@ public class ConnectionDTO {
 
     public int getTripId() {
         return tripId;
-    }
-
-    public int getArriveAirportId() {
-        return arriveAirportId;
-    }
-
-    public void setArriveAirportId(int arriveAirportId) {
-        this.arriveAirportId = arriveAirportId;
     }
 
     public void setTripId(int tripId) {

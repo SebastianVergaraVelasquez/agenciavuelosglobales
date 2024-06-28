@@ -167,6 +167,10 @@ public class TripBookingService {
         return connectionRepository.showConnectionInfo(id);
     }
 
+    public Optional <ConnectionDTO> findTripAsDTO(int tripId){
+        return connectionRepository.findConnectionDTO(tripId);
+    }
+
     public Optional<Plane> findPlaneById(int id){
         return planeRepository.findById(id);
     }
@@ -213,5 +217,9 @@ public class TripBookingService {
 
     public void updateTripBookingDetail(TripBookingDetails bookingDetails){
         tripBookingDetailsRepository.update(bookingDetails);
+    }
+
+    public List<ConnectionDTO> listConnectionsAvailable(String idAirportOrigin, String idAirportDestination, String date){
+        return connectionRepository.listConnectionsAvailable(idAirportOrigin,idAirportDestination,date);
     }
 }

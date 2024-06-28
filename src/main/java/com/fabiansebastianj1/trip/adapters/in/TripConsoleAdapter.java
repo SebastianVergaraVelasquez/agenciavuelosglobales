@@ -150,7 +150,6 @@ public class TripConsoleAdapter {
                 "| Trip ID    | Connection ID | Connection Number  | Start Airport | Arrive Airport| Trip Date    | Price        |%n");
         System.out.format(
                 "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
-
         for (ConnectionDTO connectionDTO : connections) {
             System.out.format(format,
                     connectionDTO.getTripId(),
@@ -162,6 +161,7 @@ public class TripConsoleAdapter {
                     connectionDTO.getPrice());
             System.out.format(
                     "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
+            System.out.println(String.format("Airline: %s", connectionDTO.getAirlineName()));
         }
     }
 
