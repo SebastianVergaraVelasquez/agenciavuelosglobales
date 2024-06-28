@@ -1,6 +1,5 @@
 package com.fabiansebastianj1.revision.domain.models;
 
-import java.sql.Date;
 
 public class Revision {
     private int id;

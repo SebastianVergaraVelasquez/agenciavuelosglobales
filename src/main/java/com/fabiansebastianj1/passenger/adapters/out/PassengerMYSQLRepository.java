@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import com.fabiansebastianj1.passenger.domain.models.Passenger;
 import com.fabiansebastianj1.passenger.infrastructure.PassengerRepository;
-import com.fabiansebastianj1.planes.domain.models.Plane;
 
 public class PassengerMYSQLRepository implements PassengerRepository {
 

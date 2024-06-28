@@ -62,6 +62,7 @@ public class FareConsoleAdapter {
                     System.out.println("Saliendo del modulo de tarifas");
                     break;
                 default:
+                    System.out.println("Ingrese una opción válida");
                     break;
             }
         }

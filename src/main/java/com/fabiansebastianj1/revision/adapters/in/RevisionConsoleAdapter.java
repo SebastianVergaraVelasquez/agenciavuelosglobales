@@ -2,7 +2,6 @@ package com.fabiansebastianj1.revision.adapters.in;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 
 import com.fabiansebastianj1.employee.domain.models.Employee;
 import com.fabiansebastianj1.planes.domain.models.Plane;
@@ -23,7 +22,6 @@ public class RevisionConsoleAdapter {
     }
 
     public void start() {
-        Scanner scanner = new Scanner(System.in);
         boolean executing = true;
         InputVali inputVali = new InputVali();
 
@@ -31,7 +29,8 @@ public class RevisionConsoleAdapter {
             System.out.println("*** Modulo de Revisión de aviones ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            int choice = inputVali.readInt("1.Registrar revisión \n2. Consultar historial de revision\n3. Actualizar Informacion de Revision\n4. Eliminar Revision\n5. Salir");
+            int choice = inputVali.readInt(
+                    "1. Registrar revisión \n2. Consultar historial de revision\n3. Actualizar Informacion de Revision\n4. Eliminar Revision\n5. Salir");
             System.out.println(" ");
 
             switch (choice) {
@@ -39,13 +38,15 @@ public class RevisionConsoleAdapter {
                     mostrarAviones();
                     Plane showPlane = ValidationExist.transformAndValidateObj(
                             () -> revisionService.findPlaneById(
-                                    inputVali.readInt(("Ingrese el id del avión"))));
+                                    inputVali.readInt(("Ingrese el id del avión: -> "))));
                     int planeId = showPlane.getId();
-                    String revisionDate = inputVali.stringNotNull("Ingrese la fecha de la revisión en formato yyyy-MM-dd: ");
-                    String description = inputVali.stringNotNull("Ingrese una descripción del procedimiento");
+                    String revisionDate = inputVali
+                            .stringNotNull("Ingrese la fecha de la revisión en formato yyyy-MM-dd: -> ");
+                    String description = inputVali.stringNotNull("Ingrese una descripción del procedimiento: -> ");
 
                     Employee showEmployee = ValidationExist.transformAndValidateObj(
-                            () -> revisionService.findEmployeeById(inputVali.stringNotNull("Ingrese el id del empleado")));
+                            () -> revisionService.findEmployeeById(inputVali
+                                    .stringNotNull("Ingrese el id del empleado que realizo la revision: -> ")));
                     String employeeId = showEmployee.getId();
 
                     // Registrar en revision
@@ -61,26 +62,26 @@ public class RevisionConsoleAdapter {
                     RevEmployee newRevEmployee = new RevEmployee(employeeId, revisionId, description);
                     revisionService.createRevEmployee(newRevEmployee);
 
-                    System.out.println("Registro de revisión guardado exitosamente");
+                    System.out.println("* Registro de revisión guardado exitosamente *");
                     break;
                 case 2:
                     System.out.println("*** Consultar historial de revision ***");
 
-                    //consultar avion por plate, luego extraer de ahí el id y pasarlo a la busqueda de revisión
+                    // consultar avion por plate, luego extraer de ahí el id y pasarlo a la busqueda
+                    // de revisión
                     Plane planeFinded = ValidationExist.transformAndValidateObj(
-                            () -> revisionService.findPlaneByPlates(inputVali.stringNotNull("Ingrese la id del avion"))
-                    );
-                    //Consultar si el avión buscado tiene revisiones
+                            () -> revisionService
+                                    .findPlaneByPlates(inputVali.stringNotNull("Ingrese la placa del avion: -> ")));
+                    // Consultar si el avión buscado tiene revisiones
                     showRevisionsByPlaneId(planeFinded.getId());
                     break;
                 case 3:
                     System.out.println("*** Actualizar Informacion de Revision ***");
                     System.out.println(" ");
-                    System.out.println("Informacion actual de la revision");
+                    System.out.println("* Informacion actual de la revision *");
                     Revision showRevision = ValidationExist.transformAndValidateObj(
                             () -> revisionService.findRevisionById(
-                                    inputVali.readInt(("Ingrese el Id de la revision que desea editar")))
-                    );
+                                    inputVali.readInt(("Ingrese el Id de la revision que desea editar: -> "))));
                     showRevisionsByPlaneId(showRevision.getPlaneId());
                     updateRevision(showRevision);
 
@@ -95,14 +96,15 @@ public class RevisionConsoleAdapter {
                     System.out.format("+------+------------+----------+%n");
 
                     for (Revision revision : revisions) {
-                        System.out.format(leftAlignFormat, revision.getId(), revision.getRevisionDate(), revision.getPlaneId());
+                        System.out.format(leftAlignFormat, revision.getId(), revision.getRevisionDate(),
+                                revision.getPlaneId());
                     }
 
                     System.out.format("+------+------------+----------+%n");
 
                     Revision showRevisions = ValidationExist.transformAndValidateObj(
                             () -> revisionService.findRevisionById(
-                                    inputVali.readInt(("Ingrese el ID de la revision que desea aliminar"))));
+                                    inputVali.readInt(("Ingrese el ID de la revision que desea eliminar: -> "))));
 
                     revisionService.deleteRevEmployee(showRevisions.getId());
                     revisionService.deleteRevision(showRevisions.getId());
@@ -119,7 +121,7 @@ public class RevisionConsoleAdapter {
     }
 
     public void showRevisionsByPlaneId(int id) {
-        System.out.println("Historial de revisiones");
+        System.out.println("*** Historial de revisiones ***");
         List<RevisionDTO> revisions = revisionService.revisionsByPlaneId(id);
         if (!revisions.isEmpty()) {
             for (RevisionDTO revisionDTO : revisions) {
@@ -127,7 +129,8 @@ public class RevisionConsoleAdapter {
                         "date: %s \n" +
                         "planeId: %s \n" +
                         "description: %s \n" +
-                        "tecnico: %s \n\n", revisionDTO.getId(), revisionDTO.getRevisionDate(), revisionDTO.getPlaneId(), revisionDTO.getDescription(), revisionDTO.getEmployeeName()));
+                        "tecnico: %s \n\n", revisionDTO.getId(), revisionDTO.getRevisionDate(),
+                        revisionDTO.getPlaneId(), revisionDTO.getDescription(), revisionDTO.getEmployeeName()));
             }
         } else {
             System.out.println("Este avión no tiene revisiones \n");
@@ -135,10 +138,10 @@ public class RevisionConsoleAdapter {
     }
 
     public void mostrarAviones() {
-        System.out.println("Listado de aviones");
+        System.out.println("*** Listado de aviones ***");
         List<Plane> planes = revisionService.listPlanes();
         for (Plane plane : planes) {
-            System.out.println(String.format("id: %s, plates: %s", plane.getId(), plane.getPlates()));
+            System.out.println(String.format("id: %s,  plates: %s", plane.getId(), plane.getPlates()));
         }
     }
 
@@ -150,21 +153,23 @@ public class RevisionConsoleAdapter {
         String newEmployeeId;
         newInput = Register.yesOrNo("Desea cambiar la fecha de la revision? Ingrese el valor numerico 1 (si) o 2(no)");
         if (newInput == true) {
-            newDate = inputVali.stringNotNull("Ingrese la nueva fecha");
+            newDate = inputVali.stringNotNull("Ingrese la nueva fecha: -> ");
         } else {
             newDate = showRevision.getRevisionDate();
         }
-        newInput = Register.yesOrNo("Desea cambiar la descripcion de la revision? Ingrese el valor numerico 1 (si) o 2(no)");
+        newInput = Register
+                .yesOrNo("Desea cambiar la descripcion de la revision? Ingrese el valor numerico 1 (si) o 2(no)");
         Optional<RevEmployee> revEmployee = revisionService.findRevEmployeeById(showRevision.getId());
         if (newInput == true) {
-            newDescription = inputVali.stringNotNull("Ingrese la nueva descripcion");
+            newDescription = inputVali.stringNotNull("Ingrese la nueva descripcion: -> ");
             revEmployee.get().setDescription(newDescription);
             revisionService.updateRevEmploye(revEmployee.get());
         }
-        newInput = Register.yesOrNo("Desea cambiar el empleado de la revision? Ingrese el valor numerico 1 (si) o 2(no)");
+        newInput = Register
+                .yesOrNo("Desea cambiar el empleado de la revision? Ingrese el valor numerico 1 (si) o 2(no)");
         if (newInput == true) {
             revisionService.findAllEmployees();
-            newEmployeeId = inputVali.stringNotNull("Ingrese el Id del empleado que quiera seleccionar");
+            newEmployeeId = inputVali.stringNotNull("Ingrese el Id del empleado que quiera seleccionar: -> ");
             revEmployee.get().setId_employee(newEmployeeId);
             revisionService.updateRevEmploye(revEmployee.get());
         }
@@ -172,6 +177,5 @@ public class RevisionConsoleAdapter {
         revisionService.updateRevision(showRevision);
 
     }
-
 
 }

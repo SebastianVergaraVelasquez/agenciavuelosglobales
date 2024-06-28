@@ -70,6 +70,7 @@ public class AirportConsoleAdapter {
                     System.out.println("Saliendo del modulo de Aeropuerto");
                     break;
                 default:
+                System.out.println("Ingrese una opción válida");
                     break;
             }
         }

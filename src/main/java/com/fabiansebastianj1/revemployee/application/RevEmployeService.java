@@ -2,7 +2,6 @@ package com.fabiansebastianj1.revemployee.application;
 
 import java.util.Optional;
 
-import com.fabiansebastianj1.customer.domain.models.Customer;
 import com.fabiansebastianj1.revemployee.domain.models.RevEmployee;
 import com.fabiansebastianj1.revemployee.infraestructure.RevEmployeeRepository;
 

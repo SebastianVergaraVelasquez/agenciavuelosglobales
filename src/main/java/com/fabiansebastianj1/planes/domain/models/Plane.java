@@ -1,7 +1,5 @@
 package com.fabiansebastianj1.planes.domain.models;
 
-import java.sql.Date;
-
 public class Plane {
 
     private int id;

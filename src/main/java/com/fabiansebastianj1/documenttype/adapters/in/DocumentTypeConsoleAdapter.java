@@ -26,7 +26,7 @@ public class DocumentTypeConsoleAdapter {
             System.out.println("Que accion desea realizar, digite una opcion numerica");
             int choice = inputVali.readInt(
                     "1. Registrar tipo de documento\n2. Actualizar tipo de documento\n3. Eliminar tipo de documento" +
-                            "\n4. Consultar tipo de documento\n5. Salir");
+                            "\n4. Consultar tipo de documento\n0. Salir");
             System.out.println(" ");
 
             switch (choice) {
@@ -62,11 +62,12 @@ public class DocumentTypeConsoleAdapter {
                     DocumentType showDocumentType = returnDocumentType(inputVali);
                     showDocumentTypeInfo(showDocumentType);
                     break;
-                case 5:
+                case 0:
                     executing = false;
                     System.out.println("Saliendo del modulo de Tipo de Documento");
                     break;
                 default:
+                    System.out.println("Ingrese una opción válida");
                     break;
             }
 

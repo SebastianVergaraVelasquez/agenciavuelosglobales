@@ -1,6 +1,5 @@
 package com.fabiansebastianj1.revemployee.infraestructure;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.fabiansebastianj1.revemployee.domain.models.RevEmployee;

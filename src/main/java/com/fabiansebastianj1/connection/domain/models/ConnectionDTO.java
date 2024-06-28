@@ -1,7 +1,5 @@
 package com.fabiansebastianj1.connection.domain.models;
 
-import java.sql.Date;
-
 //Esta clase se utiliza para recibir una consulta de varias tablas.
 
 public class ConnectionDTO {
