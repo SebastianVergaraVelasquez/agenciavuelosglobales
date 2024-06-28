@@ -2,7 +2,6 @@ package com.fabiansebastianj1.trip.adapters.in;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 
 import com.fabiansebastianj1.airport.domain.models.Airport;
 import com.fabiansebastianj1.city.domain.models.City;
@@ -10,6 +9,7 @@ import com.fabiansebastianj1.connection.domain.models.ConnectionDTO;
 import com.fabiansebastianj1.connection.domain.models.Connections;
 import com.fabiansebastianj1.country.domain.models.Country;
 import com.fabiansebastianj1.planes.domain.models.Plane;
+import com.fabiansebastianj1.planes.domain.models.PlaneDTO;
 import com.fabiansebastianj1.trip.application.TripService;
 import com.fabiansebastianj1.trip.domain.models.Trip;
 import com.fabiansebastianj1.validations.InputVali;
@@ -25,7 +25,6 @@ public class TripConsoleAdapter {
 
     public void start() {
 
-        Scanner scanner = new Scanner(System.in);
         boolean executing = true;
         InputVali inputVali = new InputVali();
 
@@ -34,16 +33,16 @@ public class TripConsoleAdapter {
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
             int choice = inputVali.readInt(
-                    "1.Registrar trayecto? \n2.Asignar avión a trayecto \n3.Actualizar información de trayecto \n4.Eliminar trayecto \n5.Salir");
+                    "1.Registrar trayecto? \n2.Reasignar avión a trayecto \n3.Actualizar información de trayecto \n0. Salir");
             System.out.println(" ");
 
             switch (choice) {
                 case 1:
                     System.out.println("Información del trayecto");
-
+                    infoTrip(inputVali);
                     break;
                 case 2:
-                    System.out.println("*** Asignar avión a trayecto ***");
+                    System.out.println("*** Reasignar avión a trayecto ***");
                     System.out.println("*** Lista de vuelos disponibles ***");
                     showTrips();
                     Trip tripToAsignPlane = returnTrip(inputVali);
@@ -56,22 +55,27 @@ public class TripConsoleAdapter {
                     updateTrip(tripToUpdate);
                     System.out.println("Actualización exitosa");
                     break;
-                case 4:
-                    System.out.println("*** Eliminar trayecto ***");
-                    Trip tripToDelete = returnTrip(inputVali);
-                    tripService.deleteTrip(tripToDelete.getId());
-                    Optional<ConnectionDTO> tripAsConnection = tripService
-                            .findTripAsConnectionByTripId(tripToDelete.getId());
-                    List<Connections> connectionsToDelete = tripService
-                            .findAllConnectionsByTripId(tripAsConnection.get().getTripId());
-                    for (Connections connections : connectionsToDelete) {
-                        tripService.deleteConnection(connections.getId());
-                    }
-                    System.out.println("Trayecto eliminado exitosamente");
+                // case 4:
+                //     System.out.println("*** Eliminar trayecto ***");
+                //     Trip tripToDelete = returnTrip(inputVali);
+                //     tripService.deleteTrip(tripToDelete.getId());
+                //     Optional<ConnectionDTO> tripAsConnection = tripService
+                //             .findTripAsConnectionByTripId(tripToDelete.getId());
+                //     List<Connections> connectionsToDelete = tripService
+                //             .findAllConnectionsByTripId(tripAsConnection.get().getTripId());
+                //     for (Connections connections : connectionsToDelete) {
+                //         tripService.deleteConnection(connections.getId());
+                //     }
+                //     System.out.println("* Trayecto eliminado exitosamente *");
+                //     break;
+                case 0:
+                    executing = false;
+                    System.out.println("** Saliendo del modulo de trip **");
                     break;
+
                 default:
                     executing = false;
-                    System.out.println("Saliendo del modulo de trip");
+                    System.out.println("** Saliendo del modulo de trip **");
                     break;
             }
         }
@@ -96,35 +100,39 @@ public class TripConsoleAdapter {
         showAirports(destinationCity.getId());
         Airport destinationAirport = returnAirport(inputVali);
 
-        String date = inputVali.stringNotNull("Ingrese la fecha del viaje (YYYY-MM-DD)"); // Fecha del vuelo
-        Double price = inputVali.readDouble("Ingrese el valor del vuelo"); // valor del vuelo
+        String date = inputVali.stringNotNull("Ingrese la fecha del viaje (YYYY-MM-DD): -> "); // Fecha del vuelo
+        Double price = inputVali.readDouble("Ingrese el valor del vuelo: -> "); // valor del vuelo
         Trip newTrip = new Trip(date, price); // Con la info creo el nuevo idTrip
         tripService.createTrip(newTrip);
+
+        showAvailablePlanes();
+        Plane plane = returnPlane(inputVali);
 
         Optional<Trip> tripRegistered = tripService.findLastTrip();
 
         createTripAsConnection(tripRegistered.get().getId(), originAirport.getId(), destinationAirport.getId(),
-                inputVali); // Registro
+                inputVali, plane.getId()); // Registro
         // eL origen y destino como connection
-
-        newInput = Register.yesOrNo(inputVali.stringNotNull("Este vuelo tiene escalas?"));
+        newInput = Register.yesOrNo("Este vuelo tiene escalas? Ingrese el valor numerico 1 (si) o 2(no)");
         if (!newInput) {
-            System.out.println("Vuelo registrado");
+            System.out.println("\n* Vuelo registrado *\n");
         } else {
-            List<ConnectionDTO> connections = returnAvailableConnections(originAirport.getId(), destinationAirport.getId());
+            List<ConnectionDTO> connections = returnAvailableConnections(originAirport.getId(),
+                    destinationAirport.getId());
             if (connections.isEmpty()) {
                 System.out.println("No hay escalas disponibles");
-                System.out.println("Vuelo registrado");
-            }
-            else{
+                System.out.println("\n* Vuelo registrado *\n");
+            } else {
                 showAvailableConnections(connections);
                 System.out.println("Ahora va a añadir vuelo que desea como escala");
                 Trip trip = returnTrip(inputVali);
                 Optional<ConnectionDTO> tripAsDTO = tripService.findTripAsConnectionByTripId(trip.getId());
-                Connections newConnection = new Connections(tripAsDTO.get().getConnectionNumber(),tripRegistered.get().getId(),
-                tripAsDTO.get().getPlaneId(),tripAsDTO.get().getStartAirport(),2);
+                Connections newConnection = new Connections(tripAsDTO.get().getConnectionNumber(),
+                        tripRegistered.get().getId(),
+                        tripAsDTO.get().getPlaneId(), tripAsDTO.get().getStartAirport(), 2);
                 tripService.createConnection(newConnection);
-            }   
+                System.out.println("\n* Vuelo registrado *\n");
+            }
         }
 
     }
@@ -158,12 +166,12 @@ public class TripConsoleAdapter {
     }
 
     public void createTripAsConnection(int idTrip, String idOriginAirport, String idDestinationAirport,
-            InputVali inputVali) {
+            InputVali inputVali, int id_plane) {
         String con_number1 = inputVali
-                .stringNotNull("Asigne un connection_number para el origen en este formato (CONXXXX): \n");
+                .stringNotNull("Asigne un connection_number para el origen en este formato CX###; ejm: CX001: -> ");
         String con_number2 = inputVali
-                .stringNotNull("Asigne un connection_number para el destino en este formato (CONXXXX): \n");
-        Connections connectionOrigen = new Connections(con_number1, idTrip, null, idOriginAirport, 1);
+                .stringNotNull("Asigne un connection_number para el destino en este formato CX###; ejm: CX001: -> ");
+        Connections connectionOrigen = new Connections(con_number1, idTrip, id_plane, idOriginAirport, 1);
         tripService.createConnection(connectionOrigen);
         Connections connectionDestination = new Connections(con_number2, idTrip, null, idDestinationAirport, 3);
         tripService.createConnection(connectionDestination);
@@ -174,50 +182,38 @@ public class TripConsoleAdapter {
         InputVali inputVali = new InputVali();
         newInput = Register.yesOrNo("Desea cambiar la fecha del trayecto? Ingrese el valor numérico 1(si) 2(no)");
         if (newInput) {
-            String newDate = inputVali.stringNotNull("Ingrese la nueva fecha");
+            String newDate = inputVali.stringNotNull("Ingrese la nueva fecha: -> ");
             trip.setDate(newDate);
         }
         newInput = Register.yesOrNo("Desea cambiar el precio? Ingrese el valor numérico 1(si) 2(no)");
         if (newInput) {
-            Double newPrice = inputVali.readDouble(inputVali.stringNotNull("Ingrese el precio"));
+            Double newPrice = inputVali.readDouble(inputVali.stringNotNull("Ingrese el precio: -> "));
             trip.setPrice(newPrice);
         }
         tripService.updateTrip(trip);
     }
 
     public void asignPlaneToTrip(Trip trip) {
-        boolean reAsign;
         InputVali inputVali = new InputVali();
         Optional<ConnectionDTO> tripAsConnection = tripService.findTripAsConnectionByTripId(trip.getId());
-        if (tripAsConnection.get().getPlaneId() == 0) {
-            System.out.println("Este trayecto no tiene un avión asignado");
-            showAvailablePlanes();
-            Plane plane = returnPlane(inputVali);
-            Connections connection = tripService.findConnectionById(tripAsConnection.get().getConnectionId()).get();
-            connection.setId_plane(plane.getId());
-            tripService.updateConnection(connection);
-        } else {
-            System.out.println("Este trayecto ya tiene un avión asignado");
-            reAsign = Register.yesOrNo("Desea reasignarlo? Ingrese el valor numérico 1(si) 2(no)");
-            if (reAsign) {
-                showAvailablePlanes();
-                Plane plane = returnPlane(inputVali);
-                Connections connection = tripService.findConnectionById(tripAsConnection.get().getConnectionId()).get();
-                connection.setId_plane(plane.getId());
-                tripService.updateConnection(connection);
-                System.out.println("Asignación completa");
-            } else {
-                System.out.println("Asignación cancelada");
-            }
-        }
+
+        System.out.println("Este trayecto ya tiene un avión asignado.\n Seleccione el nuevo avion/aerolinea");
+        showAvailablePlanes();
+        Plane plane = returnPlane(inputVali);
+        Connections connection = tripService.findConnectionById(tripAsConnection.get().getConnectionId()).get();
+        connection.setId_plane(plane.getId());
+        tripService.updateConnection(connection);
+        System.out.println("* Reasignación completa *");
+
     }
 
     public void showAvailablePlanes() {
-        System.out.println("***Listado de aviones disponibles ***");
-        List<Plane> planes = tripService.findAllAvailable();
-        for (Plane plane : planes) {
-            System.out.println(String.format("id: %s , plates: %s, capacity: %s", plane.getId(), plane.getPlates(),
-                    plane.getCapacity()));
+        System.out.println("*** Listado de aviones disponibles ***");
+        List<PlaneDTO> planes = tripService.findListPlaneInfo();
+        for (PlaneDTO plane : planes) {
+            System.out.println(
+                    String.format("id: %s,  plates: %s,  capacity: %s,  airline: %s", plane.getId(), plane.getPlates(),
+                            plane.getCapacity(), plane.getAirlineName()));
         }
     }
 
@@ -231,7 +227,7 @@ public class TripConsoleAdapter {
 
     public Airport returnAirport(InputVali inputVali) {
         Airport airport = ValidationExist.transformAndValidateObj(
-                () -> tripService.findAirport(inputVali.stringNotNull("Ingrese el id del aeropuerto")));
+                () -> tripService.findAirport(inputVali.stringNotNull("Ingrese el id del aeropuerto: -> ")));
         return airport;
     }
 
@@ -245,7 +241,7 @@ public class TripConsoleAdapter {
 
     public Country returnCountry(InputVali inputVali) {
         Country country = ValidationExist.transformAndValidateObj(
-                () -> tripService.findCountry(inputVali.stringNotNull("Ingrese el id del país")));
+                () -> tripService.findCountry(inputVali.stringNotNull("Ingrese el id del país: -> ")));
         return country;
     }
 
@@ -259,21 +255,21 @@ public class TripConsoleAdapter {
 
     public City returnCity(InputVali inputVali) {
         City city = ValidationExist.transformAndValidateObj(
-                () -> tripService.findCity(inputVali.stringNotNull("Ingrese el id de la ciudad")));
+                () -> tripService.findCity(inputVali.stringNotNull("Ingrese el id de la ciudad: -> ")));
         return city;
     }
 
     public Plane returnPlane(InputVali inputVali) {
         Plane plane = ValidationExist.transformAndValidateObj(
                 () -> tripService.findPlaneById(
-                        inputVali.readInt(("Ingrese el id del avión para asignarlo"))));
+                        inputVali.readInt(("Ingrese el id del avión para asignarlo: -> "))));
         return plane;
     }
 
     public Trip returnTrip(InputVali inputVali) {
         Trip trip = ValidationExist.transformAndValidateObj(
                 () -> tripService
-                        .findTripById(inputVali.readInt(("Ingrese el id del trayecto"))));
+                        .findTripById(inputVali.readInt(("Ingrese el id del trayecto: -> n"))));
         return trip;
     }
 

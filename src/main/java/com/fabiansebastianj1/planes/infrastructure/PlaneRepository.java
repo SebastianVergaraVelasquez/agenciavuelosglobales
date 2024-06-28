@@ -15,4 +15,5 @@ public interface PlaneRepository {
     List<Plane> findAll();
     Optional<PlaneDTO> findPlaneInfoAdditional(String plates);
     List<Plane> findAllAvailable();
+    List<PlaneDTO> findListPlaneInfo();
 }

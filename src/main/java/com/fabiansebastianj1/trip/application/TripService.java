@@ -13,6 +13,7 @@ import com.fabiansebastianj1.connection.infraestructure.ConnectionRepository;
 import com.fabiansebastianj1.country.domain.models.Country;
 import com.fabiansebastianj1.country.infraestructure.CountryRepository;
 import com.fabiansebastianj1.planes.domain.models.Plane;
+import com.fabiansebastianj1.planes.domain.models.PlaneDTO;
 import com.fabiansebastianj1.planes.infrastructure.PlaneRepository;
 import com.fabiansebastianj1.trip.domain.models.Trip;
 import com.fabiansebastianj1.trip.infrastructure.TripRepository;
@@ -71,6 +72,10 @@ public class TripService {
 
     public List<Plane> findAllAvailable(){
         return planeRepository.findAllAvailable();
+    }
+    
+    public List<PlaneDTO> findListPlaneInfo(){
+        return planeRepository.findListPlaneInfo();
     }
 
     public Optional<Connections> findConnectionById(int id){

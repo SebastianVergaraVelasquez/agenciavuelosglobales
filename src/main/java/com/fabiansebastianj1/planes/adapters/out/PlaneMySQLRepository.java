@@ -216,6 +216,36 @@ public class PlaneMySQLRepository implements PlaneRepository {
         }
         return Optional.empty();
     }
+    @Override
+    public List<PlaneDTO> findListPlaneInfo() {
+        List<PlaneDTO> planeDTOInfos = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT p.id AS id_plane, p.plates AS plates, p.capacity AS capacity, p.fabircation_date AS fabrication_date, " +
+                    "st.name AS status, a.name AS airline, m.name AS model " +
+                    "FROM plane AS p "+
+                    "JOIN status AS st ON p.id_status = st.id " +
+                    "JOIN airline AS a ON p.id_airline = a.id " +
+                    "JOIN model AS m ON p.id_model = m.id " +
+                    "WHERE p.id_status = 1";
+            try (PreparedStatement statement = connection.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        PlaneDTO planeDTOInfo = new PlaneDTO(
+                                resultSet.getInt("id_plane"),
+                                resultSet.getString("plates"),
+                                resultSet.getInt("capacity"),
+                                resultSet.getString("fabrication_date"),
+                                resultSet.getString("status"),
+                                resultSet.getString("airline"),
+                                resultSet.getString("model"));
+                        planeDTOInfos.add(planeDTOInfo);
+                    }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return planeDTOInfos;
+    }
 
 
 }
