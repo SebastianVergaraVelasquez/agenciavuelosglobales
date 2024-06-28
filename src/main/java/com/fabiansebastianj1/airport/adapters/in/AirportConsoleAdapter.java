@@ -10,7 +10,6 @@ import com.fabiansebastianj1.validations.ValidationExist;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 
 public class AirportConsoleAdapter {
 
@@ -21,7 +20,6 @@ public class AirportConsoleAdapter {
     }
 
     public void start() {
-        Scanner scanner = new Scanner(System.in);
         boolean executing = true;
         InputVali inputVali = new InputVali();
 
@@ -30,7 +28,7 @@ public class AirportConsoleAdapter {
             System.out.println(" ");
             System.out.println("Que accion desea realizar, digite una opcion numerica");
             int choice = inputVali.readInt(
-                    "1. Registrar Aeropuerto \n2.Consultar Aeropuerto \n3.Actualizar Aeropuerto \n4.Eliminar Aeropuerto \n5. Salir");
+                    "1. Registrar Aeropuerto \n2. Consultar Aeropuerto \n3. Actualizar Aeropuerto \n4. Eliminar Aeropuerto \n5. Salir");
             System.out.println(" ");
 
             switch (choice) {
@@ -40,15 +38,16 @@ public class AirportConsoleAdapter {
 
                     String airports = verificarAeropuerto(inputVali);
 
-                    String name = inputVali.stringNotNull("Ingrese el nombre del Aeropuerto");
+                    String name = inputVali.stringNotNull("Ingrese el nombre del Aeropuerto: -> ");
 
                     showCities();
                     City showCity = ValidationExist.transformAndValidateObj(() -> airportService
-                            .findCityById(inputVali.stringNotNull("Ingrese el id de la ciudad a la que pertenece")));
+                            .findCityById(inputVali.stringNotNull("Ingrese el id de la ciudad a la que pertenece: -> ")));
                     String cityId = showCity.getId();
 
                     Airport newAirport = new Airport(airports, name, cityId);
                     airportService.createAirport(newAirport);
+                    System.out.println("* Aeropuerto registrado existosamente *\n");
                     break;
                 case 2:
                     System.out.println("*** Consulta de aeropuerto ***");
@@ -64,7 +63,7 @@ public class AirportConsoleAdapter {
                     System.out.println("*** Eliminar aeropuerto ***");
                     Airport airport = returnAirport(inputVali);
                     airportService.deleteAirport(airport.getId());
-                    System.out.println("*** Aeropuerto eliminado ***");
+                    System.out.println("* Aeropuerto eliminado exitosamente*\n");
                     break;
                 case 5:
                     executing = false;
@@ -83,7 +82,7 @@ public class AirportConsoleAdapter {
         showAirportInfo(airport.getId());
         newInput = Register.yesOrNo("Desea cambiar el nombre del aeropuerto? Ingrese el valor numérico: 1(Sí) o 2(No)");
         if (newInput) {
-            newName = inputVali.stringNotNull("Ingrese el nuevo nombre del aeropuerto");
+            newName = inputVali.stringNotNull("Ingrese el nuevo nombre del aeropuerto: -> ");
         } else {
             newName = airport.getName();
         }
@@ -93,7 +92,7 @@ public class AirportConsoleAdapter {
 
     public Airport returnAirport(InputVali inputVali) {
         Airport showAirport = ValidationExist.transformAndValidateObj(
-                () -> airportService.findAirportById(inputVali.stringNotNull("Ingrese el id del aeropuerto")));
+                () -> airportService.findAirportById(inputVali.stringNotNull("Ingrese el id del aeropuerto: -> ")));
         return showAirport;
     }
 
@@ -101,23 +100,23 @@ public class AirportConsoleAdapter {
         Optional<AirportDTO> airport = airportService.findAirportCityById(id);
         AirportDTO airportFinded = airport.get();
         System.out.println(String.format("id: %s" +
-                "name: %s" +
-                "city: %s", airportFinded.getId(), airportFinded.getName(), airportFinded.getCityName()));
+                "  name: %s" +
+                "  city: %s\n", airportFinded.getId(), airportFinded.getName(), airportFinded.getCityName()));
     }
 
     public String verificarAeropuerto(InputVali inputVali) {
         String airports;
         while (true) {
-            airports = inputVali.stringNotNull("Ingrese identificador del aeropuerto del avión");
+            airports = inputVali.stringNotNull("Ingrese identificador del aeropuerto del avión: -> ");
             Optional<Airport> airportFinded = airportService.findAirportById(airports);
             if (airportFinded.isPresent()) {
                 Airport airport = airportFinded.get();
-                System.out.println("Este Aeropuerto ya ha sido registrado");
+                System.out.println("Este Aeropuerto ya ha sido registrado.");
                 System.out.println(String.format("id: %s , airports: %s , cityID: %s", airport.getId(),
                         airport.getName(), airport.getCityId()));
                 System.out.println("Ingrese un identificador de Aeropuerto que no se haya registrado");
             } else {
-                System.out.println("Este Aeropuerto aún no se ha registado");
+                System.out.println("Este Aeropuerto aún no se ha registado.");
                 break;
             }
         }

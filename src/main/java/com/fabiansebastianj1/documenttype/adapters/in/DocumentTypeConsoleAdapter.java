@@ -7,7 +7,6 @@ import com.fabiansebastianj1.validations.Register;
 import com.fabiansebastianj1.validations.ValidationExist;
 
 import java.util.List;
-import java.util.Scanner;
 
 public class DocumentTypeConsoleAdapter {
 
@@ -18,7 +17,6 @@ public class DocumentTypeConsoleAdapter {
     }
 
     public void start() {
-        Scanner scanner = new Scanner(System.in);
         boolean executing = true;
         InputVali inputVali = new InputVali();
 
@@ -35,11 +33,12 @@ public class DocumentTypeConsoleAdapter {
                 case 1:
                     System.out.println("*** Registrar tipo de documento ***");
                     System.out.println(" ");
-                    scanner.nextLine();
 
-                    String nameDocumentTypes = inputVali.stringNotNull("Ingrese el nombre del tipo de documento");
+                    String nameDocumentTypes = inputVali.stringNotNull("Ingrese el nombre del tipo de documento: -> ");
                     DocumentType documentType = new DocumentType(nameDocumentTypes);
                     documentService.createDocumentType(documentType);
+                    System.out.println("* Tipo de documento creado existosamente *\n");
+
                     break;
                 case 2:
                     System.out.println("*** Actualizar Tipo de Documento ***");
@@ -48,7 +47,7 @@ public class DocumentTypeConsoleAdapter {
                     DocumentType documentTypeToUpdate = returnDocumentType(inputVali);
                     showDocumentTypeInfo(documentTypeToUpdate);
                     updateDocumentType(documentTypeToUpdate, inputVali);
-                    System.out.println("Tipo de Documento actualizada");
+                    System.out.println("\n* Tipo de Documento actualizada exitosamente *\n");
                     break;
                 case 3:
                     System.out.println("*** Eliminar Tipo de Documento ***");
@@ -56,6 +55,7 @@ public class DocumentTypeConsoleAdapter {
                     System.out.println(" ");
                     DocumentType documentTypeToDelete = returnDocumentType(inputVali);
                     documentService.deleteDocumentTypeById(documentTypeToDelete.getId());
+                    System.out.println("* Tipo de Documento eliminado exitosamente *\n");
                     break;
                 case 4:
                     System.out.println("*** Consultar Tipo de Documento ***");
@@ -79,7 +79,7 @@ public class DocumentTypeConsoleAdapter {
         newInput = Register.yesOrNo("Desea cambiar el nombre del Tipo de Documento? Ingrese el valor numérico: " +
                 "1 (si) 2 (no)");
         if (newInput) {
-            String newName = inputVali.stringNotNull("Ingrese el nombre del Tipo de Documento");
+            String newName = inputVali.stringNotNull("Ingrese el nombre del Tipo de Documento: -> ");
             documentType.setName(newName);
         }
         documentService.updateDocumentType(documentType);
@@ -88,7 +88,7 @@ public class DocumentTypeConsoleAdapter {
     public DocumentType returnDocumentType(InputVali inputVali) {
         DocumentType documentType = ValidationExist.transformAndValidateObj(
                 () -> documentService.getDocumentTypeById(
-                        inputVali.readInt(("Ingrese la id del Tipo de Documento"))));
+                        inputVali.readInt(("Ingrese el id del Tipo de Documento: -> "))));
         return documentType;
     }
 
@@ -101,7 +101,7 @@ public class DocumentTypeConsoleAdapter {
         List<DocumentType> documentTypes = documentService.getAllDocumentTypes();
         System.out.println("Tipos de documentos registrados actualmente");
         for (DocumentType documentType : documentTypes) {
-            System.out.println(String.format("id: %d ; " +
+            System.out.println(String.format("id: %d    " +
                     "name: %s", documentType.getId(), documentType.getName()));
         }
     }

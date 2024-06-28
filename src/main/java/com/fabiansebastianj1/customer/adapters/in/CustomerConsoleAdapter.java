@@ -1,7 +1,6 @@
 package com.fabiansebastianj1.customer.adapters.in;
 
 import java.util.List;
-import java.util.Scanner;
 
 import com.fabiansebastianj1.customer.application.CustomerService;
 import com.fabiansebastianj1.customer.domain.models.Customer;
@@ -17,7 +16,6 @@ public class CustomerConsoleAdapter {
     }
 
     public void start() {
-        Scanner scanner = new Scanner(System.in);
         boolean executing = true;
         InputVali inputVali = new InputVali();
 
@@ -26,7 +24,7 @@ public class CustomerConsoleAdapter {
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
             int choice = inputVali.readInt(
-                    "1.Visualizar información del cliente \n2.Registrar cliente \n3. Actualizar info de cliente \n4.Salir");
+                    "1. Visualizar información del cliente \n2. Registrar cliente \n3. Actualizar informacion de cliente \n0. Salir");
             System.out.println(" ");
 
             switch (choice) {
@@ -41,8 +39,9 @@ public class CustomerConsoleAdapter {
                     break;
                 case 3:
                     updateCustomerInfo(inputVali);
+                    System.out.println("* Cliente actualizado exitosamente *\n");
                     break;
-                case 4:
+                case 0:
                     executing = false;
                     System.out.println("Saliendo del modulo de cliente");
                     break;
@@ -60,14 +59,14 @@ public class CustomerConsoleAdapter {
         // verificar si desea cambiar el nombre
         newInput = Register.yesOrNo("Desea cambiar el nombre del cliente? Ingrese el valor numerico 1 (si) o 2(no)");
         if (newInput == true) {
-            newName = inputVali.stringNotNull("Ingrese el nuevo nombre");
+            newName = inputVali.stringNotNull("Ingrese el nuevo nombre: -> ");
         } else {
             newName = showCustomer.getName();
         }
         // verificar si desea cambiar la edad
         newInput = Register.yesOrNo("Desea cambiar la edad del cliente? Ingrese el valor numerico 1 (si) o 2(no)");
         if (newInput == true) {
-            newAge = inputVali.readInt(("Ingrese la edad"));
+            newAge = inputVali.readInt(("Ingrese la edad: -> "));
         } else {
             newAge = showCustomer.getAge();
         }
@@ -77,7 +76,7 @@ public class CustomerConsoleAdapter {
             showDocumentTypes();
             DocumentType showDocumentType = ValidationExist.transformAndValidateObj(
                     () -> customerService.findDocumentTypeById(
-                            inputVali.readInt(("Ingrese el id del tipo de documento"))));
+                            inputVali.readInt(("Ingrese el id del tipo de documento: -> "))));
             newIdDocumentType = showDocumentType.getId();
         } else {
             newIdDocumentType = showCustomer.getDocumentTypeId();
@@ -90,7 +89,7 @@ public class CustomerConsoleAdapter {
     public CustomerDTO returnCustomerDTO(InputVali inputVali) {
         CustomerDTO showCustomer = ValidationExist.transformAndValidateObj(
                 () -> customerService.findCustomerDTO(
-                        inputVali.stringNotNull("Ingrese el id del cliente para conocer su información")));
+                        inputVali.stringNotNull("Ingrese el id del cliente para conocer su información: -> ")));
         return showCustomer;
     }
 
@@ -98,12 +97,12 @@ public class CustomerConsoleAdapter {
     public Customer returnCustomer(InputVali inputVali) {
         Customer showCustomer = ValidationExist.transformAndValidateObj(
                 () -> customerService.findCustomerById(
-                        inputVali.stringNotNull("Ingrese el id del cliente para conocer su información")));
+                        inputVali.stringNotNull("Ingrese el id del cliente para conocer su información: -> ")));
         return showCustomer;
     }
 
     public void showCustomerInfo(CustomerDTO customer) {
-        System.out.println(String.format("id: %s\n name: %s \n age: %s \ndocument_type: %s", customer.getId(),
+        System.out.println(String.format("id: %s\nname: %s \nage: %s \ndocument_type: %s\n", customer.getId(),
                 customer.getName(), customer.getAge(), customer.getDocumentType()));
     }
 
@@ -116,16 +115,16 @@ public class CustomerConsoleAdapter {
     }
 
     public void insertCustomerInfo(InputVali inputVali) {
-        String id = inputVali.stringNotNull("Ingrese la id del cliente");
-        String nombre = inputVali.stringNotNull("Ingrese el nombre del cliente");
-        int edad = inputVali.readInt(("Ingrese la edad del cliente"));
+        String id = inputVali.stringNotNull("Ingrese la id del cliente: -> ");
+        String nombre = inputVali.stringNotNull("Ingrese el nombre del cliente: -> ");
+        int edad = inputVali.readInt("Ingrese la edad del cliente: -> ");
         showDocumentTypes();
         DocumentType showDocumentType = ValidationExist.transformAndValidateObj(
                 () -> customerService.findDocumentTypeById(
-                        inputVali.readInt(("Ingrese el id del tipo de documento"))));
+                        inputVali.readInt(("Ingrese el id del tipo de documento: -> "))));
 
         Customer newCustomer = new Customer(id, nombre, edad, showDocumentType.getId());
         customerService.createCustomer(newCustomer);
-        System.out.println("Cliente creado exitosamente");
+        System.out.println("* Cliente creado exitosamente *\n");
     }
 }
