@@ -6,14 +6,17 @@ import java.util.Optional;
 import com.fabiansebastianj1.connection.domain.models.ConnectionDTO;
 import com.fabiansebastianj1.connection.domain.models.Connections;
 import com.fabiansebastianj1.customer.domain.models.Customer;
+import com.fabiansebastianj1.documenttype.domain.models.DocumentType;
 import com.fabiansebastianj1.fare.domain.models.Fare;
 import com.fabiansebastianj1.passenger.domain.models.Passenger;
 import com.fabiansebastianj1.planes.domain.models.Plane;
+import com.fabiansebastianj1.print.PrintSeats;
 import com.fabiansebastianj1.trip.domain.models.Trip;
 import com.fabiansebastianj1.tripbooking.application.TripBookingService;
 import com.fabiansebastianj1.tripbooking.domain.models.TripBooking;
 import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetails;
 import com.fabiansebastianj1.validations.InputVali;
+import com.fabiansebastianj1.validations.Register;
 import com.fabiansebastianj1.validations.ValidationExist;
 
 public class TripBookingConsoleAdapter {
@@ -192,6 +195,11 @@ public class TripBookingConsoleAdapter {
                             updateTripDate(bookingToUpdate, tripAsConenction);
                             break;
                         case 2:
+                            updatePassengerInfo(bookingToUpdate);
+                            break;
+                        case 3:
+                            updateSeats(bookingToUpdate, tripAsConenction);
+                            break;
                         case 0:
                             executing = false;
                             System.out.println("Saliendo");
@@ -212,6 +220,73 @@ public class TripBookingConsoleAdapter {
 
             }
         }
+    }
+
+    public void updatePassengerInfo(TripBooking bookingToUpdate){
+        boolean newInput;
+        InputVali inputVali = new InputVali();
+        List<Passenger> passengers = tripBookingService.getPassengersByBookingId(bookingToUpdate.getId());
+
+        System.out.println("Lista de pasajeros asociados a esta reserva\n");
+        for (Passenger passenger : passengers) {
+            System.out.println(String.format("name: %s , nif: %s \n", passenger.getName(), passenger.getSeat()));
+            newInput = Register.yesOrNo("Desea modificar la información de este pasajero?Ingrese el valor numérico: 1(sÍ) 2(no) -> \n");
+            if (newInput) { //aquí se va a actulizar la info del pasajero
+                newInput = Register.yesOrNo("Desea modificar el nif? Ingrese el valor numérico: 1(sÍ) 2(no) -> \n");
+                if (newInput) {
+                    String newNif = inputVali.stringNotNull("Ingrese el nif del pasajero");
+                    passenger.setNif(newNif); 
+                }
+                newInput = Register.yesOrNo("Desea modificar el nombre? Ingrese el valor numérico: 1(sÍ) 2(no) -> \n");
+                if (newInput) {
+                    String newName = inputVali.stringNotNull("Ingrese el nombre del pasajero");
+                    passenger.setName(newName);
+                }
+                newInput = Register.yesOrNo("Desea modificar la edad? Ingrese el valor numérico: 1(sÍ) 2(no) -> \n");
+                if (newInput) {
+                    int newAge = inputVali.readInt("Ingrese la edad del pasajero");
+                    passenger.setAge(newAge);
+                }
+                newInput = Register.yesOrNo("Desea modificar el tipo de documento? Ingrese el valor numérico: 1(sÍ) 2(no) -> \n");
+                if (newInput) {
+                    tripBookingConsoleUtils.showDocumentTypes();
+                    DocumentType newDocumentType = tripBookingConsoleUtils.returnDocumentType(inputVali);
+                    passenger.setDocumentTypeId(newDocumentType.getId());
+                }
+                tripBookingService.updatePassenger(passenger);
+                System.out.println("Información de pasajero actualizada... \n");
+            }
+            else{System.out.println("Información de pasajero no actualizada...\n");}
+        }
+        System.out.println("Actualización finalizada...\n");
+    }
+
+    public void updateSeats(TripBooking bookingToUpdate,Optional<ConnectionDTO> tripAsConenction){
+        boolean newSeat;
+        InputVali inputVali = new InputVali();
+        List<Passenger> passengers = tripBookingService.getPassengersByBookingId(bookingToUpdate.getId());
+        Plane plane = tripBookingService.findPlaneById(tripAsConenction.get().getPlaneId()).get();
+        int totalOccupiedSeats = tripBookingService.getTotalOccupiedSeats(bookingToUpdate.getId_trip());
+        if ((plane.getCapacity() - totalOccupiedSeats) >= passengers.size()) { //si hay al menos el numero de pasajeros que de puestos libres se puede cambiar
+           
+            List<String> occupiedSeats = tripBookingService.getAllOccupiedSeats(bookingToUpdate.getId_trip());
+            PrintSeats.printSeats(occupiedSeats, plane); //mostrar asientos
+            for (Passenger passenger : passengers) {
+                System.out.println(String.format("name: %s , seat: %s \n", passenger.getName(), passenger.getSeat()));
+                newSeat = Register.yesOrNo("Desea cambiar el asiento? Ingrese el valor numérico: 1(sÍ) 2(no) -> \n");
+                if (newSeat) {
+                    String seat = inputVali.stringWithLeght( 
+                        "\nIngrese el numero de asiento de la siguiente manera: Ex. Si desea el 3 escribirá 003: -> \n",
+                        3);
+                    passenger.setSeat(seat);
+                    tripBookingService.updatePassenger(passenger); //Se actualiza en db
+                    occupiedSeats.add(seat);
+                    System.out.println("***Cambio de asiento realizado***");
+                }
+            }
+            System.out.println("***Datos actualizados***");
+        }
+        else{System.out.println("No hay asientos suficientes");}
     }
 
     public void updateTripDate(TripBooking bookingToUpdate, Optional<ConnectionDTO> tripAsConenction) {
