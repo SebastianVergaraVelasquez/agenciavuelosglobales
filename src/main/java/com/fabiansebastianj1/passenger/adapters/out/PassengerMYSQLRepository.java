@@ -91,12 +91,12 @@ public class PassengerMYSQLRepository implements PassengerRepository {
             String query = "UPDATE passenger SET nif = ?,name=?,age=?,seat=?,id_document_type=?,id_trip_booking_detail=? WHERE nif = ?;";
             try (PreparedStatement statement = connection.prepareStatement(query)){
                 statement.setString(1,passenger.getNif());
-                statement.setString(1,passenger.getName());
-                statement.setInt(1,passenger.getAge());
-                statement.setString(1,passenger.getSeat());
-                statement.setInt(1,passenger.getDocumentTypeId());
-                statement.setInt(1,passenger.getTripBookingDetailId());
-                statement.setString(1,passenger.getNif());
+                statement.setString(2,passenger.getName());
+                statement.setInt(3,passenger.getAge());
+                statement.setString(4,passenger.getSeat());
+                statement.setInt(5,passenger.getDocumentTypeId());
+                statement.setInt(6,passenger.getTripBookingDetailId());
+                statement.setString(7,passenger.getNif());
                 statement.executeUpdate();
             }
         }catch (SQLException e){

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.fabiansebastianj1.tripbooking.domain.models.TripBooking;
 import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetails;
 import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetailsDTO;
 import com.fabiansebastianj1.tripbookingdetails.infrastructure.TripBookingDetailsRepository;

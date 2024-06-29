@@ -1,7 +1,6 @@
 package com.fabiansebastianj1.tripbookingdetails.adapters.in;
 
 import java.util.List;
-import java.util.Scanner;
 
 import com.fabiansebastianj1.tripbookingdetails.application.TripBookingDetailsService;
 import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetailsDTO;
@@ -17,7 +16,6 @@ public class TripBookingDetailsAdapter {
 
     public void start() {
 
-        Scanner scanner = new Scanner(System.in);
         boolean executing = true;
         InputVali inputVali = new InputVali();
 
@@ -25,7 +23,7 @@ public class TripBookingDetailsAdapter {
             System.out.println("*** Consulta de reservas ***");
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
-            int choice = inputVali.readInt("1.Consulta de reservas \n2. Salir");
+            int choice = inputVali.readInt("1. Consulta de reservas \n0. Salir");
             System.out.println(" ");
             
             switch (choice) {
@@ -38,7 +36,7 @@ public class TripBookingDetailsAdapter {
                         showBookingByCustomerId(idFlightOrCustomer);
                     }
                     break;
-                case 2:
+                case 0:
                     executing = false;
                     System.out.println("Saliendo del modulo");
                     break;

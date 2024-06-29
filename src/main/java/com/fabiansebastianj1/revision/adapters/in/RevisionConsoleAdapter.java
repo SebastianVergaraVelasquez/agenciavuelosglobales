@@ -132,8 +132,8 @@ public class RevisionConsoleAdapter {
                 System.out.println(String.format("id: %s \n" +
                         "date: %s \n" +
                         "planeId: %s \n" +
-                        "description: %s \n" +
-                        "tecnico: %s \n\n", revisionDTO.getId(), revisionDTO.getRevisionDate(),
+                        "tecnico: %s \n" +
+                        "description: %s \n\n", revisionDTO.getId(), revisionDTO.getRevisionDate(),
                         revisionDTO.getPlaneId(), revisionDTO.getDescription(), revisionDTO.getEmployeeName()));
             }
         } else {

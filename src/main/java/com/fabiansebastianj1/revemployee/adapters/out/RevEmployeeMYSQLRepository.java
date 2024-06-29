@@ -47,7 +47,8 @@ public class RevEmployeeMYSQLRepository implements RevEmployeeRepository {
                         RevEmployee revEmployee = new RevEmployee(
                             resultSet.getString("id_employee"),
                             resultSet.getInt("id_revision"),
-                            resultSet.getString("description")
+                            resultSet.getString("description"),
+                            resultSet.getInt("id_rev_employee")
                             );
                         return Optional.of(revEmployee);
                     }
@@ -62,11 +63,12 @@ public class RevEmployeeMYSQLRepository implements RevEmployeeRepository {
     @Override
     public void update(RevEmployee revEmployee) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE rev_employee SET id_employee = ?, id_revision = ?, description = ? WHERE id = ?";
+            String query = "UPDATE rev_employee SET id_employee = ?, id_revision = ?, description = ? WHERE id_rev_employee = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, revEmployee.getId_employee());
                 statement.setInt(2, revEmployee.getId_revision());
                 statement.setString(3, revEmployee.getDescription());
+                statement.setInt(4, revEmployee.getId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {

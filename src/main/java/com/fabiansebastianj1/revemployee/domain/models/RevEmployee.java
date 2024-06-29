@@ -4,6 +4,7 @@ public class RevEmployee {
     private String id_employee;
     private int id_revision;
     private String description;
+    private int id;
 
     public RevEmployee() {
     }
@@ -12,6 +13,13 @@ public class RevEmployee {
         this.id_employee = id_employee;
         this.id_revision = id_revision;
         this.description = description;
+    }
+
+    public RevEmployee(String id_employee, int id_revision, String description, int id) {
+        this.id_employee = id_employee;
+        this.id_revision = id_revision;
+        this.description = description;
+        this.id = id;
     }
 
     public String getId_employee() {
@@ -36,6 +44,14 @@ public class RevEmployee {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
    

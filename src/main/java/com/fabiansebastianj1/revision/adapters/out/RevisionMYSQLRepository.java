@@ -46,6 +46,7 @@ public class RevisionMYSQLRepository implements RevisionRepository {
                 statement.setString(1, revision.getRevisionDate());
                 statement.setInt(2, revision.getPlaneId());
                 statement.setInt(3, revision.getId());
+                statement.setInt(3, revision.getId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {

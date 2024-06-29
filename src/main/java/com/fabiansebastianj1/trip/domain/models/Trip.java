@@ -1,7 +1,5 @@
 package com.fabiansebastianj1.trip.domain.models;
 
-import java.sql.Date;
-
 public class Trip {
     private int id;
     private String date;

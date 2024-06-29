@@ -408,4 +408,39 @@ public class ConnectionMYSQLRepository implements ConnectionRepository {
 
         return Optional.empty();
     }
+    @Override
+    public Optional<ConnectionDTO> showConnectionInfoByTrip(int id) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT " +
+                    "c.id AS connection_id, " +
+                    "c.connection_number AS con_number, " +
+                    "c.id_trip AS trip_id, " +
+                    "ai.name AS airport, " +
+                    "p.id AS plane_id, " +
+                    "p.plates AS plane_plates " +
+                    "FROM connection AS c " +
+                    "JOIN airport ai ON ai.id = c.id_airport " +
+                    "JOIN plane p ON p.id = c.id_plane " +
+                    "WHERE c.id_trip = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        ConnectionDTO connections = new ConnectionDTO(
+                                resultSet.getInt("connection_id"),
+                                resultSet.getString("con_number"),
+                                resultSet.getInt("trip_id"),
+                                resultSet.getString("airport"),
+                                resultSet.getInt("plane_id"),
+                                resultSet.getString("plane_plates"));
+                        return Optional.of(connections);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
 }

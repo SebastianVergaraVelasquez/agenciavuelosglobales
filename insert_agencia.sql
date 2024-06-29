@@ -85,7 +85,7 @@ INSERT INTO employee (id, name, id_rol, ingress_date, id_airline, id_airport) VA
 ('EMP001', 'Michael Johnson', 1, '2020-03-15', 1, 'JFK'), 
 ('EMP004', 'Sophia Garcia', 2, '2020-06-05', 2, 'JFK'),
 ('EMP002', 'Emily White', 3, '2021-01-10', 2, 'YYZ'),
-('EMP003', 'David Lee', 4, '2019-11-20', 3, 'YYZ');
+('EMP003', 'David Lee', 4, '2019-11-20', 1, 'YYZ');
     
 
 -- INSERTS PARA TABLA flight_fare

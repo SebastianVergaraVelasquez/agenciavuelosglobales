@@ -2,7 +2,6 @@ package com.fabiansebastianj1.tripbooking.adapters.in;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 
 import com.fabiansebastianj1.connection.domain.models.ConnectionDTO;
 import com.fabiansebastianj1.connection.domain.models.Connections;
@@ -15,7 +14,6 @@ import com.fabiansebastianj1.tripbooking.application.TripBookingService;
 import com.fabiansebastianj1.tripbooking.domain.models.TripBooking;
 import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetails;
 import com.fabiansebastianj1.validations.InputVali;
-import com.fabiansebastianj1.validations.Register;
 import com.fabiansebastianj1.validations.ValidationExist;
 
 public class TripBookingConsoleAdapter {
@@ -31,7 +29,6 @@ public class TripBookingConsoleAdapter {
 
     public void start() {
 
-        Scanner scanner = new Scanner(System.in);
         boolean executing = true;
         InputVali inputVali = new InputVali();
 
@@ -112,7 +109,6 @@ public class TripBookingConsoleAdapter {
     }
 
     public void bookingCustomerMenu() {
-        Scanner scanner = new Scanner(System.in);
         boolean executing = true;
         InputVali inputVali = new InputVali();
 
@@ -121,7 +117,7 @@ public class TripBookingConsoleAdapter {
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
             int choice = inputVali.readInt(
-                    "1.Reservar vuelo \n2.Consultar reservas \n3.Cancelar reserva \n4. Modificar reserva \n5.Salir");
+                    "1. Reservar vuelo \n2. Consultar reservas \n3. Cancelar reserva \n4. Modificar reserva \n0. Salir");
             System.out.println(" ");
 
             switch (choice) {
@@ -190,19 +186,28 @@ public class TripBookingConsoleAdapter {
 
                     System.out.println("Qué acción desea realizar, digite una opcion numérica");
                     choice = inputVali.readInt(
-                            "1.Reagendar fecha \n2.Información de pasajeros \n3.Asientos \n0.Salir");
+                            "1. Reagendar fecha \n2. Información de pasajeros \n3. Asientos \n0.Salir");
                     switch (choice) {
                         case 1:
                             updateTripDate(bookingToUpdate, tripAsConenction);
                             break;
                         case 2:
+                        case 0:
+                            executing = false;
+                            System.out.println("Saliendo");
+                            break;
                         default:
+                            System.out.println("Ingrese una opción válida");
                             break;
                     }
                     break;
-                default:
+                case 0:
                     executing = false;
                     System.out.println("Saliendo del modulo");
+                    break;
+
+                default:
+                    System.out.println("Ingrese una opción válida");
                     break;
 
             }
@@ -213,38 +218,47 @@ public class TripBookingConsoleAdapter {
 
         InputVali inputVali = new InputVali();
         String newDate = inputVali.stringNotNull("Ingrese la nueva fecha que desea volar (YYYY-MM-DD): -> ");
-        List<ConnectionDTO> tripsAvailable = tripBookingService.listConnectionsAvailable(
-                    tripAsConenction.get().getStartAirport(), tripAsConenction.get().getArriveAirport(), newDate);
+        List<ConnectionDTO> tripsAvailable = tripBookingService.findAllFlightsByAirportsId(
+                tripAsConenction.get().getStartAirport(), tripAsConenction.get().getArriveAirport(), newDate);
         if (!tripsAvailable.isEmpty()) {
             tripBookingConsoleUtils.showFlightsByAirports(tripsAvailable); // Este dice by airports, pero como tal
-                                                                               // solo imprime la lista que se le mande
-                                                                               // con un formato
-                                                                                  
-            Trip newTrip = tripBookingConsoleUtils.returnTripById(inputVali.readInt("Ingrese el id del nuevo vuelo")); //Poner este nuevo 
-            //trip id en booking toupdate, setear los seats de las personas como 0 y ver cómo les asigno otros según el nuevo vuelo
+                                                                           // solo imprime la lista que se le mande
+                                                                           // con un formato
 
-            Plane plane = tripBookingService.findPlaneById(tripAsConenction.get().getPlaneId()).get();//Conocer el avión del nuevo vuelo
+            Trip newTrip = tripBookingConsoleUtils.returnTripById(inputVali.readInt("Ingrese el id del nuevo vuelo: -> ")); // Poner
+                                                                                                                       // este
+                                                                                                                       // nuevo
+            // trip id en booking toupdate, setear los seats de las personas como 0 y ver
+            // cómo les asigno otros según el nuevo vuelo
+
+            Plane plane = tripBookingService.findPlaneById(tripAsConenction.get().getPlaneId()).get();// Conocer el
+                                                                                                      // avión del nuevo
+                                                                                                      // vuelo
             int occupiedSeats = tripBookingService.getTotalOccupiedSeats(newTrip.getId());
-            List <Passenger> passengers = tripBookingService.getPassengersByBookingId(bookingToUpdate.getId()); //se listan todos los pasajeros
-            //asociados a ese tripBookingId
+            List<Passenger> passengers = tripBookingService.getPassengersByBookingId(bookingToUpdate.getId()); // se
+                                                                                                               // listan
+                                                                                                               // todos
+                                                                                                               // los
+                                                                                                               // pasajeros
+            // asociados a ese tripBookingId
 
             if ((plane.getCapacity() - occupiedSeats) > passengers.size()) {
                 for (Passenger passenger : passengers) {
                     passenger.setSeat("");
                 }
-                bookingToUpdate.setId_trip(newTrip.getId()); //cambiar el tripId del booking
+                bookingToUpdate.setId_trip(newTrip.getId()); // cambiar el tripId del booking
                 tripBookingService.updateTripBooking(bookingToUpdate); // actualizar en db
-                List <Passenger> passengersUpdated = tripBookingConsoleUtils.asignSeats(passengers, newTrip.getId());
+                List<Passenger> passengersUpdated = tripBookingConsoleUtils.asignSeats(passengers, newTrip.getId());
                 for (Passenger passenger : passengersUpdated) {
                     tripBookingService.updatePassenger(passenger);
                 }
                 System.out.println("Vuelo actualizado");
-            }
-            else{
-                System.out.println("La cantidad de pasajeros de la reserva supera los asientos disponibles. Saliendo...");
+            } else {
+                System.out
+                        .println("La cantidad de pasajeros de la reserva supera los asientos disponibles. Saliendo...");
             }
         } else {
-                System.out.println("No hay más viajes para su trayecto en la fecha seleccionada");
+            System.out.println("No hay más viajes para su trayecto en la fecha seleccionada");
         }
     }
 }

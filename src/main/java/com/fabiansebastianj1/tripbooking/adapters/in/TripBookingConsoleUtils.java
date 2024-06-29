@@ -69,7 +69,7 @@ public class TripBookingConsoleUtils {
     public Fare returnFare(InputVali inputVali) {
         Fare fare = ValidationExist.transformAndValidateObj(
                 () -> tripBookingService
-                        .findFareById(inputVali.readInt(("Ingrese el id de la ciudad"))));
+                        .findFareById(inputVali.readInt(("Ingrese el id de la tarifa: -> "))));
         return fare;
     }
 
@@ -154,7 +154,7 @@ public class TripBookingConsoleUtils {
     public void showPayTypes() {
         List<PayType> payTypes = tripBookingService.findAllPayTypes();
         for (PayType payType : payTypes) {
-            System.out.println(String.format("id_city: %s, name: %s", payType.getId(), payType.getName()));
+            System.out.println(String.format("id_pay_type: %s,  name: %s", payType.getId(), payType.getName()));
         }
     }
 
@@ -178,7 +178,7 @@ public class TripBookingConsoleUtils {
     public TripBooking returnTripBooking(InputVali inputVali) {
         TripBooking tripBooking = ValidationExist.transformAndValidateObj(
                 () -> tripBookingService
-                        .findTripBookingById(inputVali.readInt(("Ingrese el identificador de reserva"))));
+                        .findTripBookingById(inputVali.readInt(("Ingrese el identificador de reserva: -> "))));
         return tripBooking;
     }
 
@@ -279,7 +279,7 @@ public class TripBookingConsoleUtils {
     public List<Passenger> asignSeats(List<Passenger> passengers, int tripId) {
         // traer el avión
         InputVali inputVali = new InputVali();
-        ConnectionDTO tripOrigin = tripBookingService.findConnectionInfoById(tripId).get();
+        ConnectionDTO tripOrigin = tripBookingService.showConnectionInfoByTrip(tripId).get();
         Plane planeOrigin = tripBookingService.findPlaneById(tripOrigin.getPlaneId()).get();
         List<String> occupiedSeats = tripBookingService.getAllOccupiedSeats(tripOrigin.getTripId()); // Me devuelve los
                                                                                                      // string de todos
@@ -295,7 +295,9 @@ public class TripBookingConsoleUtils {
                 if (!occupiedSeats.contains(newSeat)) {
                     occupiedSeats.add(newSeat);
                     passenger.setSeat(newSeat);
-                    break;
+                    break;                    
+                } else{
+                    System.out.println("Asiento seleccionado ocupado, por favor seleccione otro...");
                 }
             }
             
@@ -359,7 +361,9 @@ public class TripBookingConsoleUtils {
         showPayTypes();
         System.out.println("Al ingresar el método de pago se procesará la transacción");
         PayType payType = returnPayType(inputVali);
-
+        if (payType.getId() !=3) {
+            inputVali.readInt("Digite el numero del medio de pago");
+        }
         System.out.println("Transacción realizada exitosamente");
 
         // info de pago y registrar en payment

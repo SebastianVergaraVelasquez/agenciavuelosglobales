@@ -50,7 +50,7 @@ public class TripCrewConsoleAdapter {
                     Connections showConnections = ValidationExist.transformAndValidateObj(
                             () -> tripCrewService.findConnectionById(
                                     inputVali.readInt(
-                                            ("Ingrese la id_escala mostrada para el vuelo al que desea asignar la tripulación"))));
+                                            ("Ingrese la id_escala mostrada para el vuelo al que desea asignar la tripulación: -> "))));
                     int idConnection = showConnections.getId();
 
                     Optional<Plane> plane = tripCrewService.findPlaneById(showConnections.getId_plane());
@@ -66,11 +66,11 @@ public class TripCrewConsoleAdapter {
                     break;
 
                 case 2:
-                    System.out.println("***Consulta de tripulantes***");
+                    System.out.println("*** Consulta de tripulantes ***");
 
                     // Consulto el tripId y extraigo el tripId
                     Trip searchedTrip = ValidationExist.transformAndValidateObj(
-                            () -> tripCrewService.findTripById(inputVali.readInt("Ingrese el id del vuelo")));
+                            () -> tripCrewService.findTripById(inputVali.readInt("Ingrese el id del vuelo: -> ")));
 
                     // Consulto el connectionId y extraigo el connectionId si existe
                     Optional<ConnectionDTO> searchedTripAsConnection = tripCrewService
@@ -100,11 +100,11 @@ public class TripCrewConsoleAdapter {
 
         InputVali inputVali = new InputVali();
 
-        System.out.println("\n***Consulta de tripulantes***");
+        System.out.println("\n*** Consulta de tripulantes ***");
 
         // Consulto el tripId y extraigo el tripId
         Trip searchedTrip = ValidationExist.transformAndValidateObj(
-                () -> tripCrewService.findTripById(inputVali.readInt("Ingrese el id del vuelo")));
+                () -> tripCrewService.findTripById(inputVali.readInt("Ingrese el id del vuelo: -> ")));
 
         // Consulto el connectionId y extraigo el connectionId si existe
         Optional<ConnectionDTO> searchedTripAsConnection = tripCrewService
@@ -122,7 +122,7 @@ public class TripCrewConsoleAdapter {
     public void showTripCrew(int id) {
         List<TripCrewDTO> tripCrewList = tripCrewService.listTripCrewDTOByConnectionId(id);
         for (TripCrewDTO tripCrewDTO : tripCrewList) {
-            System.out.println(String.format("id_employee: %s, name: %s, role: %s", tripCrewDTO.getEmployeeId(),
+            System.out.println(String.format("id_employee: %s,  name: %s, role: %s", tripCrewDTO.getEmployeeId(),
                     tripCrewDTO.getEmployeeName(), tripCrewDTO.getEmployeeRole()));
         }
     }
@@ -134,7 +134,7 @@ public class TripCrewConsoleAdapter {
 
         while (continueAdd) {
             Employee showEmployee = ValidationExist.transformAndValidateObj(
-                    () -> tripCrewService.findEmployeeById(inputVali.stringNotNull("ingrese la id del empleado")));
+                    () -> tripCrewService.findEmployeeById(inputVali.stringNotNull("Ingrese la id del empleado: -> ")));
             String employeeId = showEmployee.getId();
             TripCrew tripCrew = new TripCrew(employeeId, idConnection);
             tripCrewService.createTripCrew(tripCrew);
@@ -145,10 +145,10 @@ public class TripCrewConsoleAdapter {
 
     // Método para mostrar la lista de empleados disponibles
     public void mostrarEmpleados(int airlineId) {
-        System.out.println("Lista de empleados");
+        System.out.println("** Lista de empleados **");
         List<EmployeeDTO> employees = tripCrewService.listTripulation(airlineId);
         for (EmployeeDTO employee : employees) {
-            System.out.println(String.format("id: %s, name: %s", employee.getId(), employee.getName()));
+            System.out.println(String.format("id: %s,  name: %s,  airline: %s", employee.getId(), employee.getName(), employee.getAirlineName()));
         }
     }
 

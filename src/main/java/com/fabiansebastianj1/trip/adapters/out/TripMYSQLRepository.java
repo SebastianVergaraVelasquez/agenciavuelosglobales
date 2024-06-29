@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import com.fabiansebastianj1.trip.domain.models.Trip;
 import com.fabiansebastianj1.trip.infrastructure.TripRepository;
-import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetails;
 
 public class TripMYSQLRepository implements TripRepository {
 

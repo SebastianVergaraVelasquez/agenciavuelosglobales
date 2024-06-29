@@ -1,7 +1,6 @@
 package com.fabiansebastianj1.validations;
 
 import java.util.Optional;
-import java.util.Scanner;
 import java.util.function.Supplier;
 
 public class ValidationExist {

@@ -2,7 +2,6 @@ package com.fabiansebastianj1.tripbooking.adapters.out;
 
 import com.fabiansebastianj1.tripbooking.domain.models.TripBooking;
 import com.fabiansebastianj1.tripbooking.infraestructure.TripBookingRepository;
-import com.fabiansebastianj1.tripbookingdetails.domain.models.TripBookingDetails;
 
 import java.sql.*;
 import java.util.ArrayList;

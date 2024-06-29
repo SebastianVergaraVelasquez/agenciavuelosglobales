@@ -33,12 +33,12 @@ public class TripConsoleAdapter {
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
             int choice = inputVali.readInt(
-                    "1.Registrar trayecto? \n2.Reasignar avión a trayecto \n3.Actualizar información de trayecto \n0. Salir");
+                    "1. Registrar trayecto? \n2. Reasignar avión a trayecto \n3. Actualizar información de trayecto \n0. Salir");
             System.out.println(" ");
 
             switch (choice) {
                 case 1:
-                    System.out.println("Información del trayecto");
+                    System.out.println("** Información del trayecto **");
                     infoTrip(inputVali);
                     break;
                 case 2:
@@ -74,9 +74,9 @@ public class TripConsoleAdapter {
                     break;
 
                 default:
-                    executing = false;
-                    System.out.println("** Saliendo del modulo de trip **");
+                    System.out.println("Ingrese una opción válida");
                     break;
+
             }
         }
     }
@@ -84,7 +84,7 @@ public class TripConsoleAdapter {
     public void infoTrip(InputVali inputVali) {
 
         boolean newInput = true;
-        System.out.println("Información pais/ciudad/aeropuerto de origen"); // Pedir la información de origen
+        System.out.println("* Información pais/ciudad/aeropuerto de origen *"); // Pedir la información de origen
         showCountries();
         Country originCountry = returnCountry(inputVali);
         showCitiesByCountry(originCountry.getId());
@@ -92,7 +92,7 @@ public class TripConsoleAdapter {
         showAirports(originCity.getId());
         Airport originAirport = returnAirport(inputVali);
 
-        System.out.println("Información pais/ciudad/aeropuerto de destino"); // pedir la información de destino
+        System.out.println("* Información pais/ciudad/aeropuerto de destino *"); // pedir la información de destino
         showCountries();
         Country destinationCountry = returnCountry(inputVali);
         showCitiesByCountry(destinationCountry.getId());
@@ -233,7 +233,7 @@ public class TripConsoleAdapter {
     }
 
     public void showCountries() {
-        System.out.println("Paises disponibles");
+        System.out.println("* Paises disponibles *");
         List<Country> countries = tripService.findAllCountries();
         for (Country country : countries) {
             System.out.println(String.format("id: %s, name: %s \n", country.getId(), country.getName()));
@@ -247,7 +247,7 @@ public class TripConsoleAdapter {
     }
 
     public void showCitiesByCountry(String id) {
-        System.out.println("ciudades disponibles");
+        System.out.println("* Ciudades disponibles *");
         List<City> cities = tripService.findCitiesByCountryId(id);
         for (City city : cities) {
             System.out.println(String.format("id: %s, name: %s \n", city.getId(), city.getName()));

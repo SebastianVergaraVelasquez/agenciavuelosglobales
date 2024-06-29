@@ -170,6 +170,10 @@ public class TripBookingService {
     public Optional <ConnectionDTO> findTripAsDTO(int tripId){
         return connectionRepository.findConnectionDTO(tripId);
     }
+    
+    public Optional <ConnectionDTO> showConnectionInfoByTrip(int tripId){
+        return connectionRepository.showConnectionInfoByTrip(tripId);
+    }
 
     public Optional<Plane> findPlaneById(int id){
         return planeRepository.findById(id);
