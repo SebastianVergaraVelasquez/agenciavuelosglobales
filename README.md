@@ -330,10 +330,11 @@ ENGINE = InnoDB;
 -- Table rev_employee
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS rev_employee (
+  id_rev_employee INT NOT NULL AUTO_INCREMENT,
   id_employee VARCHAR(20) NOT NULL,
   id_revision INT NOT NULL,
   description TEXT NOT NULL,
-  PRIMARY KEY (id_employee, id_revision),
+  PRIMARY KEY (id_rev_employee),
   CONSTRAINT FK_rev_employee_employee
     FOREIGN KEY (id_employee)
     REFERENCES employee (id),
@@ -396,9 +397,10 @@ ENGINE = InnoDB;
 -- Table trip_crew
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS trip_crew (
+  id_trip_crew INT NOT NULL AUTO_INCREMENT,
   id_employee VARCHAR(20) NOT NULL,
   id_connection INT NOT NULL,
-  PRIMARY KEY (id_employee, id_connection),
+  PRIMARY KEY (id_trip_crew),
   CONSTRAINT FK_trip_crews_connection
     FOREIGN KEY (id_connection)
     REFERENCES connection (id),
@@ -550,7 +552,7 @@ INSERT INTO employee (id, name, id_rol, ingress_date, id_airline, id_airport) VA
 ('EMP001', 'Michael Johnson', 1, '2020-03-15', 1, 'JFK'), 
 ('EMP004', 'Sophia Garcia', 2, '2020-06-05', 2, 'JFK'),
 ('EMP002', 'Emily White', 3, '2021-01-10', 2, 'YYZ'),
-('EMP003', 'David Lee', 4, '2019-11-20', 3, 'YYZ');
+('EMP003', 'David Lee', 4, '2019-11-20', 1, 'YYZ');
     
 
 -- INSERTS PARA TABLA flight_fare
