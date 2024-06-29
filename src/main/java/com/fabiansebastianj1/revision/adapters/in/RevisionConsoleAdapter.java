@@ -190,11 +190,6 @@ public class RevisionConsoleAdapter {
 
     public void showEmployes(List<EmployeeDTO> technicians) {
 
-        // System.out.printf("%-10s %-20s %-10s %-20s %-15s %-10s %-20s %-10s %-10s
-        // %-20s%n",
-        // "ID", "Nombre", "Nombre Rol", "Fecha Ingreso", "Nombre Aerolínea", "ID
-        // Aeropuerto", "Nombre Ciudad");
-
         String format = "| %-6s | %-13s | %-18s | %-13s | %-16s | %-13s | %-18s |%n";
         System.out.format(
                 "+--------+---------------+--------------------+---------------+------------------+---------------+--------------------+%n");
