@@ -75,6 +75,16 @@ public class DocumentTypeConsoleAdapter {
 
     }
 
+    public void startMenuCliente() {
+
+        InputVali inputVali = new InputVali();
+
+        System.out.println("*** Consulta Tipo de Documento ***\n");
+        DocumentType showDocumentType = returnDocumentType(inputVali);
+        showDocumentTypeInfo(showDocumentType);
+
+    }
+
     public void updateDocumentType(DocumentType documentType, InputVali inputVali) {
         boolean newInput;
         newInput = Register.yesOrNo("Desea cambiar el nombre del Tipo de Documento? Ingrese el valor numérico: " +

@@ -26,15 +26,15 @@ public class RevisionConsoleAdapter {
         InputVali inputVali = new InputVali();
 
         while (executing) {
-            System.out.println("*** Modulo de Revisión de aviones ***");
-            System.out.println(" ");
+
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
             int choice = inputVali.readInt(
-                    "1. Registrar revisión \n2. Consultar historial de revision\n3. Actualizar Informacion de Revision\n4. Eliminar Revision\n5. Salir");
+                    "1. Registrar revisión \n2. Consultar historial de revision\n3. Actualizar Informacion de Revision\n4. Eliminar Revision\n0. Salir");
             System.out.println(" ");
 
             switch (choice) {
                 case 1:
+                    System.out.println("*** Registrar revisión ***\n");
                     mostrarAviones();
                     Plane showPlane = ValidationExist.transformAndValidateObj(
                             () -> revisionService.findPlaneById(
@@ -108,8 +108,10 @@ public class RevisionConsoleAdapter {
 
                     revisionService.deleteRevEmployee(showRevisions.getId());
                     revisionService.deleteRevision(showRevisions.getId());
+                    System.out.println("* Registro de revisión eliminado exitosamente *");
+
                     break;
-                case 5:
+                case 0:
                     System.out.println("Saliendo del modulo de revisión");
                     executing = false;
                     break;

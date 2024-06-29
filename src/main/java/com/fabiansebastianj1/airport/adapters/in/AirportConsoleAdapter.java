@@ -28,7 +28,7 @@ public class AirportConsoleAdapter {
             System.out.println(" ");
             System.out.println("Que accion desea realizar, digite una opcion numerica");
             int choice = inputVali.readInt(
-                    "1. Registrar Aeropuerto \n2. Consultar Aeropuerto \n3. Actualizar Aeropuerto \n4. Eliminar Aeropuerto \n5. Salir");
+                    "1. Registrar Aeropuerto \n2. Consultar Aeropuerto \n3. Actualizar Aeropuerto \n4. Eliminar Aeropuerto \n0. Salir");
             System.out.println(" ");
 
             switch (choice) {
@@ -65,7 +65,7 @@ public class AirportConsoleAdapter {
                     airportService.deleteAirport(airport.getId());
                     System.out.println("* Aeropuerto eliminado exitosamente*\n");
                     break;
-                case 5:
+                case 0:
                     executing = false;
                     System.out.println("Saliendo del modulo de Aeropuerto");
                     break;

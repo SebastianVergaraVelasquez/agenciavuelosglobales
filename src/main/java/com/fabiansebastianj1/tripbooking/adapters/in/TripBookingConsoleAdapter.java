@@ -94,17 +94,6 @@ public class TripBookingConsoleAdapter {
                             () -> tripBookingService.findTripBookingById(
                                     inputVali.readInt(("Ingrese el id de la reserva"))));
                     int tripBookingId = showTripBooking.getId();
-                    // TripBooking bookingToDelete =
-                    // tripBookingConsoleUtils.returnTripBooking(inputVali); // Verificar que
-                    // // exista el
-                    // // booking
-                    // List<Passenger> passengersToDelete = tripBookingService
-                    // .getPassengersByBookingId(bookingToDelete.getId()); // Listar los pasajeros
-                    // asociados
-                    // for (Passenger passenger : passengersToDelete) {
-                    // tripBookingService.deleletePassengers(passenger.getNif()); // Eliminar uno
-                    // por uno de la base
-                    // }
                     tripBookingService.deleteTripBookingDetailForId(tripBookingId);
                     tripBookingService.deleteTripBooking(tripBookingId);
 

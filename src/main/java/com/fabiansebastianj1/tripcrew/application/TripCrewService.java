@@ -1,6 +1,5 @@
 package com.fabiansebastianj1.tripcrew.application;
 
-import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 

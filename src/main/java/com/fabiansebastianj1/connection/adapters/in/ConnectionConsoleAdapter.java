@@ -67,6 +67,20 @@ public class ConnectionConsoleAdapter {
         }
     }
 
+    public void startMenuCliente() {
+        InputVali inputVali = new InputVali();
+
+        ConnectionDTO trip = ValidationExist.transformAndValidateObj(
+                () -> connectionService.findTripByTripId(
+                        inputVali.readInt(("Ingrese la id del vuelo: -> "))));
+        System.out.println(String.format("id_vuelo: %s\n" +
+                "salida: %s \n" +
+                "llegada: %s \n" +
+                "Fecha: %s", trip.getTripId(), trip.getStartAirport(), trip.getArriveAirport(),
+                trip.getTripDate()));
+        showConnections(trip.getTripId());
+    }
+
     public void updateInfoConnection(Connections connection) {
         InputVali inputVali = new InputVali();
         boolean newInput;

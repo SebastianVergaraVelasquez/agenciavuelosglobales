@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fabiansebastianj1.connection.domain.models.ConnectionDTO;
 import com.fabiansebastianj1.tripcrew.domain.models.TripCrew;
 import com.fabiansebastianj1.tripcrew.domain.models.TripCrewDTO;
 import com.fabiansebastianj1.tripcrew.infrastructure.TripCrewRepository;

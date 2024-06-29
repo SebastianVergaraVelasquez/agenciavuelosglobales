@@ -30,7 +30,7 @@ public class PlaneConsoleAdapter {
             System.out.println(" ");
             System.out.println("Qué acción desea realizar, digite una opcion numérica");
             int choice = inputVali.readInt(
-                    "1. Registrar avión \n2. Eliminar avión \n3. Consultar Avion \n4. Salir");
+                    "1. Registrar avión \n2. Eliminar avión \n3. Consultar Avion \n0. Salir");
             System.out.println(" ");
 
             switch (choice) {
@@ -109,7 +109,7 @@ public class PlaneConsoleAdapter {
                     showPlaneInfo(PlaneFinded);
 
                     break;
-                case 4:
+                case 0:
                     executing = false;
                     System.out.println("Saliendo del modulo de aviones");
                     break;
@@ -176,9 +176,9 @@ public class PlaneConsoleAdapter {
             newIdStatus = showPlane.getStatusId();
         }
         // verificar si desea cambiar la aerolinea
-        newInput = Register.yesOrNo("Desea cambiar la edad del cliente? Ingrese el valor numerico 1 (si) o 2(no)");
+        newInput = Register.yesOrNo("Desea cambiar la aerolinea del avion? Ingrese el valor numerico 1 (si) o 2(no)");
         if (newInput == true) {
-            newIdAirline = inputVali.readInt(("Ingrese la edad: -> "));
+            newIdAirline = inputVali.readInt(("Ingrese el id de la aerolinea: -> "));
         } else {
             newIdAirline = showPlane.getAirlineId();
         }

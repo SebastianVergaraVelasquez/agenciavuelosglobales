@@ -68,6 +68,15 @@ public class FareConsoleAdapter {
         }
     }
 
+    public void startMenuCliente() {
+        InputVali inputVali = new InputVali();
+
+        System.out.println("*** Consultar tarifa ***");
+        Fare showFare = returnFare(inputVali);
+        showFareInfo(showFare);
+
+    }
+
     public void updateFare(Fare fare, InputVali inputVali) {
         boolean newInput;
         newInput = Register.yesOrNo("Desea cambiar el nombre de la tarifa? Ingrese el valor numérico: " +
