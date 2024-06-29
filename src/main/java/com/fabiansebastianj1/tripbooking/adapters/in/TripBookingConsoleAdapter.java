@@ -186,7 +186,7 @@ public class TripBookingConsoleAdapter {
 
                     System.out.println("Qué acción desea realizar, digite una opcion numérica");
                     choice = inputVali.readInt(
-                            "1. Reagendar fecha \n2. Información de pasajeros \n3. Asientos \n0.Salir");
+                            "1. Reagendar fecha \n2. Información de pasajeros \n3. Asientos \n0. Salir");
                     switch (choice) {
                         case 1:
                             updateTripDate(bookingToUpdate, tripAsConenction);

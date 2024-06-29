@@ -3,6 +3,7 @@ package com.fabiansebastianj1.revision.adapters.in;
 import java.util.List;
 import java.util.Optional;
 
+import com.fabiansebastianj1.connection.domain.models.ConnectionDTO;
 import com.fabiansebastianj1.employee.domain.models.Employee;
 import com.fabiansebastianj1.employee.domain.models.EmployeeDTO;
 import com.fabiansebastianj1.planes.domain.models.Plane;
@@ -172,39 +173,47 @@ public class RevisionConsoleAdapter {
         newInput = Register
                 .yesOrNo("Desea cambiar el empleado de la revision? Ingrese el valor numerico 1 (si) o 2(no)");
         if (newInput == true) {
-            Optional<Plane> plane = revisionService.findPlaneById(showRevision.getPlaneId()); //tomar el avión y extraer el idAirline
-            List<EmployeeDTO> employees = revisionService.findTechniciansByAirline(plane.get().getAirlineId()); //Encontrar tecnicos
+            Optional<Plane> plane = revisionService.findPlaneById(showRevision.getPlaneId()); // tomar el avión y
+                                                                                              // extraer el idAirline
+            List<EmployeeDTO> employees = revisionService.findTechniciansByAirline(plane.get().getAirlineId()); // Encontrar
+                                                                                                                // tecnicos
             if (!employees.isEmpty()) {
                 showEmployes(employees);
                 newEmployeeId = inputVali.stringNotNull("Ingrese el Id del empleado que quiera seleccionar: -> ");
                 revEmployee.get().setId_employee(newEmployeeId);
-                revisionService.updateRevEmploye(revEmployee.get());  
-            }
-            else{
+                revisionService.updateRevEmploye(revEmployee.get());
+            } else {
                 System.out.println("No hay técnicos para asignar");
             }
         }
     }
 
+    public void showEmployes(List<EmployeeDTO> technicians) {
 
+        // System.out.printf("%-10s %-20s %-10s %-20s %-15s %-10s %-20s %-10s %-10s
+        // %-20s%n",
+        // "ID", "Nombre", "Nombre Rol", "Fecha Ingreso", "Nombre Aerolínea", "ID
+        // Aeropuerto", "Nombre Ciudad");
 
-    public void showEmployes(List<EmployeeDTO> technicians){
-        
-        System.out.printf("%-10s %-20s %-10s %-20s %-15s %-10s %-20s %-10s %-10s %-20s%n",
-    "ID", "Nombre", "ID Rol", "Nombre Rol", "Fecha Ingreso", "ID Aerolínea", "Nombre Aerolínea", "ID Aeropuerto", "ID Ciudad", "Nombre Ciudad");
+        String format = "| %-6s | %-13s | %-18s | %-13s | %-16s | %-13s | %-18s |%n";
+        System.out.format(
+                "+--------+---------------+--------------------+---------------+------------------+---------------+--------------------+%n");
+        System.out.format(
+                "| ID     | Nombre        | Nombre Rol         | Fecha Ingreso | Nombre Aerolínea | ID Aeropuerto | Nombre Ciudad      |%n");
+        System.out.format(
+                "+--------+---------------+--------------------+---------------+------------------+---------------+--------------------+%n");
 
         for (EmployeeDTO technician : technicians) {
-        System.out.printf("%-10s %-20s %-10d %-20s %-15s %-10d %-20s %-10s %-10s %-20s%n",
-        technician.getId(),
-        technician.getName(),
-        technician.getRolId(),
-        technician.getRoleName(),
-        technician.getIngressDate(),
-        technician.getAirlineId(),
-        technician.getAirlineName(),
-        technician.getAirportId(),
-        technician.getCityId(),
-        technician.getCityName());
-}
+            System.out.format(format,
+                    technician.getId(),
+                    technician.getName(),
+                    technician.getRoleName(),
+                    technician.getIngressDate(),
+                    technician.getAirlineName(),
+                    technician.getAirportId(),
+                    technician.getCityName());
+                    System.out.format(
+                            "+--------+---------------+--------------------+---------------+------------------+---------------+--------------------+%n");
+        }
     }
 }

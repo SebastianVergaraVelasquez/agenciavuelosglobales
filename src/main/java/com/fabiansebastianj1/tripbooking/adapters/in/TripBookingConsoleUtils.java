@@ -36,7 +36,7 @@ public class TripBookingConsoleUtils {
     public DocumentType returnDocumentType(InputVali inputVali) {
         DocumentType documentType = ValidationExist.transformAndValidateObj(
                 () -> tripBookingService.getDocumentType(
-                        inputVali.readInt(("Ingrese la id del Tipo de Documento"))));
+                        inputVali.readInt(("Ingrese la id del Tipo de Documento: -> "))));
         return documentType;
     }
 
@@ -52,17 +52,19 @@ public class TripBookingConsoleUtils {
         List<ConnectionDTO> flights = tripBookingService.listFlights();
         for (ConnectionDTO flight : flights) {
             System.out.println(String.format("id_vuelo: %s, id_escala: %s, aeropuerto_salida %s, " +
-                    "aeropuerto llegada: %s, " + "airline: %s"+
+                    "aeropuerto llegada: %s, " + "airline: %s" +
                     "fecha: %s", flight.getTripId(), flight.getConnectionId(), flight.getStartAirport(),
                     flight.getArriveAirport(), flight.getAirlineName(), flight.getTripDate()));
         }
+
     }
 
     public void showFares() {
         List<Fare> fares = tripBookingService.listFares();
         for (Fare fare : fares) {
-            System.out.println(String.format("id: %d, descripción: %s, valor: %f", fare.getId(), fare.getDescription(),
-                    fare.getValue()));
+            System.out
+                    .println(String.format("id: %d,  descripción: %s,  valor: %f", fare.getId(), fare.getDescription(),
+                            fare.getValue()));
         }
     }
 
@@ -76,26 +78,26 @@ public class TripBookingConsoleUtils {
     public void showCities() {
         List<City> cities = tripBookingService.findAllCities();
         for (City city : cities) {
-            System.out.println(String.format("id_city: %s, name: %s", city.getId(), city.getName()));
+            System.out.println(String.format("id_city: %s,  name: %s", city.getId(), city.getName()));
         }
     }
 
     public City returnCity(InputVali inputVali) {
         City city = ValidationExist.transformAndValidateObj(
-                () -> tripBookingService.findCityById(inputVali.stringNotNull("Ingrese el id de la ciudad")));
+                () -> tripBookingService.findCityById(inputVali.stringNotNull("Ingrese el id de la ciudad: -> ")));
         return city;
     }
 
     public void showAirports(String id) {
         List<Airport> airports = tripBookingService.findAllAirportsByCityId(id);
         for (Airport airport : airports) {
-            System.out.println(String.format("id_airport: %s, name: %s", airport.getId(), airport.getName()));
+            System.out.println(String.format("id_airport: %s,  name: %s", airport.getId(), airport.getName()));
         }
     }
 
     public Airport returnAirport(InputVali inputVali) {
         Airport airport = ValidationExist.transformAndValidateObj(
-                () -> tripBookingService.findAirportById(inputVali.stringNotNull("Ingrese el id del aeropuerto")));
+                () -> tripBookingService.findAirportById(inputVali.stringNotNull("Ingrese el id del aeropuerto: -> ")));
         return airport;
     }
 
@@ -125,7 +127,7 @@ public class TripBookingConsoleUtils {
                     connectionDTO.getPrice(),
                     connectionDTO.getAirlineName());
             System.out.format(
-                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+--------------------+%n");
+                    "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+--------------------+%n");
         }
     }
 
@@ -133,11 +135,11 @@ public class TripBookingConsoleUtils {
         Trip trip = ValidationExist.transformAndValidateObj(
                 () -> tripBookingService
                         .findTripById(inputVali
-                                .readInt(("Ingrese el id del vuelo a seleccionar (id_trip)"))));
+                                .readInt(("Ingrese el id del vuelo a seleccionar (id_trip): -> "))));
         return trip;
     }
 
-    public Trip returnTripById(int id){
+    public Trip returnTripById(int id) {
         Trip trip = ValidationExist.transformAndValidateObj(
                 () -> tripBookingService
                         .findTripById(id));
@@ -147,7 +149,7 @@ public class TripBookingConsoleUtils {
     public PayType returnPayType(InputVali inputVali) {
         PayType payType = ValidationExist.transformAndValidateObj(
                 () -> tripBookingService.findPayTypeById(
-                        inputVali.readInt(("Ingrese el id del medio de pago"))));
+                        inputVali.readInt(("Ingrese el id del medio de pago: -> "))));
         return payType;
     }
 
@@ -159,11 +161,12 @@ public class TripBookingConsoleUtils {
     }
 
     public void showPassengers(int bookingId) {
-        System.out.println("Lista de pasajeros\n");
+        System.out.println("* Lista de pasajeros *\n");
         List<Passenger> passengers = tripBookingService.getPassengersByBookingId(bookingId);
         for (Passenger passenger : passengers) {
-            System.out.println(String.format("Nif: %s, name: %s, seat: %s \n", passenger.getNif(), passenger.getName(),
-                    passenger.getSeat()));
+            System.out
+                    .println(String.format("Nif: %s,  name: %s,  seat: %s \n", passenger.getNif(), passenger.getName(),
+                            passenger.getSeat()));
         }
     }
 
@@ -171,8 +174,8 @@ public class TripBookingConsoleUtils {
         Optional<TripBookingDetailsDTO> details = tripBookingService.findByTripBookingIdAsDTO(bookingId);
         System.out.println(String.format("id_details: %s \n" +
                 "id_booking: %s \nid_customer: %s \nfare: %s \nCondition: %s", details.get().getId(),
-                details.get().getTripBookingId(),
-                details.get().getCustomerId(), details.get().getFareName(), details.get().getTripConditionName()));
+                details.get().getTripBookingId(), details.get().getCustomerId(), details.get().getFareName(),
+                details.get().getTripConditionName()));
     }
 
     public TripBooking returnTripBooking(InputVali inputVali) {
@@ -191,11 +194,11 @@ public class TripBookingConsoleUtils {
         showCities();
 
         // seleccionar origen
-        System.out.println("Seleccón de la ciudad de origen");
+        System.out.println("Seleccón de la ciudad de origen: -> ");
         City originCity = returnCity(inputVali);
         System.out.println("Estas son los aeropuertos disponibles");
         showAirports(originCity.getId());
-        System.out.println("Seleccón del aeropuerto de origen");
+        System.out.println("Seleccón del aeropuerto de origen: -> ");
         Airport orginAirport = returnAirport(inputVali);
 
         // seleccionar destino
@@ -203,7 +206,7 @@ public class TripBookingConsoleUtils {
         City destinationCity = returnCity(inputVali);
         System.out.println("Estos son los aeropuertos disponibles");
         showAirports(destinationCity.getId());
-        System.out.println("Seleccón del aeropuerto de destino");
+        System.out.println("Seleccón del aeropuerto de destino: -> ");
         Airport destinationAirport = returnAirport(inputVali);
 
         // Verificar si es un viaje de ida y vuelta
@@ -211,7 +214,7 @@ public class TripBookingConsoleUtils {
 
         // Mostrar vuelos y seleccionarlos
         if (!newInput) { // En caso de que solo sea vuelo de ida
-            String departureDate = inputVali.stringNotNull("Ingrese la fecha de salida");
+            String departureDate = inputVali.stringNotNull("Ingrese la fecha de salida (YYYY-MM-DD): -> ");
             System.out.println("Estos son los vuelos disponibles:");
             List<ConnectionDTO> flightsOrigin = returnFlightsByAirports(orginAirport.getId(),
                     destinationAirport.getId(), departureDate);
@@ -232,8 +235,8 @@ public class TripBookingConsoleUtils {
                 return tripsSelected;
             }
         } else { // Si es vuelo de ida y vuelta
-            String departureDate = inputVali.stringNotNull("Ingrese la fecha de salida");
-            String returnDate = inputVali.stringNotNull("Ingrese la fecha de regreso");
+            String departureDate = inputVali.stringNotNull("Ingrese la fecha de salida (YYYY-MM-DD): -> ");
+            String returnDate = inputVali.stringNotNull("Ingrese la fecha de regreso (YYYY-MM-DD): -> ");
             List<ConnectionDTO> flightsOrigin = returnFlightsByAirports(orginAirport.getId(),
                     destinationAirport.getId(), departureDate);
             List<ConnectionDTO> flightsReturn = returnFlightsByAirports(destinationAirport.getId(),
@@ -258,12 +261,12 @@ public class TripBookingConsoleUtils {
 
     public Customer registerPayment() {
         InputVali inputVali = new InputVali();
-        String customerId = inputVali.stringNotNull("Ingrese el numero de identificación");
+        String customerId = inputVali.stringNotNull("Ingrese el numero de identificación: -> ");
         System.out.println("***Selección de tipo de documento***");
         showDocumentTypes();
         DocumentType docType = returnDocumentType(inputVali);
-        String name = inputVali.stringNotNull("Ingrese su nombre");
-        int edad = inputVali.readInt(("Ingrese su edad"));
+        String name = inputVali.stringNotNull("Ingrese su nombre: -> ");
+        int edad = inputVali.readInt(("Ingrese su edad: -> "));
         Customer newCustomer = new Customer(customerId, name, edad, docType.getId());
         Optional<Customer> customer = tripBookingService.findCostumerById(customerId);
         // Verificar si ya hay un cliente con esa id para no volverlo a registrar en
@@ -287,20 +290,21 @@ public class TripBookingConsoleUtils {
                                                                                                      // ocupados
         // Ahora imprimir en pantalla
         PrintSeats.printSeats(occupiedSeats, planeOrigin);
-        
+
         for (Passenger passenger : passengers) {
             while (true) {
                 String newSeat = inputVali.stringWithLeght(
-                    "\nIngrese el numero de asiento de la siguiente manera: Ex. Si desea el 3 escribirá 003\n", 3);
+                        "\nIngrese el numero de asiento de la siguiente manera: Ex. Si desea el 3 escribirá 003: -> \n",
+                        3);
                 if (!occupiedSeats.contains(newSeat)) {
                     occupiedSeats.add(newSeat);
                     passenger.setSeat(newSeat);
-                    break;                    
-                } else{
+                    break;
+                } else {
                     System.out.println("Asiento seleccionado ocupado, por favor seleccione otro...");
                 }
             }
-            
+
         }
         return passengers;
     }
@@ -315,16 +319,16 @@ public class TripBookingConsoleUtils {
         ConnectionDTO tripOrigin = tripBookingService.findConnectionInfoById(tripsIdSelected[0]).get();
         Plane planeOrigin = tripBookingService.findPlaneById(tripOrigin.getPlaneId()).get();
         int ocupados = tripBookingService.getTotalOccupiedSeats(tripOrigin.getTripId()); // Esto retorna cantos puestos
-                                                                                          // ocupados hay
+                                                                                         // ocupados hay
         if ((planeOrigin.getCapacity() - ocupados) > passengersNumber) {
             for (int i = 0; i < passengersNumber; i++) {
-                System.out.println("Selección de tipo de documento");
+                System.out.println("Selección de tipo de documento: -> ");
                 showDocumentTypes();
                 DocumentType documentType = returnDocumentType(inputVali);
-                String nif = inputVali.stringNotNull(String.format("Ingrese el docuemnto del pasajero %s", i + 1));
-                String name = inputVali.stringNotNull(String.format("Ingrese el nombre del pasajero %s", i + 1));
+                String nif = inputVali.stringNotNull(String.format("Ingrese el docuemnto del pasajero %s: -> ", i + 1));
+                String name = inputVali.stringNotNull(String.format("Ingrese el nombre del pasajero %s: -> ", i + 1));
                 int age = inputVali
-                        .readInt((String.format("Ingrese la edad del pasajero %s", i + 1)));
+                        .readInt((String.format("Ingrese la edad del pasajero %s: -> ", i + 1)));
                 Passenger passenger = new Passenger(nif, name, age, "", documentType.getId(), 0);
                 passengers.add(passenger);
             }
@@ -348,7 +352,7 @@ public class TripBookingConsoleUtils {
             passengers2 = asignSeats(passengers, tripsIdSelected[1]);
         }
 
-        System.out.println("Escoja el id de una de las tarifas mostradas");
+        System.out.println("Escoja el id de una de las tarifas mostradas: -> ");
         showFares();
         Fare fare = returnFare(inputVali);
 
@@ -357,12 +361,12 @@ public class TripBookingConsoleUtils {
         // datos de quién paga
 
         Customer newCustomer = registerPayment();
-        String email = inputVali.stringNotNull("Ingrese su email");
+        String email = inputVali.stringNotNull("Ingrese su email: -> ");
         showPayTypes();
         System.out.println("Al ingresar el método de pago se procesará la transacción");
         PayType payType = returnPayType(inputVali);
-        if (payType.getId() !=3) {
-            inputVali.readInt("Digite el numero del medio de pago");
+        if (payType.getId() != 3) {
+            inputVali.readInt("Digite el numero del medio de pago: -> ");
         }
         System.out.println("Transacción realizada exitosamente");
 
