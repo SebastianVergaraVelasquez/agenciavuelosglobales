@@ -106,13 +106,13 @@ public class TripBookingConsoleUtils {
 
     public void showFlightsByAirports(List<ConnectionDTO> flights) {
 
-        String format = "| %-10s | %-13s | %-18s | %-13s | %-13s | %-12s | %-12f |%n";
+        String format = "| %-10s | %-13s | %-18s | %-13s | %-13s | %-12s | %-12f | %-18s |%n";
         System.out.format(
-                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
+                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+--------------------+%n");
         System.out.format(
-                "| Trip ID    | Connection ID | Connection Number  | Start Airport | Arrive Airport| Trip Date    | Price        |%n");
+                "| Trip ID    | Connection ID | Connection Number  | Start Airport | Arrive Airport| Trip Date    | Price        | Airline            |%n");
         System.out.format(
-                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
+                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+--------------------+%n");
 
         for (ConnectionDTO connectionDTO : flights) {
             System.out.format(format,
@@ -122,10 +122,10 @@ public class TripBookingConsoleUtils {
                     connectionDTO.getStartAirport(),
                     connectionDTO.getArriveAirport(),
                     connectionDTO.getTripDate(),
-                    connectionDTO.getPrice());
+                    connectionDTO.getPrice(),
+                    connectionDTO.getAirlineName());
             System.out.format(
-                    "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+%n");
-            System.out.println(String.format("Airline: %s", connectionDTO.getAirlineName()));
+                "+------------+---------------+--------------------+---------------+---------------+--------------+--------------+--------------------+%n");
         }
     }
 
