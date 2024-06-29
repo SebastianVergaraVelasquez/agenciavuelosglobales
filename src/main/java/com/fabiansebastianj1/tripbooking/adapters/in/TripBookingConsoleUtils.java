@@ -287,9 +287,18 @@ public class TripBookingConsoleUtils {
                                                                                                      // ocupados
         // Ahora imprimir en pantalla
         PrintSeats.printSeats(occupiedSeats, planeOrigin);
+        
         for (Passenger passenger : passengers) {
-            passenger.setSeat((inputVali.stringWithLeght(
-                    "\nIngrese el numero de asiento de la siguiente manera: Ex. Si desea el 3 escribirá 003\n", 3)));
+            while (true) {
+                String newSeat = inputVali.stringWithLeght(
+                    "\nIngrese el numero de asiento de la siguiente manera: Ex. Si desea el 3 escribirá 003\n", 3);
+                if (!occupiedSeats.contains(newSeat)) {
+                    occupiedSeats.add(newSeat);
+                    passenger.setSeat(newSeat);
+                    break;
+                }
+            }
+            
         }
         return passengers;
     }
@@ -303,7 +312,7 @@ public class TripBookingConsoleUtils {
         // capacidad
         ConnectionDTO tripOrigin = tripBookingService.findConnectionInfoById(tripsIdSelected[0]).get();
         Plane planeOrigin = tripBookingService.findPlaneById(tripOrigin.getPlaneId()).get();
-        int ocupados = tripBookingService.getTotalOccupiedSeats(tripOrigin.getPlaneId()); // Esto retorna cantos puestos
+        int ocupados = tripBookingService.getTotalOccupiedSeats(tripOrigin.getTripId()); // Esto retorna cantos puestos
                                                                                           // ocupados hay
         if ((planeOrigin.getCapacity() - ocupados) > passengersNumber) {
             for (int i = 0; i < passengersNumber; i++) {
@@ -407,5 +416,4 @@ public class TripBookingConsoleUtils {
                     lasTripBooking2.get().getId()));
         }
     }
-
 }
