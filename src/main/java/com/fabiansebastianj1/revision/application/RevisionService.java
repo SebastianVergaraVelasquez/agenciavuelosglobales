@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fabiansebastianj1.employee.domain.models.Employee;
+import com.fabiansebastianj1.employee.domain.models.EmployeeDTO;
 import com.fabiansebastianj1.employee.infrastructure.EmployeeRepository;
 import com.fabiansebastianj1.planes.domain.models.Plane;
 import com.fabiansebastianj1.planes.infrastructure.PlaneRepository;
@@ -80,8 +81,12 @@ public class RevisionService {
        return revEmployeeRepository.findRevEmployeeById(id);
     }
 
-    public List<Employee> findAllEmployees(){
+    public List<EmployeeDTO> findAllEmployees(){
         return employeeRepository.findAll();
+    }
+
+    public List<EmployeeDTO> findTechniciansByAirline(int airlineId){
+        return employeeRepository.findAllTechniciansByAirline(airlineId);
     }
 
     public void updateRevEmploye(RevEmployee revEmployee){

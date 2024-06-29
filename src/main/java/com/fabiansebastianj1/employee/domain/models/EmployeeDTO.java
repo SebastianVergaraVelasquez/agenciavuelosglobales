@@ -1,20 +1,30 @@
 package com.fabiansebastianj1.employee.domain.models;
 
-public class Employee {
+
+public class EmployeeDTO {
     private String id;
     private String name;
     private int rolId;
+    private String roleName;
     private String ingressDate;
     private int airlineId;
+    private String airlineName;
     private String airportId;
+    private String cityId;
+    private String cityName;
     
-    public Employee(String id, String name, int rolId, String ingressDate, int airlineId, String airportId) {
+    public EmployeeDTO(String id, String name, int rolId, String roleName, String ingressDate, int airlineId,
+            String airlineName, String airportId, String cityId, String cityName) {
         this.id = id;
         this.name = name;
         this.rolId = rolId;
+        this.roleName = roleName;
         this.ingressDate = ingressDate;
         this.airlineId = airlineId;
+        this.airlineName = airlineName;
         this.airportId = airportId;
+        this.cityId = cityId;
+        this.cityName = cityName;
     }
 
     public String getId() {
@@ -41,6 +51,14 @@ public class Employee {
         this.rolId = rolId;
     }
 
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
     public String getIngressDate() {
         return ingressDate;
     }
@@ -57,6 +75,14 @@ public class Employee {
         this.airlineId = airlineId;
     }
 
+    public String getAirlineName() {
+        return airlineName;
+    }
+
+    public void setAirlineName(String airlineName) {
+        this.airlineName = airlineName;
+    }
+
     public String getAirportId() {
         return airportId;
     }
@@ -65,5 +91,21 @@ public class Employee {
         this.airportId = airportId;
     }
 
-    
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+   
 }

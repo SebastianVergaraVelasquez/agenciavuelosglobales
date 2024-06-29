@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fabiansebastianj1.employee.domain.models.Employee;
+import com.fabiansebastianj1.employee.domain.models.EmployeeDTO;
 import com.fabiansebastianj1.planes.domain.models.Plane;
 import com.fabiansebastianj1.revemployee.domain.models.RevEmployee;
 import com.fabiansebastianj1.revision.application.RevisionService;
@@ -43,7 +44,8 @@ public class RevisionConsoleAdapter {
                     String revisionDate = inputVali
                             .stringNotNull("Ingrese la fecha de la revisión en formato yyyy-MM-dd: -> ");
                     String description = inputVali.stringNotNull("Ingrese una descripción del procedimiento: -> ");
-
+                    List<EmployeeDTO> employees = revisionService.findTechniciansByAirline(showPlane.getAirlineId());
+                    showEmployes(employees);
                     Employee showEmployee = ValidationExist.transformAndValidateObj(
                             () -> revisionService.findEmployeeById(inputVali
                                     .stringNotNull("Ingrese el id del empleado que realizo la revision: -> ")));
@@ -156,8 +158,8 @@ public class RevisionConsoleAdapter {
         newInput = Register.yesOrNo("Desea cambiar la fecha de la revision? Ingrese el valor numerico 1 (si) o 2(no)");
         if (newInput == true) {
             newDate = inputVali.stringNotNull("Ingrese la nueva fecha: -> ");
-        } else {
-            newDate = showRevision.getRevisionDate();
+            showRevision.setRevisionDate(newDate);
+            revisionService.updateRevision(showRevision);
         }
         newInput = Register
                 .yesOrNo("Desea cambiar la descripcion de la revision? Ingrese el valor numerico 1 (si) o 2(no)");
@@ -170,14 +172,39 @@ public class RevisionConsoleAdapter {
         newInput = Register
                 .yesOrNo("Desea cambiar el empleado de la revision? Ingrese el valor numerico 1 (si) o 2(no)");
         if (newInput == true) {
-            revisionService.findAllEmployees();
-            newEmployeeId = inputVali.stringNotNull("Ingrese el Id del empleado que quiera seleccionar: -> ");
-            revEmployee.get().setId_employee(newEmployeeId);
-            revisionService.updateRevEmploye(revEmployee.get());
+            Optional<Plane> plane = revisionService.findPlaneById(showRevision.getPlaneId()); //tomar el avión y extraer el idAirline
+            List<EmployeeDTO> employees = revisionService.findTechniciansByAirline(plane.get().getAirlineId()); //Encontrar tecnicos
+            if (!employees.isEmpty()) {
+                showEmployes(employees);
+                newEmployeeId = inputVali.stringNotNull("Ingrese el Id del empleado que quiera seleccionar: -> ");
+                revEmployee.get().setId_employee(newEmployeeId);
+                revisionService.updateRevEmploye(revEmployee.get());  
+            }
+            else{
+                System.out.println("No hay técnicos para asignar");
+            }
         }
-        showRevision.setRevisionDate(newDate);
-        revisionService.updateRevision(showRevision);
-
     }
 
+
+
+    public void showEmployes(List<EmployeeDTO> technicians){
+        
+        System.out.printf("%-10s %-20s %-10s %-20s %-15s %-10s %-20s %-10s %-10s %-20s%n",
+    "ID", "Nombre", "ID Rol", "Nombre Rol", "Fecha Ingreso", "ID Aerolínea", "Nombre Aerolínea", "ID Aeropuerto", "ID Ciudad", "Nombre Ciudad");
+
+        for (EmployeeDTO technician : technicians) {
+        System.out.printf("%-10s %-20s %-10d %-20s %-15s %-10d %-20s %-10s %-10s %-20s%n",
+        technician.getId(),
+        technician.getName(),
+        technician.getRolId(),
+        technician.getRoleName(),
+        technician.getIngressDate(),
+        technician.getAirlineId(),
+        technician.getAirlineName(),
+        technician.getAirportId(),
+        technician.getCityId(),
+        technician.getCityName());
+}
+    }
 }

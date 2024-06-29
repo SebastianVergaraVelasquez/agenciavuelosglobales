@@ -88,7 +88,7 @@ public class MenuController {
         TripConsoleAdapter tripConsoleAdapter = new TripConsoleAdapter(tripService);
 
         TripCrewService tripCrewService = new TripCrewService(tripCrewMYSQLRepository, connectionMYSQLRepository,
-                employeeMYSQLRepository, tripMYSQLRepository);
+                employeeMYSQLRepository, tripMYSQLRepository,planeMySQLRepository);
         TripCrewConsoleAdapter tripCrewConsoleAdapter = new TripCrewConsoleAdapter(tripCrewService);
 
         boolean executing = true;
@@ -225,7 +225,7 @@ public class MenuController {
         PayTypeMYSQLRepository payTypeMYSQLRepository = new PayTypeMYSQLRepository(url, user, password);
 
         TripCrewService tripCrewService = new TripCrewService(tripCrewMYSQLRepository, connectionMYSQLRepository,
-                employeeMYSQLRepository, tripMYSQLRepository);
+                employeeMYSQLRepository, tripMYSQLRepository, planeMySQLRepository);
         TripCrewConsoleAdapter tripCrewConsoleAdapter = new TripCrewConsoleAdapter(tripCrewService);
         TripBookingMYSQLRepository tripBookingMYSQLRepository = new TripBookingMYSQLRepository(url, user, password);
         TripBookingDetailsMYSQLRepository tripBookingDetailsMYSQLRepository = new TripBookingDetailsMYSQLRepository(url,

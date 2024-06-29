@@ -7,7 +7,10 @@ import com.fabiansebastianj1.connection.domain.models.ConnectionDTO;
 import com.fabiansebastianj1.connection.domain.models.Connections;
 import com.fabiansebastianj1.connection.infraestructure.ConnectionRepository;
 import com.fabiansebastianj1.employee.domain.models.Employee;
+import com.fabiansebastianj1.employee.domain.models.EmployeeDTO;
 import com.fabiansebastianj1.employee.infrastructure.EmployeeRepository;
+import com.fabiansebastianj1.planes.domain.models.Plane;
+import com.fabiansebastianj1.planes.infrastructure.PlaneRepository;
 import com.fabiansebastianj1.trip.domain.models.Trip;
 import com.fabiansebastianj1.trip.infrastructure.TripRepository;
 import com.fabiansebastianj1.tripcrew.domain.models.TripCrew;
@@ -20,13 +23,15 @@ public class TripCrewService {
     private final ConnectionRepository connectionRepository;
     private final EmployeeRepository employeeRepository;
     private final TripRepository tripRepository;
+    private final PlaneRepository planeRepository;
 
     public TripCrewService(TripCrewRepository tripCrewRepository, ConnectionRepository connectionRepository,
-            EmployeeRepository employeeRepository, TripRepository tripRepository) {
+            EmployeeRepository employeeRepository, TripRepository tripRepository, PlaneRepository planeRepository) {
         this.tripCrewRepository = tripCrewRepository;
         this.connectionRepository = connectionRepository;
         this.employeeRepository = employeeRepository;
         this.tripRepository = tripRepository;
+        this.planeRepository = planeRepository;
     }
 
     public void createTripCrew(TripCrew tripCrew){
@@ -37,8 +42,8 @@ public class TripCrewService {
         return connectionRepository.listFlights();
     }
 
-    public List<Employee> listEmployees(){
-        return employeeRepository.findAll();
+    public List<EmployeeDTO> listTripulation(int airlineId){
+        return employeeRepository.findAllTripulation(airlineId);
     }
 
     public Optional<Connections> findConnectionById(int id){
@@ -59,5 +64,9 @@ public class TripCrewService {
 
     public List<TripCrewDTO> listTripCrewDTOByConnectionId(int id){
         return tripCrewRepository.listTripCrewDTO(id);
+    }
+
+    public Optional<Plane> findPlaneById(int id){
+        return planeRepository.findById(id);
     }
 }
