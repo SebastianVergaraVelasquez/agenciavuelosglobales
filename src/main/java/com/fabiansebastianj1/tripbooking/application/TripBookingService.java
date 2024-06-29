@@ -215,6 +215,10 @@ public class TripBookingService {
         passengerRepository.delete(id);
     }
 
+    public void updatePassenger(Passenger passenger){
+        passengerRepository.update(passenger);
+    }
+
     public void updateTripBookingDetail(TripBookingDetails bookingDetails){
         tripBookingDetailsRepository.update(bookingDetails);
     }

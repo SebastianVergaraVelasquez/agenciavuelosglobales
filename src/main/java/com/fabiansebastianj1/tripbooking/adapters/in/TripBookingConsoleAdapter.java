@@ -9,6 +9,7 @@ import com.fabiansebastianj1.connection.domain.models.Connections;
 import com.fabiansebastianj1.customer.domain.models.Customer;
 import com.fabiansebastianj1.fare.domain.models.Fare;
 import com.fabiansebastianj1.passenger.domain.models.Passenger;
+import com.fabiansebastianj1.planes.domain.models.Plane;
 import com.fabiansebastianj1.trip.domain.models.Trip;
 import com.fabiansebastianj1.tripbooking.application.TripBookingService;
 import com.fabiansebastianj1.tripbooking.domain.models.TripBooking;
@@ -194,7 +195,7 @@ public class TripBookingConsoleAdapter {
                         case 1:
                             updateTripDate(bookingToUpdate, tripAsConenction);
                             break;
-
+                        case 2:
                         default:
                             break;
                     }
@@ -219,14 +220,29 @@ public class TripBookingConsoleAdapter {
                                                                                // solo imprime la lista que se le mande
                                                                                // con un formato
                                                                                   
-            Trip newTrip = tripBookingConsoleUtils.returnTripById(inputVali.readInt("Ingrese el id del nuevo vuelo"));
-            //Poner este nuevo trip id en booking toupdate, setear los seats de las personas como 0 y ver cómo les asigno 
-            //otros según el nuevo vuelo
+            Trip newTrip = tripBookingConsoleUtils.returnTripById(inputVali.readInt("Ingrese el id del nuevo vuelo")); //Poner este nuevo 
+            //trip id en booking toupdate, setear los seats de las personas como 0 y ver cómo les asigno otros según el nuevo vuelo
 
-            //verificar el número de asientos disponibles y los pasajeros que voy a ingresar
+            Plane plane = tripBookingService.findPlaneById(tripAsConenction.get().getPlaneId()).get();//Conocer el avión del nuevo vuelo
+            int occupiedSeats = tripBookingService.getTotalOccupiedSeats(newTrip.getId());
+            List <Passenger> passengers = tripBookingService.getPassengersByBookingId(bookingToUpdate.getId()); //se listan todos los pasajeros
+            //asociados a ese tripBookingId
 
-            //verificar el de asginar a un vuelo con conexión
-
+            if ((plane.getCapacity() - occupiedSeats) > passengers.size()) {
+                for (Passenger passenger : passengers) {
+                    passenger.setSeat("");
+                }
+                bookingToUpdate.setId_trip(newTrip.getId()); //cambiar el tripId del booking
+                tripBookingService.updateTripBooking(bookingToUpdate); // actualizar en db
+                List <Passenger> passengersUpdated = tripBookingConsoleUtils.asignSeats(passengers, newTrip.getId());
+                for (Passenger passenger : passengersUpdated) {
+                    tripBookingService.updatePassenger(passenger);
+                }
+                System.out.println("Vuelo actualizado");
+            }
+            else{
+                System.out.println("La cantidad de pasajeros de la reserva supera los asientos disponibles. Saliendo...");
+            }
         } else {
                 System.out.println("No hay más viajes para su trayecto en la fecha seleccionada");
         }
