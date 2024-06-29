@@ -21,8 +21,7 @@ En este proyecto, integramos la metodología de cascada con una arquitectura hex
 
 ### Diseño base de datos
 
-// insertar DER
-
+![DER Database agencia](https://github.com/SebastianVergaraVelasquez/agenciavuelosglobales/blob/main/DER_airport.png?raw=true)
 
 
 ### Tecnologías utilizadas
